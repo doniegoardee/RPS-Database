@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
         <img src="{{ asset('images/penro_cag.png') }}" width="40px" height="40px" alt="" style="background-color: white; border-radius:50%;">
         {{-- <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
@@ -15,20 +15,21 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
         <a class="nav-link" href="{{ route('dashboard') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fa-solid fa-house"></i>
             <span>Dashboard</span></a>
     </li>
 
-    {{-- <!-- Divider -->
+    <!-- Divider -->
     <hr class="sidebar-divider">
- --}}
 
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('add.doc') }}">
-            <i class="fas fa-fw fa-plus"></i>
-            <span>Add Document</span></a>
-    </li>
+
+ <li class="nav-item {{ request()->routeIs('add.doc') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('add.doc') }}">
+        <i class="fa-solid fa-file-circle-plus"></i>
+        <span>Add Document</span>
+    </a>
+</li>
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -39,45 +40,47 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
+    <li class="nav-item {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'active' : '' }}">
+        <a class="nav-link {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="{{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'true' : 'false' }}" aria-controls="collapseTwo">
+            <i class="fa-solid fa-folder"></i>
             <span>Document Records</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTwo" class="collapse {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Documents:</h6>
-                <a class="collapse-item" href="{{ route('tenur.doc') }}">Tenurial Instrument(TI)</a>
-                <a class="collapse-item" href="{{ route('for.doc') }}">Foreshore</a>
-                <a class="collapse-item" href="{{ route('ppi.doc') }}">API / PPI</a>
+                <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument(TI)</a>
+                <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('for.doc') }}">Foreshore</a>
+                <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="{{ route('ppi.doc') }}">API / PPI</a>
             </div>
         </div>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>Utilities</span>
+    <li class="nav-item {{ request()->routeIs('all.doc') ? 'active' : '' }}">
+        <a class="nav-link {{ request()->routeIs( 'all.doc') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="{{ request()->routeIs( 'all.doc') ? 'true' : 'false' }}" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Manage Documents</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+        <div id="collapseUtilities" class="collapse {{ request()->routeIs( 'all.doc') ? 'show' : '' }}" aria-labelledby="headingUtilities"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="utilities-color.html">Colors</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
+                <h6 class="collapse-header">Manage:</h6>
+                <a class="collapse-item {{ request()->routeIs('all.doc') ? 'active' : '' }}" href="{{ route('all.doc') }}">All Documents</a>
+                <a class="collapse-item" href="utilities-border.html">Archive Documents</a>
+                {{-- Keep these comments without affecting active status --}}
+                {{-- <a class="collapse-item" href="utilities-animation.html">Unarchive Documents</a>
+                <a class="collapse-item" href="utilities-other.html">Other</a> --}}
             </div>
         </div>
     </li>
 
-    <!-- Divider -->
-    {{-- <hr class="sidebar-divider">
 
-    <!-- Heading -->
+    <!-- Divider -->
+   <hr class="sidebar-divider">
+
+ {{--   <!-- Heading -->
     <div class="sidebar-heading">
         Addons
     </div>

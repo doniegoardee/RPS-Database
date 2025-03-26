@@ -27,25 +27,32 @@
                             <th>Subject</th>
                             <th>Date</th>
                             <th>Document</th>
+                            <th>Type</th>
                             <th>Remarks</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody class="text-center">
-                        @foreach ($for as $for)
+                        @foreach ($all as $all)
 
                         <tr>
-                            <td>{{ $for->id }}</td>
-                            <td>{{ $for->tracking_num }}</td>
-                            <td>{{ $for->subject }}</td>
-                            <td>{{ $for->date }}</td>
+                            <td>{{ $all->id }}</td>
+                            <td>{{ $all->tracking_num }}</td>
+                            <td>{{ $all->subject }}</td>
+                            <td>{{ $all->date }}</td>
 
                             <td>
-                                <a href="{{ url('file/' . $for->file) }}" target="_blank"   class="">
-                                    {{$for->file  }}
+                                <a href="{{ url('file/' . $all->file) }}" target="_blank"   class="">
+                                    {{$all->file  }}
                                     </a>
                             </td>
-                            <td>{{ $for->remarks }}</td>
+                            <td>{{ $all->type }}</td>
+                            <td>{{ $all->remarks }}</td>
+                            <td>
+                                 <a href="" class="btn btn-primary">View</a>
+                                 <a href="" class="btn btn-danger">Archive</a>
+                                </td>
                         </tr>
                         @endforeach
 
@@ -53,8 +60,6 @@
                 </table>
             </div>
         </div>
-
-
 
 
 

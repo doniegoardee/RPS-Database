@@ -15,8 +15,9 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
-            RPSDocsSeeder::class,
+            UserSeeder::class,
             TIseeder::class,
+            RPSDocsSeeder::class,
         ]);
 
     }
