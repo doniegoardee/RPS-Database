@@ -6,53 +6,88 @@ use App\Http\Controllers\Controller;
 use App\Models\RPSDocs;
 use App\Models\TypeTI;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class DocsController extends Controller
 {
 
-
 public function add_doc(){
 
-return view('rps-database.add-doc');
+    $tenur = TypeTI::all();
+
+return view('rps-database.add-doc',compact('tenur'));
 
 }
+
 
 public function store_doc(Request $request)
 {
+    // Log the incoming data
+    Log::info('Incoming Request Data:', $request->all());
+
+
     $request->validate([
-        'tracking_num' => 'nullable|string|max:255',
-        'subject' => 'nullable|string|max:255',
+        'tracking_num' => 'required|string|max:255',
+        'subject' => 'required|string|max:255',
+        'file' => 'required|file|mimes:pdf,doc,docx',
         'date' => 'required|date',
-        'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
-        'type' => 'required|string|max:255',
-        'tenur_type' => 'nullable|string|max:255',
-        'remarks' => 'nullable|string|max:255',
+        'type' => 'required|string|in:Tenurial Instrument,Foreshore,API / PPI',
+        'tenur_type_id' => 'nullable|exists:type_t_i_s,id',
+        'remarks' => 'nullable|string',
     ]);
 
     $filePath = null;
+
     if ($request->hasFile('file')) {
         $file = $request->file('file');
-        $destinationPath = public_path('file');
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0777, true);
-        }
-        $fileName =$file->getClientOriginalName();
-        $file->move($destinationPath, $fileName);
+        $fileName = $file->getClientOriginalName();
         $filePath = $fileName;
+
+        if ($file->move(public_path('rpsdocs'), $fileName)) {
+            Log::info('File uploaded successfully: ' . $filePath);
+        } else {
+            Log::error('File upload failed.');
+        }
     }
 
-    RpsDocs::create([
+    $tenurType = null;
+
+    if ($request->type === 'Tenurial Instrument' && $request->tenur_type_id) {
+        $tenurType = TypeTI::find($request->tenur_type_id)?->title;
+        Log::info('Tenurial Type Found: ' . $tenurType);
+    }
+
+    $document = RPSDocs::create([
         'tracking_num' => $request->tracking_num,
         'subject' => $request->subject,
-        'date' => $request->date,
         'file' => $filePath,
+        'date' => $request->date,
         'type' => $request->type,
-        'tenur_type' => $request->type === 'Tenurial Instrument' ? $request->tenur_type : null,
+        'tenur_type_id' => $request->tenur_type_id,
+        'tenur_type' => $tenurType,
+        'user_id' => Auth::id(),
         'remarks' => $request->remarks,
     ]);
 
-    return redirect()->route('add.doc')->with('success', 'Document created successfully!');
+    if ($document) {
+        Log::info('Document created successfully.', $document->toArray());
+        return redirect()->back()->with('success', 'Document added successfully.');
+    } else {
+        Log::error('Document creation failed.');
+        return redirect()->back()->with('error', 'Document creation failed.');
+    }
 }
+
+
+public function create()
+{
+    $tenurTypes = TypeTI::all();
+    return view('rpsdocs.create', compact('tenurTypes'));
+}
+
+
 
 
 public function ppi(){
@@ -72,20 +107,31 @@ public function tenurial(){
 
 
 
-public function tenur_con($id){
-
-
-    $tenur = TypeTI::findOrFail($id);
+public function tenur_con($title)
+{
+    $tenur = TypeTI::where('title', $title)->firstOrFail();
     $type = $tenur->rpsDocs;
 
-    return view('rps-database.documents.tenurial-doc.tenur-docs',compact('tenur','type'));
-
-    }
+    return view('rps-database.documents.tenurial-doc.tenur-docs', compact('tenur', 'type'));
+}
 
 
     public function for(){
 
-        return view('rps-database.documents.foreshore');
+        $for = RPSDocs::where('type','foreshore')->get();
+
+        return view('rps-database.documents.foreshore',compact('for'));
 
         }
+
+
+
+    public function all_doc(){
+
+        $all = RPSDocs::all();
+
+        return view('rps-database.manage-doc.all-doc',compact('all'));
+
+
+    }
 }

@@ -19,11 +19,12 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::get('/foreshore',[DocsController::class, 'for'])->name('for.doc');
 
     Route::get('/tenurial-instrument',[DocsController::class, 'tenurial'])->name('tenur.doc');
-    Route::get('/tenurial-type/{id}',[DocsController::class, 'tenur_con'])->name('tenur.type');
+    Route::get('/tenurial-type/{title}', [DocsController::class, 'tenur_con'])->name('tenur.type');
 
-    Route::get('/add-doc',[DocsController::class, 'add_doc'])->name('add.doc');
+    Route::get('/add-documents',[DocsController::class, 'add_doc'])->name('add.doc');
     Route::post('/store',[DocsController::class, 'store_doc'])->name('store.doc');
 
+    Route::get('/all-documents',[DocsController::class, 'all_doc'])->name('all.doc');
 
 
 });

@@ -4,52 +4,63 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\User;
 
 class RPSDocsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $treeCuttingId = DB::table('type_t_i_s')->where('title', 'Tree Cutting')->value('id');
-        $sifmaId = DB::table('type_t_i_s')->where('title', 'SIFMA')->value('id');
-        $gsupId = DB::table('type_t_i_s')->where('title', 'GSUP')->value('id');
+        $user = User::first();
+        $tenurialTypes = DB::table('type_t_i_s')->pluck('id', 'title');
 
-        DB::table('r_p_s_docs')->insert([
+        $docs = [
             [
-                'tracking_num' => 'TRK-001',
-                'subject' => 'Land Tenure Document',
-                'date' => now(),
-                'file' => 'document1.pdf',
-                'type' => 'Tenurial Instrument',
-                'tenur_type_id' => $treeCuttingId,
-                'remarks' => 'Approved',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'tracking_num'   => 'TN-001',
+                'subject'        => 'Foreshore Lease Application',
+                'file'           => 'path/to/file1.pdf',
+                'date'           => Carbon::now(),
+                'type'           => 'Foreshore',
+                'tenur_type_id'  => null,
+                'tenur_type'     => null,
+                'user_id'        => $user ? $user->id : null,
+                'remarks'        => 'Pending approval',
             ],
             [
-                'tracking_num' => 'TRK-002',
-                'subject' => 'Foreshore Lease Application',
-                'date' => now(),
-                'file' => 'document2.pdf',
-                'type' => 'Foreshore',
-                'tenur_type_id' => null,
-                'remarks' => 'Pending Review',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'tracking_num'   => 'TN-002',
+                'subject'        => 'Tree Cutting Permit',
+                'file'           => 'path/to/file2.pdf',
+                'date'           => Carbon::now(),
+                'type'           => 'Tenurial Instrument',
+                'tenur_type_id'  => $tenurialTypes['Tree Cutting'] ?? null,
+                'tenur_type'     => 'Tree Cutting',
+                'user_id'        => $user ? $user->id : null,
+                'remarks'        => 'Approved',
             ],
             [
-                'tracking_num' => 'TRK-003',
-                'subject' => 'API Processing',
-                'date' => now(),
-                'file' => 'document3.pdf',
-                'type' => 'API / PPI',
-                'tenur_type_id' => null,
-                'remarks' => 'Under Processing',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'tracking_num'   => 'TN-003',
+                'subject'        => 'Protected Area Permit',
+                'file'           => 'path/to/file3.pdf',
+                'date'           => Carbon::now(),
+                'type'           => 'API / PPI',
+                'tenur_type_id'  => null,
+                'tenur_type'     => null,
+                'user_id'        => $user ? $user->id : null,
+                'remarks'        => 'In review',
             ],
-        ]);
+            [
+                'tracking_num'   => 'TN-004',
+                'subject'        => 'Special Forest Permit',
+                'file'           => 'path/to/file4.pdf',
+                'date'           => Carbon::now(),
+                'type'           => 'Tenurial Instrument',
+                'tenur_type_id'  => $tenurialTypes['FLGMA'] ?? null,
+                'tenur_type'     => 'FLGMA',
+                'user_id'        => $user ? $user->id : null,
+                'remarks'        => 'For verification',
+            ],
+        ];
+
+        DB::table('r_p_s_docs')->insert($docs);
     }
 }
