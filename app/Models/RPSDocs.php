@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 
 class RPSDocs extends Model
 {
     use HasFactory;
+
 
     protected $table = 'r_p_s_docs';
 
@@ -23,6 +27,7 @@ class RPSDocs extends Model
         'remarks',
     ];
 
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -32,4 +37,15 @@ class RPSDocs extends Model
     {
         return $this->belongsTo(TypeTI::class, 'tenur_type_id');
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('userDocuments', function (Builder $builder) {
+            if (Auth::check()) {
+                $builder->where('user_id', Auth::id());
+            }
+        });
+
+    }
+
 }
