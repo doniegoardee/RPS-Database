@@ -17,7 +17,7 @@ class TIseeder extends Seeder
 
         DB::table('type_t_i_s')->insert([
             [
-                'title' => 'Tree Cutting',
+                'title' => 'CSC',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -27,17 +27,7 @@ class TIseeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'GSUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Gratious Permit',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'FLAg/FLAgT',
+                'title' => 'FLAg|FLAgT',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -47,27 +37,12 @@ class TIseeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'SAPA',
+                'title' => 'SLUP|SAPA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'NGCP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Wildlife',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

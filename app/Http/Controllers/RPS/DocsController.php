@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\RPS;
 
 use App\Http\Controllers\Controller;
-use App\Models\RPSDocs;
+use App\Models\TenurialInstrument;
 use App\Models\TypeTI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,6 @@ return view('rps-database.add-doc',compact('tenur'));
 
 public function store_doc(Request $request)
 {
-    // Log the incoming data
     Log::info('Incoming Request Data:', $request->all());
 
 
@@ -59,7 +58,7 @@ public function store_doc(Request $request)
         Log::info('Tenurial Type Found: ' . $tenurType);
     }
 
-    $document = RPSDocs::create([
+    $document = TenurialInstrument::create([
         'tracking_num' => $request->tracking_num,
         'subject' => $request->subject,
         'file' => $filePath,
@@ -118,9 +117,9 @@ public function tenur_con($title)
 
     public function for(){
 
-        $for = RPSDocs::where('type','foreshore')->get();
+        $for = TenurialInstrument::where('type','foreshore')->get();
 
-        return view('rps-database.documents.foreshore',compact('for'));
+        return view('rps-database.lands.foreshore',compact('for'));
 
         }
 
@@ -128,7 +127,7 @@ public function tenur_con($title)
 
     public function all_doc(){
 
-        $all = RPSDocs::all();
+        $all = TenurialInstrument::all();
 
         return view('rps-database.manage-doc.all-doc',compact('all'));
 

@@ -21,8 +21,7 @@ class UserSeeder extends Seeder
                 'name' => 'RPS',
                 'email' => 'rps@gmail.com',
                 'password' => Hash::make('password')],
-                'created_at' => now(),
-                'updated_at' => now(),
+
         ]);
     }
 }

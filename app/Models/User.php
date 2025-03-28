@@ -31,6 +31,6 @@ class User extends Authenticatable
 
     public function rpsDocs()
     {
-        return $this->hasMany(RPSDocs::class, 'user_id');
+        return $this->hasMany(TenurialInstrument::class, 'user_id');
     }
 }

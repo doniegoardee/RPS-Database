@@ -17,13 +17,13 @@
 
 
                 <div class="col-xl-3 col-md-6 mb-4">
-                    <a href="{{ route('tenur.doc') }}" class="text-decoration-none">
+                    <a href="{{ route('forestry') }}" class="text-decoration-none">
                         <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                            Tenurial Instrument (TI)
+                                           Forestry
                                         </div>
                                         <b class="text-success">{{ $ti }}</b>
                                         {{-- <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div> --}}
@@ -38,7 +38,7 @@
                 </div>
 
 
-                <div class="col-xl-3 col-md-6 mb-4">
+                {{-- <div class="col-xl-3 col-md-6 mb-4">
                     <a href="{{ route('for.doc') }}" class="text-decoration-none">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
@@ -49,24 +49,24 @@
                                         </div>
                                         <b class="text-primary">{{ $foreshore }}</b>
 
-                                        {{-- <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div> --}}
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
                                     </div>
                                     <div class="col-auto">
-                                        {{-- <i class="fas fa-calendar fa-2x text-gray-300"></i> --}}
+                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> --}}
 
                 <div class="col-xl-3 col-md-6 mb-4">
-                    <a href="{{ route('ppi.doc') }}" class="text-decoration-none">
+                    <a href="{{ route('lands') }}" class="text-decoration-none">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">API / PPI</div>
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Lands</div>
                                         <b class="text-info">{{ $ppi }}</b>
 
                                         {{-- <div class="row no-gutters align-items-center">
