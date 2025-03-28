@@ -13,23 +13,23 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
     <li class="nav-item active">
         <a class="nav-link" href="{{ route('dashboard') }}">
             <i class="fa-solid fa-house"></i>
             <span>Dashboard</span></a>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
 
-
-
- <li class="nav-item {{ request()->routeIs('add.doc') ? 'active' : '' }}">
+ {{-- <li class="nav-item {{ request()->routeIs('add.doc') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('add.doc') }}">
         <i class="fa-solid fa-file-circle-plus"></i>
         <span>Add Document</span>
     </a>
-</li>
+</li> --}}
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -40,21 +40,65 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'active' : '' }}">
-        <a class="nav-link {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="{{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'true' : 'false' }}" aria-controls="collapseTwo">
-            <i class="fa-solid fa-folder"></i>
-            <span>Document Records</span>
-        </a>
-        <div id="collapseTwo" class="collapse {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Documents:</h6>
-                <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument(TI)</a>
-                <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('for.doc') }}">Foreshore</a>
-                <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="{{ route('ppi.doc') }}">API / PPI</a>
+
+
+        <!-- Lands Section -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLands"
+                aria-expanded="false" aria-controls="collapseLands">
+                <i class="fa-solid fa-mountain-sun"></i>
+                <span>Lands</span>
+            </a>
+            <div id="collapseLands" class="collapse {{ request()->routeIs('for.doc', 'ppi.doc') ? 'show' : '' }}"
+                aria-labelledby="headingLands" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Documents:</h6>
+                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">FPA (Agri. Lands)</a>
+                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">RFPA (Residential)</a>
+                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">SP (School Sites)</a>
+                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="">Foreshore</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
+
+        <!-- Forestry Section -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForestry"
+                aria-expanded="false" aria-controls="collapseForestry">
+                <i class="fa-solid fa-tree"></i>
+                <span>Forestry</span>
+            </a>
+            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'show' : '' }}"
+                aria-labelledby="headingForestry" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Documents:</h6>
+                    <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument (TI)</a>
+                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('for.doc') }}">Permits</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Document Records Section -->
+        {{-- <li class="nav-item {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'active' : '' }}">
+            <a class="nav-link {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseRecords"
+                aria-expanded="{{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'true' : 'false' }}" aria-controls="collapseRecords">
+                <i class="fa-solid fa-folder"></i>
+                <span>Document Records</span>
+            </a>
+            <div id="collapseRecords" class="collapse {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'show' : '' }}"
+                aria-labelledby="headingRecords" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Documents:</h6>
+                    <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument (TI)</a>
+                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('for.doc') }}">Foreshore</a>
+                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="{{ route('ppi.doc') }}">API / PPI</a>
+                </div>
+            </div>
+        </li> --}}
+
+
+
+
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item {{ request()->routeIs('all.doc') ? 'active' : '' }}">
@@ -108,17 +152,17 @@
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="{{ route('docs.chart') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link" href="tables.html">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RPSDocs;
+use App\Models\TenurialInstrument;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,10 +13,22 @@ class HomeController extends Controller
 
 
 
-        $ti = RPSDocs::where('type','Tenurial Instrument')->count();
-        $foreshore = RPSDocs::where('type','Foreshore')->count();
-        $ppi = RPSDocs::where('type','API / PPI')->count();
+        $ti = TenurialInstrument::where('type','Tenurial Instrument')->count();
+        $ppi = TenurialInstrument::where('type','API / PPI')->count();
 
-        return view('rps-database.dashboard',compact('ti','foreshore','ppi'));
+        return view('rps-database.dashboard',compact('ti','ppi'));
     }
+
+    public function land(){
+
+    return view('rps-database.lands.lands');
+
+    }
+
+    public function forestry(){
+
+        return view('rps-database.forestry.forestry');
+
+    }
+
 }

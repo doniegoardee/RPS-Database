@@ -15,6 +15,6 @@ class TypeTI extends Model
 
     public function rpsDocs()
     {
-        return $this->hasMany(RPSDocs::class, 'tenur_type_id');
+        return $this->hasMany(TenurialInstrument::class, 'tenur_type_id');
     }
 }
