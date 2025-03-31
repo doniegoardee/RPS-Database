@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RPS\DocsController;
-use App\Http\Controllers\RPS\Lands\Permits\PermitController;
-use App\Http\Controllers\RPS\Lands\Tenurial\TIController;
+use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
+use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +37,13 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::prefix('tenurial')->group(function () {
 
         Route::get('/tenurial-instrument',[TIController::class, 'tenurial'])->name('tenur.doc');
+        Route::get('/tenurial-type/{title}', [TIController::class, 'tenur_con'])->name('tenur.type');
+        Route::get('/tenurial-instrument/add/{title}',[TIController::class, 'add_tenurial'])->name('add.tenurial');
+        Route::post('/tenurial-instruments/store', [TIController::class, 'store'])->name('tenurial.store');
+
+        Route::get('/tenurial-instruments/search', [TIController::class, 'search'])->name('tenurial.search');
+
+
 
 
     });
@@ -45,9 +52,15 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
     Route::get('/permits',[PermitController::class, 'permit'])->name('permit.doc');
     Route::get('/permit-list/{title}', [PermitController::class, 'permit_list'])->name('permit.list');
+    Route::get('/permits/add/{title}', [PermitController::class, 'add_list'])->name('add.list');
+    Route::post('/permits/store', [PermitController::class, 'store'])->name('store.list');
 
-    Route::get('/permits/add',[PermitController::class, 'add_list'])->name('add.list');
+    Route::get('/permits/add', [PermitController::class, 'add_gsup'])->name('add.gsup');
+    Route::post('/permits/gsup/store', [PermitController::class, 'gsup_store'])->name('gsup.store');
+    Route::get('/permits/gsup', [PermitController::class, 'gsup'])->name('gsup');
+    Route::get('/permits/gsup/search', [PermitController::class, 'gsupSearch'])->name('gsup.search');
 
+    Route::get('/search-permit-list', [PermitController::class, 'searchPermitList'])->name('search.permitList');
 
 
     });
@@ -55,14 +68,13 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::get('/ppi',[DocsController::class, 'ppi'])->name('ppi.doc');
     Route::get('/foreshore',[DocsController::class, 'for'])->name('for.doc');
 
-    Route::get('/tenurial-type/{title}', [DocsController::class, 'tenur_con'])->name('tenur.type');
 
     Route::get('/rps/chart', [ChartDocsController::class, 'chartData'])->name('docs.chart');
 
     Route::get('/add-documents',[DocsController::class, 'add_doc'])->name('add.doc');
     Route::post('/store',[DocsController::class, 'store_doc'])->name('store.doc');
 
-    Route::get('/all-documents',[DocsController::class, 'all_doc'])->name('all.doc');
+    Route::get('/all-documents',[HomeController::class, 'all_doc'])->name('all.doc');
 
 
 });

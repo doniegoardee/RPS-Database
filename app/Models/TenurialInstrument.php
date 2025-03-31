@@ -16,7 +16,6 @@ class TenurialInstrument extends Model
         'subject',
         'date',
         'file',
-        'type',
         'tenur_type_id',
         'tenur_type',
         'user_id',

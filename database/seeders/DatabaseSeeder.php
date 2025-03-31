@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TIseeder::class,
             PermitSeeder::class,
+            PermitListSeeder::class,
+            GSUPSeeder::class,
+            TenurialInstrumentSeeder::class,
         ]);
 
     }

@@ -14,13 +14,28 @@ class PermitList extends Model
         'app_no',
         'name',
         'subject',
-        'year',
+        'date',
         'document',
+        'user_id',
+        'permit_type',
         'remarks',
     ];
 
     public function permit()
     {
-        return $this->belongsTo(Permits::class);
+        return $this->belongsTo(Permits::class, 'permit_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($permitList) {
+            $permitList->permit_type = $permitList->permit->permit_title ?? null;
+        });
+
+        static::updating(function ($permitList) {
+            $permitList->permit_type = $permitList->permit->permit_title ?? null;
+        });
     }
 }

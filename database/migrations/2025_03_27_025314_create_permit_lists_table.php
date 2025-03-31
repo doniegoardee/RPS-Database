@@ -14,8 +14,10 @@ return new class extends Migration
             $table->string('app_no')->unique();
             $table->string('name');
             $table->string('subject');
-            $table->integer('year');
-            $table->text('document');
+            $table->string('date');
+            $table->text('document')->nullable();
+            $table->text('permit_type');
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('remarks')->nullable();
             $table->timestamps();
 

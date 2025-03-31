@@ -14,11 +14,7 @@ class PermitSeeder extends Seeder
     public function run(): void
     {
         DB::table('permits')->insert([
-            [
-                'permit_title' => 'GSUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+
             [
                 'permit_title' => 'Tree Cutting',
                 'created_at' => now(),

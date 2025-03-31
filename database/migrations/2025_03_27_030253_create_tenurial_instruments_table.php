@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('subject')->nullable();
             $table->date('date')->nullable();
             $table->string('file')->nullable();
-            $table->string('type')->nullable();
             $table->string('tenur_type')->nullable();
             $table->foreignId('tenur_type_id')->nullable()->constrained('type_t_i_s')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();

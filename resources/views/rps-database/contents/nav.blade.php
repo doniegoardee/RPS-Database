@@ -68,12 +68,12 @@
                 <i class="fa-solid fa-tree"></i>
                 <span>Forestry</span>
             </a>
-            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'for.doc', 'ppi.doc') ? 'show' : '' }}"
+            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'permit.doc') ? 'show' : '' }}"
                 aria-labelledby="headingForestry" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents:</h6>
                     <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument (TI)</a>
-                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('for.doc') }}">Permits</a>
+                    <a class="collapse-item {{ request()->routeIs('permit.doc') ? 'active' : '' }}" href="{{ route('permit.doc') }}">Permits</a>
                 </div>
             </div>
         </li>
