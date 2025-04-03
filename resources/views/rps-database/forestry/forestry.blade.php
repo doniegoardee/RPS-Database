@@ -21,6 +21,8 @@
                                 <div class="text-lg font-weight-bold text-success text-uppercase mb-2">
                                     Tenurial Instrument(TI)
                                 </div>
+                                <b class="text-lg font-weight-bold text-success text-uppercase mb-2">{{ $ti }}</b>
+
                             </div>
                         </div>
                     </div>
@@ -37,6 +39,7 @@
                                 <div class="text-lg font-weight-bold text-info text-uppercase mb-2">
                                     Permits
                                 </div>
+                                <b class="text-lg font-weight-bold text-info text-uppercase mb-2">{{ $per }}</b>
                             </div>
                         </div>
                     </div>

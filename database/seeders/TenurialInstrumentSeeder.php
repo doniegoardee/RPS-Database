@@ -4,36 +4,40 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class TenurialInstrumentSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('tenurial_instruments')->insert([
-            [
-                'tracking_num' => 'TI-001',
-                'subject' => 'Land Lease Agreement',
-                'date' => now(),
-                'file' => 'lease_agreement.pdf',
-                'tenur_type' => 'Lease',
-                'tenur_type_id' => 1,
+        $faker = Faker::create();
+
+        $tenurTypes = [
+            'CSC',
+            'SIFMA',
+            'FLAg|FLAgT',
+            'FLGMA',
+            'SLUP|SAPA',
+            'CBFMA'
+        ];
+
+        $data = [];
+
+        for ($i = 1; $i <= 50; $i++) {
+            $data[] = [
+                'tracking_num' => 'TI-' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                'subject' => $faker->sentence(3),
+                'date' => $faker->date,
+                'file' => $faker->word . '.pdf',
+                'tenur_type' => $faker->randomElement($tenurTypes),
+                'tenur_type_id' => $faker->numberBetween(1, 6),
                 'user_id' => 1,
-                'remarks' => 'Active',
+                'remarks' => $faker->randomElement(['Active', 'Expired', 'Pending']),
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-            [
-                'tracking_num' => 'TI-002',
-                'subject' => 'Reforestation Permit',
-                'date' => now(),
-                'file' => 'reforestation_permit.pdf',
-                'tenur_type' => 'Reforestation',
-                'tenur_type_id' => 2,
-                'user_id' => 2,
-                'remarks' => 'Expired',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+            ];
+        }
+
+        DB::table('tenurial_instruments')->insert($data);
     }
 }
