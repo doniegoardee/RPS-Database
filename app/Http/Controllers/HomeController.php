@@ -31,7 +31,10 @@ class HomeController extends Controller
 
     public function forestry(){
 
-        return view('rps-database.forestry.forestry');
+        $ti = TenurialInstrument::count();
+        $per = GSUP::count() + PermitList::count();
+
+        return view('rps-database.forestry.forestry',compact('ti','per'));
 
     }
 
