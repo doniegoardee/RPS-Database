@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RPS\DocsController;
+use App\Http\Controllers\RPS\Export\ExportController;
+use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
+use App\Http\Controllers\RPS\Imports\Foresty\ChainsawImport;
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,6 +62,35 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::post('/permits/gsup/store', [PermitController::class, 'gsup_store'])->name('gsup.store');
     Route::get('/permits/gsup', [PermitController::class, 'gsup'])->name('gsup');
     Route::get('/permits/gsup/search', [PermitController::class, 'gsupSearch'])->name('gsup.search');
+
+    Route::prefix('chainsaw')->group(function () {
+        Route::get('/',[PermitController::class, 'chainsaw'])->name('chainsaw');
+
+        Route::get('folder/{add}', [ChainsawCTRL::class, 'folder'])->name('folder');
+        Route::get('folder/client/{name}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
+
+        Route::post('/add-folder', [ChainsawCTRL::class, 'add_folder'])->name('folder.chainsaw');
+        Route::post('/chainsaw/add-client/{address}', [ChainsawCTRL::class, 'add_client'])->name('client.chainsaw');
+
+        Route::post('/client/add-info/{id}', [ChainsawCTRL::class, 'add_info'])->name('client.info');
+        Route::delete('/client-info/{id}', [ChainsawCTRL::class, 'destroy'])->name('chainsaw.delete');
+        Route::put('/edit-info/{id}', [ChainsawCTRL::class, 'edit'])->name('update.info');
+
+        Route::get('/import/chainsaw',[ChainsawImport::class, 'index'])->name('import');
+        Route::post('/chainsaw/import', [ChainsawImport::class, 'import'])->name('chainsaw.import');
+        Route::post('/chainsaw/save', [ChainsawImport::class, 'save'])->name('chainsaw.save');
+
+
+    });
+
+    Route::prefix('excel')->group(function () {
+
+        Route::get('/export-template', [ExportController::class, 'exportTemplate'])->name('export.template');
+        Route::post('import/client/{address}',[ChainsawImport::class, 'import_chainsaw'])->name('import.chainsaw');
+
+    });
+
+
 
     Route::get('/search-permit-list', [PermitController::class, 'searchPermitList'])->name('search.permitList');
 

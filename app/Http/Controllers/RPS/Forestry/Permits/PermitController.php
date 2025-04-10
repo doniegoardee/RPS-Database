@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\RPS\Forestry\Permits;
 
 use App\Http\Controllers\Controller;
+use App\Models\Address;
+use App\Models\ChainsawParent;
 use App\Models\GSUP;
 use App\Models\PermitList;
 use App\Models\Permits;
@@ -176,5 +178,14 @@ public function searchPermitList(Request $request)
 
     return response()->json($permitLists);
 }
+
+public function chainsaw(){
+
+
+    $address = Address::where('type','chainsaw')->get();
+
+    return view('rps-database.forestry.permits.chainsaw.chainsaw',compact('address'));
+}
+
 
 }

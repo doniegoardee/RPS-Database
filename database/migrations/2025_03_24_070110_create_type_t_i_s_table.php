@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('type_t_i_s', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }
