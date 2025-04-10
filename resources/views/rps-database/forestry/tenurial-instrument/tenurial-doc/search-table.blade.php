@@ -19,7 +19,7 @@
                         <td>{{ $doc->subject }}</td>
                         <td>{{ $doc->date }}</td>
                         <td>
-                            <a href="{{ url('rpsdocs/' . $doc->file) }}" target="_blank">
+                            <a href="{{ url('file/' . $doc->file) }}" target="_blank">
                                 {{ $doc->file }}
                             </a>
                         </td>

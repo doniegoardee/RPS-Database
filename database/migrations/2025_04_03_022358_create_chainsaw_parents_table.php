@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permits', function (Blueprint $table) {
+        Schema::create('chainsaw_parents', function (Blueprint $table) {
             $table->id();
-            $table->string('permit_title')->nullable();
+            $table->string('name')->nullable();
             $table->string('address')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permits');
+        Schema::dropIfExists('chainsaw_parents');
     }
 };

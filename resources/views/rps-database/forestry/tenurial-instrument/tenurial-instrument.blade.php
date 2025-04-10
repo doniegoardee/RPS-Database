@@ -5,11 +5,13 @@
     <!-- Scrollable Content -->
     <div class="flex-grow-1 overflow-auto custom-scroll">
 
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Tenurial Instrument</h1>
-                {{-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> --}}
-        </div>
+        <div class="flex-grow-1 overflow-auto custom-scroll p-4">
+            <div class="d-sm-flex align-items-center mb-4">
+                <a href="{{ route('forestry') }}" class="btn btn-sm btn-primary shadow-sm me-3">
+                    <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                </a>
+                <h1 class="h3 mb-0 text-gray-800">Tenurial Instruments</h1>
+            </div>
 
         <!-- Page Heading -->
         <div class="container mt-5">

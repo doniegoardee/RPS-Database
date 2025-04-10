@@ -6,53 +6,41 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-
-class TIseeder extends Seeder
+class AddressSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-
-        DB::table('type_t_i_s')->insert([
+        DB::table('addresses')->insert([
             [
-                'title' => 'CSC',
+                'address' => 'Cenro Aparri',
+                'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'SIFMA',
+                'address' => 'Cenro Solona',
+                'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'FLAg',
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'FLAgT',
+                'address' => 'Cenro Alcala',
+                'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'title' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'CBFMA',
+                'address' => 'Sub Office',
+                'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
