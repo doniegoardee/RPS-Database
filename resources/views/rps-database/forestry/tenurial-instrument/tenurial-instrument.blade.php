@@ -33,7 +33,7 @@
                 @endforeach --}}
                 @foreach ($title as $title)
                 <div class="col-md-4">
-                    <a href="{{ route('tenur.type', ['title' => $title->title]) }}" class="text-decoration-none">
+                    <a href="{{ route('ti.folder',['title'=> $title->title]) }}" class="text-decoration-none">
                         <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                             <div class="card-body">
                                 <img src="{{ asset('images/penro_cag.png') }}" alt="{{$title->title }}" class="img-fluid mb-3" style="width: 80px; height: 80px;">

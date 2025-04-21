@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('document')->nullable();
             $table->timestamps();
         });
     }

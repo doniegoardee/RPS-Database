@@ -13,19 +13,8 @@
         margin-bottom: 10px;
     }
 
-    .address-text {
-        font-weight: bold;
-        flex-grow: 1;
-        text-align: left;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
 
-    .icon-folder {
-        font-size: 1.5rem;
-        margin-right: 10px;
-    }
+
 </style>
 
 <div class="container-fluid d-flex flex-column" style="height: 100vh; overflow: hidden;">
@@ -57,19 +46,12 @@
         </div>
         @endif
 
-        {{-- <div class="input-group mb-4">
-            <input type="search" id="searchInput" class="form-control" placeholder="Search...">
-            <button class="btn btn-primary" id="searchBtn">Search</button>
-            <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
-        </div> --}}
-
         <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addInfoModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
         </a>
 
-
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive" style="height: 42.5rem">
                 <table class="table table-bordered">
                     <thead class="text-center bg-primary text-white">
                         <tr>
@@ -120,17 +102,17 @@
                                 <td>{{ $item->horse_power }}</td>
                                 <td>{{ $item->length_guidebar }}</td>
                                 <td>{{ $item->sticker }}</td>
-                                <td>{{ $item->purpose }}</td>
+                                <td >{{ $item->purpose }}</td>
                                 <td>{{ $item->remarks ?: 'No Remarks' }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        {{-- <button class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"><i class="fas fa-edit"></i></button> --}}
                                         <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"><i class="fas fa-edit"></i></button>
                                         <button class="btn btn-sm btn-danger d-inline-block me-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
 
+                            <!-- Delete Modal -->
                             <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -153,6 +135,7 @@
                                 </div>
                             </div>
 
+                            <!-- Edit Modal -->
                             <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $item->id }}" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -160,10 +143,11 @@
                                             <h5 class="modal-title" id="editModalLabel{{ $item->id }}">Edit Information</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
+                                        <form action="{{ route('update.info', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+
                                         <div class="modal-body">
-                                            <form action="{{ route('update.info', $item->id) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
 
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
@@ -187,63 +171,58 @@
 
                                                 <div class="mb-3">
                                                     <label for="date_registered" class="form-label">Date Registered/Renewal</label>
-                                                    <input type="date" class="form-control" id="date_registered" name="date_registered" value="{{ old('date_registered', $item->date_registered) }}" placeholder="Enter date registered/renewal">
+                                                    <input type="date" class="form-control" id="date_registered" name="date_registered" placeholder="Enter date registered/renewal">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="date_expiry" class="form-label">Date Expiry</label>
-                                                    <input type="date" class="form-control" id="date_expiry" name="date_expiry" value="{{ old('date_expiry', $item->date_expiry) }}" placeholder="Enter date expiry">
+                                                    <input type="date" class="form-control" id="date_expiry" name="date_expiry" placeholder="Enter date expiry">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="control_no" class="form-label">Control No.</label>
-                                                    <input type="text" class="form-control" id="control_no" name="control_no" value="{{ old('control_no', $item->control_no) }}" placeholder="Enter Control number">
+                                                    <input type="text" class="form-control" id="control_no" name="control_no" placeholder="Enter control number">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="date_acquired" class="form-label">Date Acquired</label>
-                                                    <input type="date" class="form-control" id="date_acquired" name="date_acquired" value="{{ old('date_acquired', $item->date_acquired) }}" placeholder="Enter date acquired">
+                                                    <input type="date" class="form-control" id="date_acquired" name="date_acquired" placeholder="Enter date acquired">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="horse_power" class="form-label">Horse Power</label>
-                                                    <input type="text" class="form-control" id="horse_power" name="horse_power" value="{{ old('horse_power', $item->horse_power) }}" placeholder="Enter horse power">
+                                                    <input type="text" class="form-control" id="horse_power" name="horse_power" placeholder="Enter horse power">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="length_guidebar" class="form-label">Length Guidebar</label>
-                                                    <input type="text" class="form-control" id="length_guidebar" name="length_guidebar" value="{{ old('length_guidebar', $item->length_guidebar) }}" placeholder="Enter length guidebar">
+                                                    <input type="text" class="form-control" id="length_guidebar" name="length_guidebar" placeholder="Enter length guidebar">
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <label for="sticker" class="form-label">DENR Sticker Number</label>
-                                                    <input type="text" class="form-control" id="sticker" name="sticker" value="{{ old('sticker', $item->sticker) }}" placeholder="Enter sticker number">
+                                                    <label for="sticker" class="form-label">DENR Sticker No.</label>
+                                                    <input type="text" class="form-control" id="sticker" name="sticker" placeholder="Enter sticker number">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="purpose" class="form-label">Purpose</label>
-                                                    <input type="text" class="form-control" id="purpose" name="purpose" value="{{ old('purpose', $item->purpose) }}" placeholder="Enter purpose">
+                                                    <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter purpose">
                                                 </div>
 
                                                 <div class="mb-3">
                                                     <label for="remarks" class="form-label">Remarks</label>
-                                                    <input type="text" class="form-control" id="remarks" name="remarks" value="{{ old('remarks', $item->remarks) }}" placeholder="Enter remarks">
+                                                    <input type="text" class="form-control" id="remarks" name="remarks" placeholder="Enter remarks">
                                                 </div>
 
-                                        </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                                    </div>
-
-                                                </form>
-                                        </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                            </div>
+                                        </form>
                                     </div>
-
+                                </div>
                             </div>
-
-
-
                         @empty
                             <tr>
                                 <td colspan="15" class="text-center text-muted">No records found</td>
@@ -255,12 +234,11 @@
             </div>
         </div>
 
-
-
-
     </div>
 
 </div>
+
+
 
 @include('rps-database.contents.footer')
 
@@ -276,12 +254,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="folderAddress" name="name" placeholder="Enter name">
+                        <input type="text" class="form-control" id="folderAddress" name="name" value="{{ old('name', $item->name) }}" placeholder="Enter name">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="folderAddress" name="address" placeholder="Enter address">
+                        <input type="text" class="form-control" id="folderAddress" name="address" value="{{ old('address', $item->address) }}" placeholder="Enter address">
                     </div>
 
                     <div class="mb-3">
@@ -320,30 +298,31 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="folderAddress" class="form-label">Length Guidebar</label>
-                        <input type="text" class="form-control" id="folderAddress" name="length_guidebar" placeholder="Enter enter length guidebar">
+                        <label for="length_guidebar" class="form-label">Length Guidebar</label>
+                        <input type="text" class="form-control" id="length_guidebar" name="length_guidebar" placeholder="Enter length guidebar">
                     </div>
 
                     <div class="mb-3">
-                        <label for="folderAddress" class="form-label">DENR Sticker Number</label>
-                        <input type="text" class="form-control" id="folderAddress" name="sticker" placeholder="Enter sticker number">
+                        <label for="sticker" class="form-label">DENR Sticker No.</label>
+                        <input type="text" class="form-control" id="sticker" name="sticker"  placeholder="Enter DENR Sticker No.">
                     </div>
 
                     <div class="mb-3">
-                        <label for="folderAddress" class="form-label">Purpose</label>
-                        <input type="text" class="form-control" id="folderAddress" name="purpose" placeholder="Enter purpose">
+                        <label for="purpose" class="form-label">Purpose</label>
+                        <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter purpose">
                     </div>
 
                     <div class="mb-3">
-                        <label for="folderAddress" class="form-label">Remarks</label>
-                        <input type="text" class="form-control" id="folderAddress" name="remarks" placeholder="Enter Remarks">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <input type="text" class="form-control" id="remarks" name="remarks" placeholder="Enter remarks">
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Information</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

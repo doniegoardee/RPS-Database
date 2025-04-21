@@ -48,17 +48,22 @@ public function add_client(Request $request, $address) {
 
 public function folder($add) {
     $address = Address::where('address', $add)->firstOrFail();
-    $client = ChainsawParent::Where('address',$address->address)->get();
 
-    return view('rps-database.forestry.permits.chainsaw.address', compact('client', 'address'));
+    $client = ChainsawParent::where('address', $address->address)
+                ->orderBy('name', 'asc')
+                ->get();
+
+    $count = ChainsawParent::where('address',$add)->count();
+
+    return view('rps-database.forestry.permits.chainsaw.address', compact('client', 'address','count'));
 }
 
 
 public function client($name)
 {
-    $client = ChainsawParent::where('name', $name)->firstOrFail();
+    $client = ChainsawParent::where('id', $name)->firstOrFail();
 
-    $table = Chainsaw::where('name', $name)
+    $table = Chainsaw::where('chainsaw_parent_id', $name)
         ->where('client_address', $client->address)
         ->get();
 

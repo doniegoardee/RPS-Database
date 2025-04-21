@@ -12,13 +12,17 @@ class TenurialInstrument extends Model
     protected $table = 'tenurial_instruments';
 
     protected $fillable = [
-        'tracking_num',
-        'subject',
-        'date',
-        'file',
-        'tenur_type_id',
+        'name_lessee',
+        'address',
+        'issue_date',
+        'expired_date',
+        'document',
+        'tenur_no',
+        'total_erea',
         'tenur_type',
+        'tenur_type_id',
         'user_id',
+        'status',
         'remarks',
     ];
 
@@ -33,13 +37,9 @@ class TenurialInstrument extends Model
         return $this->belongsTo(TypeTI::class, 'tenur_type_id');
     }
 
-    // protected static function booted()
-    // {
-    //     static::addGlobalScope('userDocuments', function (Builder $builder) {
-    //         if (Auth::check()) {
-    //             $builder->where('user_id', Auth::id());
-    //         }
-    //     });
+    public function ti_parent()
+    {
+        return $this->belongsTo(TIParent::class, 'tenur_type_id');
+    }
 
-    // }
 }
