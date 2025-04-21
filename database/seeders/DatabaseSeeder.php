@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             AddressSeeder::class,
             PermitListSeeder::class,
             GSUPSeeder::class,
-            TenurialInstrumentSeeder::class,
+            // TenurialInstrumentSeeder::class,
         ]);
 
     }

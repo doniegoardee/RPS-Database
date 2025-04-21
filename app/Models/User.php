@@ -14,6 +14,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_role',
     ];
 
     protected $hidden = [
@@ -29,8 +30,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function rpsDocs()
+    public function getUserRoleAttribute($value)
     {
-        return $this->hasMany(TenurialInstrument::class, 'user_id');
+        return (int) $value;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->user_role === 1;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->user_role === 0;
     }
 }

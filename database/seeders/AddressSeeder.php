@@ -44,6 +44,254 @@ class AddressSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'CSC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'CSC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'CSC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'CSC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'CSC',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'SIFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'SIFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'SIFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'SIFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'SIFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'FLAg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'FLAg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'FLAg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'FLAg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'FLAg',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'FLAgT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'FLAgT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'FLAgT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'FLAgT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'FLAgT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'FLGMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'FLGMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'FLGMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'FLGMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'FLGMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'SLUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'SLUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'SLUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'SLUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'SLUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'address' => 'Cenro Aparri',
+                'type' => 'SAPA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'SAPA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'SAPA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'SAPA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'SAPA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+             [
+                'address' => 'Cenro Aparri',
+                'type' => 'CBFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Solona',
+                'type' => 'CBFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Sanchez Mira',
+                'type' => 'CBFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Cenro Alcala',
+                'type' => 'CBFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'address' => 'Sub Office',
+                'type' => 'CBFMA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

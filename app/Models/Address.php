@@ -21,4 +21,8 @@ class Address extends Model
         return $this->hasMany(ChainsawParent::class, 'address', 'address');
     }
 
+    public function ti_clients() {
+        return $this->hasMany(TIParent::class, 'address', 'address');
+    }
+
 }

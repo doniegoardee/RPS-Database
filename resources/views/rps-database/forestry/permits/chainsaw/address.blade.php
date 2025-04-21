@@ -32,11 +32,19 @@
 
     <div class="flex-grow-1 overflow-auto">
 
-        <div class="d-sm-flex align-items-center mb-4">
-            <a href="{{ route('chainsaw')}}" class="btn btn-sm btn-primary shadow-sm me-3">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
-            </a>
-            <h1 class="h3 mb-0 text-gray-800">{{ $address->address }}'s Client Folder</h1>
+        <div class="mb-4">
+            <div class="d-flex align-items-center mb-2">
+                <a href="{{ route('chainsaw') }}" class="btn btn-sm btn-primary shadow-sm me-3">
+                    <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                </a>
+                <h1 class="h4 mb-0 text-gray-800">{{ $address->address }}'s Client Folder</h1>
+            </div>
+            <div class="ms-4 mt-1">
+                <h4 class="mb-0 text-success"><strong>Total Count: {{ $count }}</strong></h4>
+            </div>
+        </div>
+
+        <div>
         </div>
 
     @if(session('success'))
@@ -82,9 +90,10 @@
             <div class="card-body px-0">
                 @foreach ($client as $name)
 
-                <a href="{{route('table.chainsaw',$name->name) }}" class="address-container">
+                <a href="{{route('table.chainsaw',$name->id) }}" class="address-container">
                     <i class="bi bi-folder-fill text-warning icon-folder"></i>
                     <span class="address-text">{{ $name->name }}</span>
+                    {{-- <button class="btn btn-sm btn-danger d-inline-block me-2" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fas fa-trash"></i></button> --}}
                 </a>
                 @endforeach
 

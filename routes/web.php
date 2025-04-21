@@ -11,13 +11,14 @@ use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
 use App\Http\Controllers\RPS\Imports\Foresty\ChainsawImport;
+use App\Http\Controllers\RPS\Viewer\ViewerController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 
-Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function () {
 
 
     Route::prefix('home')->group(function () {
@@ -39,17 +40,24 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
     Route::prefix('tenurial')->group(function () {
 
+        Route::get('ti-folder/{title}',[TIController::class, 'ti_folder'])->name('ti.folder');
+        Route::post('add-ti/{title}',[TIController::class, 'ti_add_folder'])->name('ti-add.folder');
+        Route::get('tenur-client/{title}/{add}', [TIController::class, 'ti_client'])->name('tenur.client');
+        Route::post('add-client/folder/tenurial/{type}/{id}', [TIController::class, 'add_client_folder'])->name('add.client.ti');
+        Route::get('/tenurial-type/{id}', [TIController::class, 'tenur_con'])->name('client.data');
+        Route::post('/tenurial-instrument/add/{id}',[TIController::class, 'store'])->name('add.client.data');
+
+
         Route::get('/tenurial-instrument',[TIController::class, 'tenurial'])->name('tenur.doc');
-        Route::get('/tenurial-type/{title}', [TIController::class, 'tenur_con'])->name('tenur.type');
-        Route::get('/tenurial-instrument/add/{title}',[TIController::class, 'add_tenurial'])->name('add.tenurial');
-        Route::post('/tenurial-instruments/store', [TIController::class, 'store'])->name('tenurial.store');
+
+
 
         Route::get('/tenurial-instruments/search', [TIController::class, 'search'])->name('tenurial.search');
 
 
-
-
     });
+
+
 
     Route::prefix('permit')->group(function () {
 
@@ -63,11 +71,13 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
     Route::get('/permits/gsup', [PermitController::class, 'gsup'])->name('gsup');
     Route::get('/permits/gsup/search', [PermitController::class, 'gsupSearch'])->name('gsup.search');
 
+
+
     Route::prefix('chainsaw')->group(function () {
         Route::get('/',[PermitController::class, 'chainsaw'])->name('chainsaw');
 
         Route::get('folder/{add}', [ChainsawCTRL::class, 'folder'])->name('folder');
-        Route::get('folder/client/{name}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
+        Route::get('folder/client/{id}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
 
         Route::post('/add-folder', [ChainsawCTRL::class, 'add_folder'])->name('folder.chainsaw');
         Route::post('/chainsaw/add-client/{address}', [ChainsawCTRL::class, 'add_client'])->name('client.chainsaw');
@@ -110,6 +120,16 @@ Route::prefix('dashboard')->middleware(['auth', 'verified'])->group(function () 
 
 
 });
+
+
+Route::prefix('viewer')->middleware(['auth', 'role:user'])->group(function (){
+
+    Route::get('/dashboard',[ViewerController::class, 'index'])->name('viewer.dashboard');
+
+
+});
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
