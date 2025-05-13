@@ -21,7 +21,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'chainsaw',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -52,7 +52,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'CSC',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -83,7 +83,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'SIFMA',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -114,7 +114,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'FLAg',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -145,7 +145,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'FLAgT',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -176,7 +176,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'FLGMA',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -207,7 +207,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'SLUP',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -238,7 +238,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'SAPA',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -269,7 +269,7 @@ class AddressSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'address' => 'Cenro Solona',
+                'address' => 'Cenro Solana',
                 'type' => 'CBFMA',
                 'created_at' => now(),
                 'updated_at' => now(),

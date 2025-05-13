@@ -22,10 +22,16 @@ class TIParent extends Model
 
     public function TI()
 {
+    return $this->hasMany(TenurialInstrument::class, 'client_id');
+}
+
+public function Tenur_id()
+{
     return $this->hasMany(TenurialInstrument::class, 'tenur_type_id');
 }
 
     public function ti_address() {
         return $this->belongsTo(Address::class, 'address', 'address');
     }
+
 }

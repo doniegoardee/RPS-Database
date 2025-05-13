@@ -112,7 +112,7 @@
                 <div class="card-body px-0">
                     @foreach ($address as $add)
 
-                    <a href="{{ route('folder', ['add' => $add->address]) }}" class="address-container">
+                    <a href="{{ route('chainsaw.remark',['add'=>$add->address]) }}" class="address-container">
                         <i class="bi bi-folder-fill text-warning icon-folder"></i>
                         <span class="address-text">{{ $add->address }}</span>
                     </a>

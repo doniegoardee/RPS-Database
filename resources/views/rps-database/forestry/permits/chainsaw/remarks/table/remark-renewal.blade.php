@@ -22,7 +22,7 @@
     <div class="flex-grow-1 overflow-auto">
 
         <div class="d-sm-flex align-items-center mb-4">
-            <a href="{{ route('folder', ['add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-3">
+            <a href="{{ route('chainsaw.renewal', ['add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-3">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
             <h1 class="h3 mb-0 text-gray-800">{{ $client->name }}'s Information</h1>
@@ -69,6 +69,7 @@
                             <th style="width: 8%;">DENR Sticker No.</th>
                             <th style="width: 10%;">Purpose</th>
                             <th style="width: 10%;">Remarks</th>
+                            <th>Document</th>
                             <th style="width: 12%;">Actions</th>
                         </tr>
                     </thead>
@@ -104,13 +105,13 @@
                                 <td>{{ $item->sticker }}</td>
                                 <td >{{ $item->purpose }}</td>
                                 <td>{{ $item->remarks ?: 'No Remarks' }}</td>
+                                <td><i>No document yet uploaded</i></td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"><i class="fas fa-edit"></i></button>
                                         <button class="btn btn-sm btn-danger d-inline-block me-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </td>
-                                <td>No document uploaded yet</td>
                             </tr>
 
                             <!-- Delete Modal -->
@@ -146,10 +147,11 @@
                                         </div>
 
                                         @php
-                                            $dateRegistered = \Carbon\Carbon::parse($item->date_registered)->format('Y-m-d');
-                                            $dateExpiry = \Carbon\Carbon::parse($item->date_expiry)->format('Y-m-d');
-                                            $dateAcquired    = \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d');
+                                            $dateRegistered = $item->date_registered ? \Carbon\Carbon::parse($item->date_registered)->format('Y-m-d') : '';
+                                            $dateExpiry = $item->date_expiry ? \Carbon\Carbon::parse($item->date_expiry)->format('Y-m-d') : '';
+                                            $dateAcquired = $item->date_acquired ? \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d') : '';
                                         @endphp
+
 
                                         <form action="{{ route('update.info', $item->id) }}" method="POST">
                                             @csrf
@@ -222,12 +224,18 @@
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <label for="remarks" class="form-label">Remarks</label>
-                                                   <select class="form-control" name="remarks" id="">
-                                                    <option value="NEW">New</option>
-                                                    <option value="RENEWAL">Renewal</option>
-                                                    <option value="EXPIRED">Expired</option>
-                                                   </select>
+                                                <label for="remarks">Remarks</label>
+                                                <select name="remarks" class="form-control" id="remarks">
+                                                    <option value="NEW" {{ old('remarks', $item->remarks) == 'NEW' ? 'selected' : '' }}>New</option>
+                                                    <option value="RENEWAL" {{ old('remarks', $item->remarks) == 'RENEWAL' ? 'selected' : '' }}>Renewal</option>
+                                                    <option value="EXPIRED" {{ old('remarks', $item->remarks) == 'EXPIRED' ? 'selected' : '' }}>Expired</option>
+                                                </select>
+                                              </div>
+
+                                                <div class="mb-3">
+                                                    <label for="purpose" class="form-label">Document</label>
+                                                    <input type="file" class="form-control" id="documents" name="document" value="{{ old('document', $item->documents) }}">
+                                                <i style="color:red; text-decoration:underline">PDF ONLY</i>
                                                 </div>
 
                                             </div>
@@ -328,14 +336,16 @@
                         <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter purpose">
                     </div>
 
-                    <div class="mb-3">
+                    <input type="hidden" name="remarks" value="RENEWAL" id="">
+
+                    {{-- <div class="mb-3">
                         <label for="remarks" class="form-label">Remarks</label>
                        <select class="form-control" name="remarks" id="">
                         <option value="NEW">New</option>
                         <option value="RENEWAL">Renewal</option>
                         <option value="EXPIRED">Expired</option>
                        </select>
-                    </div>
+                    </div> --}}
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

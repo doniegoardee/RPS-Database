@@ -16,14 +16,15 @@ class TenurialInstrument extends Model
         'address',
         'issue_date',
         'expired_date',
-        'document',
         'tenur_no',
-        'total_erea',
+        'total_area',
         'tenur_type',
         'tenur_type_id',
+        'client_id',
         'user_id',
         'status',
         'remarks',
+        'document',
     ];
 
 
@@ -37,9 +38,9 @@ class TenurialInstrument extends Model
         return $this->belongsTo(TypeTI::class, 'tenur_type_id');
     }
 
-    public function ti_parent()
+    public function TI()
     {
-        return $this->belongsTo(TIParent::class, 'tenur_type_id');
+        return $this->belongsTo(TIParent::class, 'client_id');
     }
 
 }

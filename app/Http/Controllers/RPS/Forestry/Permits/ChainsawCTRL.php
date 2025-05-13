@@ -59,6 +59,124 @@ public function folder($add) {
 }
 
 
+public function remark($add){
+
+
+$address = Address::where('address',$add)->firstOrFail();
+
+$new = Chainsaw::where('client_address',$add)->where('remarks','NEW')->count();
+$renewal = Chainsaw::where('client_address',$add)->where('remarks','RENEWAL')->count();
+$expired = Chainsaw::where('client_address',$add)->where('remarks','EXPIRED')->count();
+
+return view('rps-database.forestry.permits.chainsaw.remarks.chainsaw-remarks',compact('address','new','renewal','expired'));
+
+}
+
+public function remark_new($address)
+{
+    $add = Address::where('address', $address)->firstOrFail();
+
+    $client = ChainsawParent::where('address', $address)
+        ->where(function ($query) {
+            $query->whereHas('chainsaws', function ($q) {
+                $q->where('remarks', 'new');
+            })
+            ->orDoesntHave('chainsaws');
+        })
+        ->with(['chainsaws' => function ($q) {
+            $q->where('remarks', 'new');
+        }])
+        ->orderBy('name','asc')
+        ->get();
+
+    return view('rps-database.forestry.permits.chainsaw.remarks.chainsaw-new', compact('add', 'client'));
+}
+
+
+
+public function remark_renewal($address) {
+
+    $add = Address::where('address', $address)->firstOrFail();
+
+    $client = ChainsawParent::where('address', $address)
+    ->whereHas('chainsaws',function($query){
+        $query->where('remarks','renewal');
+    }) ->with(['chainsaws' => function($query){
+            $query->where('remarks','renewal');
+        }])
+        ->orderBy('name','asc')
+        ->get();
+
+
+    return view('rps-database.forestry.permits.chainsaw.remarks.chainsaw-renewal', compact('add', 'client'));
+}
+
+
+public function remark_expired($address){
+
+
+    $add = Address::where('address', $address)->firstOrFail();
+
+    $client = ChainsawParent::where('address', $address)
+    ->whereHas('chainsaws',function($query){
+        $query->where('remarks','expired');
+    }) ->with(['chainsaws' => function($query){
+            $query->where('remarks','expired');
+        }])
+        ->orderBy('name','asc')
+        ->get();
+
+
+return view('rps-database.forestry.permits.chainsaw.remarks.chainsaw-expired',compact('add','client'));
+
+}
+
+
+public function table_new($name)
+{
+    $client = ChainsawParent::where('id', $name)->firstOrFail();
+
+    $table = Chainsaw::where('chainsaw_parent_id', $name)
+        ->where('client_address', $client->address)
+        ->where('remarks','new')
+        ->get();
+
+    $parent = $table->isEmpty() ? null : $table->first()->parent;
+
+    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-new', compact('client', 'parent', 'table'));
+}
+
+public function table_renewal($name)
+{
+    $client = ChainsawParent::where('id', $name)->firstOrFail();
+
+    $table = Chainsaw::where('chainsaw_parent_id', $name)
+        ->where('client_address', $client->address)
+        ->where('remarks','renewal')
+        ->get();
+
+    $parent = $table->isEmpty() ? null : $table->first()->parent;
+
+    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-renewal', compact('client', 'parent', 'table'));
+}
+
+
+public function table_expired($name)
+{
+    $client = ChainsawParent::where('id', $name)->firstOrFail();
+
+    $table = Chainsaw::where('chainsaw_parent_id', $name)
+        ->where('client_address', $client->address)
+        ->where('remarks','expired')
+        ->get();
+
+    $parent = $table->isEmpty() ? null : $table->first()->parent;
+
+    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-expired', compact('client', 'parent', 'table'));
+}
+
+
+
 public function client($name)
 {
     $client = ChainsawParent::where('id', $name)->firstOrFail();
@@ -71,6 +189,8 @@ public function client($name)
 
     return view('rps-database.forestry.permits.chainsaw.client-table', compact('client', 'parent', 'table'));
 }
+
+
 
 
 public function add_info(Request $request, $id){
@@ -91,6 +211,7 @@ public function add_info(Request $request, $id){
     'sticker'=> 'nullable|string|max:255',
     'purpose'=> 'nullable|string|max:255',
     'remarks'=> 'nullable|string|max:255',
+    'document' => 'nullable|file|mimes:pdf,doc,docx,png,jpeg,jpg',
 
     ]);
 
@@ -99,6 +220,16 @@ public function add_info(Request $request, $id){
     $register = $request->date_registered ? : null;
     $expiry = $request->date_expiry ? : null;
     $acquired = $request->date_acquired ? : null;
+
+
+    $document = null;
+
+    if($request->HasFile('document')){
+        $file = $request->file('document');
+        $document = $file->getClientOriginalName();
+        $file->move(public_path('file'),$document);
+
+    }
 
 
     Chainsaw::Create([
@@ -120,6 +251,7 @@ public function add_info(Request $request, $id){
     'user_id'=>Auth::id(),
     'chainsaw_parent_id'=>$parent->id,
     'client_address'=>$parent->address,
+    'document'=>$document,
 
     ]);
 
@@ -141,6 +273,9 @@ return redirect()->back()->with('danger','An information has been deleted!');
 
 public function edit(Request $request, $id)
 {
+
+    $client = Chainsaw::findOrFail($id);
+
     $validated = $request->validate([
         'name' => 'nullable|string|max:255',
         'address' => 'nullable|string|max:255',
@@ -155,9 +290,16 @@ public function edit(Request $request, $id)
         'sticker' => 'nullable|string|max:255',
         'purpose' => 'nullable|string|max:255',
         'remarks' => 'nullable|string|max:255',
+        'document'=>'nullable|file|mimes:pdf',
     ]);
 
-    $client = Chainsaw::findOrFail($id);
+    if ($request->hasFile('document')) {
+        $file = $request->file('document');
+        $filename =$file->getClientOriginalName();
+        $file->move(public_path('file'), $filename);
+        $validated['document'] = $filename;
+    }
+
     $client->update($validated);
 
     return redirect()->back()->with('primary', 'Information has been updated');

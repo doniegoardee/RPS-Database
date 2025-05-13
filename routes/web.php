@@ -5,11 +5,15 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RPS\AllDocumentsController;
 use App\Http\Controllers\RPS\DocsController;
 use App\Http\Controllers\RPS\Export\ExportController;
 use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
+use App\Http\Controllers\RPS\Forestry\Permits\PermitReportsController;
+use App\Http\Controllers\RPS\Forestry\Tenurial\TenurialReportsController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
+use App\Http\Controllers\RPS\Imports\Forestry\TenurialImportsCTRL;
 use App\Http\Controllers\RPS\Imports\Foresty\ChainsawImport;
 use App\Http\Controllers\RPS\Viewer\ViewerController;
 
@@ -47,12 +51,25 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::get('/tenurial-type/{id}', [TIController::class, 'tenur_con'])->name('client.data');
         Route::post('/tenurial-instrument/add/{id}',[TIController::class, 'store'])->name('add.client.data');
 
+        Route::get('/remark/client/new/{title}/{add}',[TIController::class, 'status_new'])->name('tenurial.new');
+        Route::get('/remark/client/renewal/{title}/{add}',[TIController::class, 'status_renewal'])->name('tenurial.renewal');
+        Route::get('/remark/client/expired/{title}/{add}',[TIController::class, 'status_expired'])->name('tenurial.expired');
+
+        Route::get('folder/client/tenurial-new/{title}/{id}', [TIController::class, 'tenurial_new'])->name('ti.new');
+        Route::get('folder/client/tenurial-renewal/{title}/{id}', [TIController::class, 'tenurial_renewal'])->name('ti.renewal');
+        Route::get('folder/client/tenurial-expired/{title}/{id}', [TIController::class, 'tenurial_expired'])->name('ti.expired');
+
+        Route::put('/client/tenurial/update/{id}',[TIController::class, 'update'])->name('tenurial.update');
+        Route::delete('/client/tenurial/delete/{id}',[TIController::class, 'delete'])->name('tenurial.delete');
 
         Route::get('/tenurial-instrument',[TIController::class, 'tenurial'])->name('tenur.doc');
 
+        route::get('view/tenurial/{id}',[AllDocumentsController::class, 'view_tenurial'])->name('view.tenurial');
 
 
-        Route::get('/tenurial-instruments/search', [TIController::class, 'search'])->name('tenurial.search');
+
+        Route::get('/clients/search', [TIController::class, 'searchClients'])->name('clients.search');
+
 
 
     });
@@ -78,9 +95,17 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
         Route::get('folder/{add}', [ChainsawCTRL::class, 'folder'])->name('folder');
         Route::get('folder/client/{id}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
+        Route::get('folder/client/new/{id}', [ChainsawCTRL::class, 'table_new'])->name('table.new');
+        Route::get('folder/client/renewal/{id}', [ChainsawCTRL::class, 'table_renewal'])->name('table.renewal');
+        Route::get('folder/client/expired/{id}', [ChainsawCTRL::class, 'table_expired'])->name('table.expired');
 
         Route::post('/add-folder', [ChainsawCTRL::class, 'add_folder'])->name('folder.chainsaw');
         Route::post('/chainsaw/add-client/{address}', [ChainsawCTRL::class, 'add_client'])->name('client.chainsaw');
+
+        Route::get('/remark/{add}',[ChainsawCTRL::class, 'remark'])->name('chainsaw.remark');
+        Route::get('/remark/client/new-chainsaw/{add}',[ChainsawCTRL::class, 'remark_new'])->name('chainsaw.new');
+        Route::get('/remark/client/renewal/{add}',[ChainsawCTRL::class, 'remark_renewal'])->name('chainsaw.renewal');
+        Route::get('/remark/client/expired/{add}',[ChainsawCTRL::class, 'remark_expired'])->name('chainsaw.expired');
 
         Route::post('/client/add-info/{id}', [ChainsawCTRL::class, 'add_info'])->name('client.info');
         Route::delete('/client-info/{id}', [ChainsawCTRL::class, 'destroy'])->name('chainsaw.delete');
@@ -98,6 +123,18 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::get('/export-template', [ExportController::class, 'exportTemplate'])->name('export.template');
         Route::post('import/client/{address}',[ChainsawImport::class, 'import_chainsaw'])->name('import.chainsaw');
 
+        Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.tenurial');
+        Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
+
+        Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
+        Route::get('/permits/all-permits/generate-report',[PermitReportsController::class, 'all_permits'])->name('permit.all');
+
+        Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
+        Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
+        Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
+
+
+
     });
 
 
@@ -111,12 +148,14 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
     Route::get('/foreshore',[DocsController::class, 'for'])->name('for.doc');
 
 
-    Route::get('/rps/chart', [ChartDocsController::class, 'chartData'])->name('docs.chart');
+    Route::get('/chart/tenurial', [ChartDocsController::class, 'index'])->name('chart.tenurial.index');
+    Route::get('/chart/tenurial/data', [ChartDocsController::class, 'tenurialChart'])->name('chart.tenurial.data');
+
 
     Route::get('/add-documents',[DocsController::class, 'add_doc'])->name('add.doc');
     Route::post('/store',[DocsController::class, 'store_doc'])->name('store.doc');
 
-    Route::get('/all-documents',[HomeController::class, 'all_doc'])->name('all.doc');
+    Route::get('/all-documents',[AllDocumentsController::class, 'index'])->name('all.doc');
 
 
 });
