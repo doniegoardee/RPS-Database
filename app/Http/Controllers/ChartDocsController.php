@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GSUP;
-use App\Models\PermitList;
-use App\Models\TenurialInstrument;
+use App\Http\Controllers\Controller;
+use App\Models\TypeTI;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ChartDocsController extends Controller
 {
-
-
-    public function chartData()
+    public function tenurialChart()
     {
-        $tenurialData = DB::table('tenurial_instruments')
-            ->select('tenur_type', DB::raw('count(*) as count'))
-            ->groupBy('tenur_type')
-            ->pluck('count', 'tenur_type');
+        $types = TypeTI::withCount('TenurialInstrument')->get();
 
-        $permitData = DB::table('permit_lists')
-            ->select('permit_type', DB::raw('count(*) as count'))
-            ->groupBy('permit_type')
-            ->pluck('count', 'permit_type');
+        $labels = $types->pluck('title');
+        $counts = $types->pluck('tenurial_instrument_count');
 
-        $gsupCount = DB::table('g_s_u_p_s')->count();
-
-        return view('rps-database.chart', compact('tenurialData', 'permitData', 'gsupCount'));
+        return response()->json([
+            'labels' => $labels,
+            'counts' => $counts,
+        ]);
     }
 
-
+    public function index()
+    {
+        return view('rps-database.chart');
+    }
 }

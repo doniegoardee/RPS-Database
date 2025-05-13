@@ -6,7 +6,7 @@
         {{-- <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div> --}}
-        <div class="sidebar-brand-text mx-3">PENRO CAG. <sup>RPS</sup></div>
+        <div class="sidebar-brand-text mx-3">PENRO <sup>CAGAYAN RPS </sup></div>
     </a>
 
     <!-- Divider -->
@@ -152,7 +152,7 @@
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('docs.chart') }}">
+        <a class="nav-link" href="{{ route('chart.tenurial.index') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
     </li>

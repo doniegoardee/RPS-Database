@@ -39,9 +39,9 @@
                 </a>
                 <h1 class="h4 mb-0 text-gray-800">{{ $address->address }}'s Client Folder</h1>
             </div>
-            <div class="ms-4 mt-1">
+            {{-- <div class="ms-4 mt-1">
                 <h4 class="mb-0 text-success"><strong>Total Count: {{ $count }}</strong></h4>
-            </div>
+            </div> --}}
         </div>
 
         <div>
@@ -92,6 +92,7 @@
 
                 <a href="{{route('table.chainsaw',$name->id) }}" class="address-container">
                     <i class="bi bi-folder-fill text-warning icon-folder"></i>
+
                     <span class="address-text">{{ $name->name }}</span>
                     {{-- <button class="btn btn-sm btn-danger d-inline-block me-2" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fas fa-trash"></i></button> --}}
                 </a>

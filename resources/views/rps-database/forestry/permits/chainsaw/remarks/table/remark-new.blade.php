@@ -22,7 +22,7 @@
     <div class="flex-grow-1 overflow-auto">
 
         <div class="d-sm-flex align-items-center mb-4">
-            <a href="{{ route('folder', ['add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-3">
+            <a href="{{ route('chainsaw.new', ['add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-3">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
             <h1 class="h3 mb-0 text-gray-800">{{ $client->name }}'s Information</h1>
@@ -46,9 +46,18 @@
         </div>
         @endif
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addInfoModal">
-            <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
-        </a>
+
+
+        <div>
+
+            <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addInfoModal">
+                <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
+            </a>
+
+            <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addInfoModal">
+                <i class="fa-solid fa-chart-simple text-white-50"></i> Generate Report
+            </a>
+        </div>
 
         <div class="card-body">
             <div class="table-responsive" style="height: 42.5rem">
@@ -69,6 +78,7 @@
                             <th style="width: 8%;">DENR Sticker No.</th>
                             <th style="width: 10%;">Purpose</th>
                             <th style="width: 10%;">Remarks</th>
+                            <th>Document</th>
                             <th style="width: 12%;">Actions</th>
                         </tr>
                     </thead>
@@ -95,7 +105,7 @@
                                 <td>{{ $item->control_no }}</td>
                                 <td>
                                     @if ($item->date_acquired)
-                                        {{ \Carbon\Carbon::parse($item->date_acquired)->format('F j, Y') }}
+                                    {{ \Carbon\Carbon::parse($item->date_acquired)->format('F j, Y') }}
                                     @else
                                     @endif
                                 </td>
@@ -103,6 +113,7 @@
                                 <td>{{ $item->length_guidebar }}</td>
                                 <td>{{ $item->sticker }}</td>
                                 <td >{{ $item->purpose }}</td>
+                                <td>No document yet uploaded</td>
                                 <td>{{ $item->remarks ?: 'No Remarks' }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
@@ -110,7 +121,6 @@
                                         <button class="btn btn-sm btn-danger d-inline-block me-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </td>
-                                <td>No document uploaded yet</td>
                             </tr>
 
                             <!-- Delete Modal -->
@@ -146,9 +156,9 @@
                                         </div>
 
                                         @php
-                                            $dateRegistered = \Carbon\Carbon::parse($item->date_registered)->format('Y-m-d');
-                                            $dateExpiry = \Carbon\Carbon::parse($item->date_expiry)->format('Y-m-d');
-                                            $dateAcquired    = \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d');
+                                            $dateRegistered = $item->date_registered ? \Carbon\Carbon::parse($item->date_registered)->format('Y-m-d') : '';
+                                            $dateExpiry = $item->date_expiry ? \Carbon\Carbon::parse($item->date_expiry)->format('Y-m-d') : '';
+                                            $dateAcquired = $item->date_acquired ? \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d') : '';
                                         @endphp
 
                                         <form action="{{ route('update.info', $item->id) }}" method="POST">
@@ -218,16 +228,24 @@
 
                                                 <div class="mb-3">
                                                     <label for="purpose" class="form-label">Purpose</label>
-                                                    <input type="text" class="form-control" id="purpose" name="purpose" value="{{ old('purpose', $item->purpose) }}" placeholder="Enter purpose">
+                                                    <textarea name="purpose" id="" class="form-control" cols="30" rows="10" placeholder="Enter purpose">{{ $item->purpose }}
+                                                    </textarea>
+                                                    {{-- <input type="text" class="form-control" id="purpose" name="purpose" > --}}
                                                 </div>
 
+                                               <div class="mb-3">
+                                                <label for="remarks">Remarks</label>
+                                                <select name="remarks" class="form-control" id="remarks">
+                                                    <option value="NEW" {{ old('remarks', $item->remarks) == 'NEW' ? 'selected' : '' }}>New</option>
+                                                    <option value="RENEWAL" {{ old('remarks', $item->remarks) == 'RENEWAL' ? 'selected' : '' }}>Renewal</option>
+                                                    <option value="EXPIRED" {{ old('remarks', $item->remarks) == 'EXPIRED' ? 'selected' : '' }}>Expired</option>
+                                                </select>
+                                              </div>
+
                                                 <div class="mb-3">
-                                                    <label for="remarks" class="form-label">Remarks</label>
-                                                   <select class="form-control" name="remarks" id="">
-                                                    <option value="NEW">New</option>
-                                                    <option value="RENEWAL">Renewal</option>
-                                                    <option value="EXPIRED">Expired</option>
-                                                   </select>
+                                                    <label for="purpose" class="form-label">Document</label>
+                                                    <input type="file" class="form-control" id="documents" name="document" value="{{ old('document', $item->documents) }}">
+                                                <i style="color:red; text-decoration:underline">PDF ONLY</i>
                                                 </div>
 
                                             </div>
@@ -270,22 +288,22 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="folderAddress" name="name" value="{{ old('name', $client->name) }}" placeholder="Enter name">
+                        <input type="text" class="form-control" id="folderAddress" name="name" value="{{ old('name', $client->name) }}" placeholder="Enter name..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="folderAddress" name="address" value="{{ old('address', $client->address) }}" placeholder="Enter address">
+                        <input type="text" class="form-control" id="folderAddress" name="address" value="{{ old('address', $client->address) }}" placeholder="Enter address..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Brand</label>
-                        <input type="text" class="form-control" id="folderAddress" name="brand" placeholder="Enter brand">
+                        <input type="text" class="form-control" id="folderAddress" name="brand" placeholder="Enter brand..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Serial No.</label>
-                        <input type="text" class="form-control" id="folderAddress" name="serial_num" placeholder="Enter serial number">
+                        <input type="text" class="form-control" id="folderAddress" name="serial_num" placeholder="Enter serial number..">
                     </div>
 
                     <div class="mb-3">
@@ -300,7 +318,7 @@
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Control No.</label>
-                        <input type="text" class="form-control" id="folderAddress" name="control_no" placeholder="Enter Control number">
+                        <input type="text" class="form-control" id="folderAddress" name="control_no" placeholder="Enter Control number..">
                     </div>
 
                     <div class="mb-3">
@@ -310,12 +328,12 @@
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Horse Power</label>
-                        <input type="text" class="form-control" id="folderAddress" name="horse_power" placeholder="Enter horse power">
+                        <input type="text" class="form-control" id="folderAddress" name="horse_power" placeholder="Enter horse power..">
                     </div>
 
                     <div class="mb-3">
                         <label for="length_guidebar" class="form-label">Length Guidebar</label>
-                        <input type="text" class="form-control" id="length_guidebar" name="length_guidebar" placeholder="Enter length guidebar">
+                        <input type="text" class="form-control" id="length_guidebar" name="length_guidebar" placeholder="Enter length guidebar..">
                     </div>
 
                     <div class="mb-3">
@@ -325,8 +343,12 @@
 
                     <div class="mb-3">
                         <label for="purpose" class="form-label">Purpose</label>
-                        <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter purpose">
+                        <textarea name="purpose" class="form-control" id="" cols="30" rows="10" placeholder="Enter purpose.."></textarea>
+                        {{-- <input type="text" class="form-control" id="purpose" name="purpose" placeholder="Enter purpose"> --}}
                     </div>
+
+
+                    {{-- <input type="hidden" name="remarks" value="NEW" id=""> --}}
 
                     <div class="mb-3">
                         <label for="remarks" class="form-label">Remarks</label>

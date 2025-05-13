@@ -12,7 +12,7 @@ class Chainsaw extends Model
     protected $fillable = [
         'name', 'address','brand', 'serial_num', 'date_registered', 'date_expiry', 'control_no',
         'date_acquired', 'horse_power', 'length_guidebar',
-        'sticker', 'purpose', 'remarks','client_address','permit_type','user_id','chainsaw_parent_id',
+        'sticker', 'purpose', 'remarks','client_address','permit_type','user_id','chainsaw_parent_id','document',
     ];
 
     public function permit()

@@ -26,17 +26,30 @@
         font-size: 1.5rem;
         margin-right: 10px;
     }
+
+    .hover-shadow:hover {
+        background-color: #f0f4f8;
+        transition: background-color 0.2s ease-in-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
 </style>
 
 <div class="container-fluid d-flex flex-column" style="height: 100vh; overflow: hidden;">
 
     <div class="flex-grow-1 overflow-auto">
 
-        <div class="d-sm-flex align-items-center mb-4">
-            <a href="#" class="btn btn-sm btn-primary shadow-sm me-3">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
-            </a>
-            <h1 class="h3 mb-0 text-gray-800">{{ $add->address }}'s Client Folder</h1>
+        <div class="mb-4">
+            <div class="d-flex align-items-center mb-2">
+                <a href="{{ route('tenur.client', ['title' => $title,'add' => $add->address]) }}" class="btn btn-sm btn-primary shadow-sm me-3">
+                    <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                </a>
+                <h1 class="h4 mb-0 text-gray-800"><b>{{ $add->address }}'s Status:Renewal</b></h1>
+            </div>
+
+        </div>
+
+        <div>
         </div>
 
     @if(session('success'))
@@ -67,29 +80,29 @@
             <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
         </div>
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
+        {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
-        </a>
+        </a> --}}
 
-        <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#ImportClientModal" >
-            <i class="fas fa-solid fa-file-excel fa-sm text-white-50"></i> Import Excel File
-        </a>
-        <a href="{{ route('export.tenurial') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
-            <i class="fas fa-solid fa-file-arrow-down fa-sm text-white-50"></i> Download Template
-        </a>
+
 
         <div class="container-fluid px-0">
-            <div class="card-body px-0">
-                @foreach ($folder as $name)
-
-                <a href="{{route('client.data',$name->id) }}" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">{{ $name->name }}</span>
-                </a>
-                @endforeach
-
-            </div>
+            @if ($client->isNotEmpty())
+                <div class="card-body px-0">
+                    @foreach ($client as $item)
+                        <a href="{{ route('ti.renewal', ['title' => $title, $item->id]) }}" class="d-flex align-items-center gap-3 py-3 px-4 mb-2 bg-light rounded shadow-sm text-decoration-none address-container hover-shadow">
+                            <i class="fa-regular fa-circle-user fa-lg text-primary"></i>
+                            <span class="fw-medium text-dark">{{ $item->name }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-primary fst-italic text-center my-5 fs-4">
+                    No client found.
+                </p>
+            @endif
         </div>
+
 
 
     </div>
@@ -107,47 +120,20 @@
                 <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('add.client.ti', ['id' => $add->id, 'type' => $title]) }}" method="POST">
-
+            <form action="{{ route('client.chainsaw',[ 'address'=> $add->address]) }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="clientName" class="form-label">Client Name</label>
                         <input type="text" class="form-control" id="clientName" name="name" placeholder="Enter client name">
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save Client</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="ImportClientModal" tabindex="-1" aria-labelledby="ImportClientModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ImportClientModalLabel">Import Client</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
-            </div>
-            <form action="{{ route('import.chainsaw', ['address' => $add->address]) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="">Import Client</label>
-                        <input class="form-control" type="file" name="import" id="import" required>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Import</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </form>
-
         </div>
     </div>
 </div>

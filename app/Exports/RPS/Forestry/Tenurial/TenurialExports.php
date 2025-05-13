@@ -1,27 +1,23 @@
 <?php
 
-namespace App\Exports\RPS\Forestry\Permits;
+namespace App\Exports\RPS\Forestry\Tenurial;
 
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class Export implements FromArray, WithHeadings
+class TenurialExports implements  FromArray, WithHeadings
 {
+
     public function headings(): array
     {
         return [
-            'Name',
+            'Name Lessee',
             'Address',
-            'Brand',
-            'Serial Number',
-            'Date Registered Or Renewal',
-            'Date Expiry',
-            'Control No.',
-            'Date Acquired',
-            'Horse Power',
-            'Length Guidebar',
-            'DENR Sticker No.',
-            'Purpose',
+            'Issue Date',
+            'Expired Date',
+            'Tenur No',
+            'Total Area',
+            'Status',
             'Remarks',
         ];
     }
