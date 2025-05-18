@@ -5,9 +5,9 @@ namespace App\Http\Controllers\RPS\Forestry\Tenurial;
 use \Log;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
-use App\Models\TenurialInstrument;
-use App\Models\TIParent;
-use App\Models\TypeTI;
+use App\Models\Forestry\Tenurial\TenurialInstrument;
+use App\Models\Forestry\Tenurial\TIParent;
+use App\Models\Forestry\Tenurial\TypeTI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,13 +60,10 @@ class TIController extends Controller
 
    public function ti_client($title, $address)
 {
-    // Fetch the specific address record
     $add = Address::where('type', $title)->where('address', $address)->firstOrFail();
 
-    // Fetch all parent records for the given title
     $folder = TIParent::where('type', $title)->get();
 
-    // Count 'new' status
     $new = TIParent::where('type', $title)->where('address', $address)
         ->where(function ($query) {
             $query->whereHas('TI', function ($q) {
@@ -76,14 +73,12 @@ class TIController extends Controller
         })
         ->count();
 
-    // Count 'renewal' status
     $renewal = TIParent::where('address', $address)->where('type', $title)
         ->whereHas('TI', function ($q) {
             $q->where('status', 'renewal');
         })
         ->count();
 
-    // Count 'expired' status
     $expired = TIParent::where('address', $address)->where('type', $title)
         ->whereHas('TI', function ($q) {
             $q->where('status', 'expired');

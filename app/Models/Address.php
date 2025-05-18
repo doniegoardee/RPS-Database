@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Forestry\Permits\ChainsawParent;
+use App\Models\Forestry\Tenurial\TIParent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

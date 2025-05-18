@@ -41,6 +41,8 @@
             </div>
         </div>
 
+
+
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -69,6 +71,11 @@
             <button class="btn btn-primary" id="searchBtn">Search</button>
             <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
         </div>
+<a href="#" class="btn btn-sm btn-success shadow-sm ms-auto">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
+        </a>
+<hr>
+
 
         <!-- Client List -->
         <div class="container-fluid px-0" id="clientList">

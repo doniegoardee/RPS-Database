@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -13,285 +12,23 @@ class AddressSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('addresses')->insert([
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'chainsaw',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'chainsaw',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'chainsaw',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'chainsaw',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'chainsaw',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        $types = ['chainsaw', 'CSC', 'SIFMA', 'FLAg', 'FLAgT', 'FLGMA', 'SLUP', 'SAPA', 'CBFMA', 'Tree Cutting',
+         'Lumber Dealer', 'Lumber Supplier','Wildlife','TFPL','Foreshore','SP','FLA','RFPA'];
+        $addresses = ['Cenro Aparri', 'Cenro Solana', 'Cenro Sanchez Mira', 'Cenro Alcala', 'Sub Office'];
 
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'CSC',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'CSC',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'CSC',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'CSC',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'CSC',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        $data = [];
 
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'SIFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'SIFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'SIFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'SIFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'SIFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        foreach ($types as $type) {
+            foreach ($addresses as $address) {
+                $data[] = [
+                    'address' => $address,
+                    'type' => $type,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
 
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'FLAg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'FLAg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'FLAg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'FLAg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'FLAg',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'FLAgT',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'FLAgT',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'FLAgT',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'FLAgT',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'FLAgT',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'FLGMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'SLUP',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            [
-                'address' => 'Cenro Aparri',
-                'type' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'SAPA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-             [
-                'address' => 'Cenro Aparri',
-                'type' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Solana',
-                'type' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Sanchez Mira',
-                'type' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Cenro Alcala',
-                'type' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'address' => 'Sub Office',
-                'type' => 'CBFMA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        DB::table('addresses')->insert($data);
     }
 }

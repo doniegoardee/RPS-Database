@@ -4,8 +4,8 @@ namespace App\Http\Controllers\RPS\Forestry\Tenurial;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\TenurialInstrument;
-use App\Models\TIParent;
+use App\Models\Forestry\Tenurial\TenurialInstrument;
+use App\Models\Forestry\Tenurial\TIParent;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class TenurialReportsController extends Controller

@@ -9,12 +9,15 @@ use App\Http\Controllers\RPS\AllDocumentsController;
 use App\Http\Controllers\RPS\DocsController;
 use App\Http\Controllers\RPS\Export\ExportController;
 use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
+use App\Http\Controllers\RPS\Forestry\Permits\LumberDealerCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitReportsController;
+
 use App\Http\Controllers\RPS\Forestry\Tenurial\TenurialReportsController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
+
 use App\Http\Controllers\RPS\Imports\Forestry\TenurialImportsCTRL;
-use App\Http\Controllers\RPS\Imports\Foresty\ChainsawImport;
+use App\Http\Controllers\RPS\Imports\Forestry\PermitsImportCTRL;
 use App\Http\Controllers\RPS\Viewer\ViewerController;
 
 Route::get('/', function () {
@@ -91,7 +94,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
 
     Route::prefix('chainsaw')->group(function () {
-        Route::get('/',[PermitController::class, 'chainsaw'])->name('chainsaw');
+        Route::get('/',[ChainsawCTRL::class, 'index'])->name('chainsaw');
 
         Route::get('folder/{add}', [ChainsawCTRL::class, 'folder'])->name('folder');
         Route::get('folder/client/{id}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
@@ -103,39 +106,102 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::post('/chainsaw/add-client/{address}', [ChainsawCTRL::class, 'add_client'])->name('client.chainsaw');
 
         Route::get('/remark/{add}',[ChainsawCTRL::class, 'remark'])->name('chainsaw.remark');
-        Route::get('/remark/client/new-chainsaw/{add}',[ChainsawCTRL::class, 'remark_new'])->name('chainsaw.new');
-        Route::get('/remark/client/renewal/{add}',[ChainsawCTRL::class, 'remark_renewal'])->name('chainsaw.renewal');
-        Route::get('/remark/client/expired/{add}',[ChainsawCTRL::class, 'remark_expired'])->name('chainsaw.expired');
+        Route::get('/remark/client/new/chainsaw/{add}',[ChainsawCTRL::class, 'remark_new'])->name('chainsaw.new');
+        Route::get('/remark/client/renewal/chainsaw/{add}',[ChainsawCTRL::class, 'remark_renewal'])->name('chainsaw.renewal');
+        Route::get('/remark/client/expired/chainsaw/{add}',[ChainsawCTRL::class, 'remark_expired'])->name('chainsaw.expired');
 
         Route::post('/client/add-info/{id}', [ChainsawCTRL::class, 'add_info'])->name('client.info');
         Route::delete('/client-info/{id}', [ChainsawCTRL::class, 'destroy'])->name('chainsaw.delete');
         Route::put('/edit-info/{id}', [ChainsawCTRL::class, 'edit'])->name('update.info');
 
-        Route::get('/import/chainsaw',[ChainsawImport::class, 'index'])->name('import');
-        Route::post('/chainsaw/import', [ChainsawImport::class, 'import'])->name('chainsaw.import');
-        Route::post('/chainsaw/save', [ChainsawImport::class, 'save'])->name('chainsaw.save');
+
+    });
+
+
+    Route::prefix('lumber-dealer')->group(function () {
+
+        Route::get('/',[LumberDealerCTRL::class, 'index'])->name('lumber.dealer');
+
+        Route::post('/add-folder/lumber-dealer', [LumberDealerCTRL::class, 'dealer_folder'])->name('ld.folder');
+
+        Route::get('/remark/{add}',[LumberDealerCTRL::class, 'remark'])->name('ld.remark');
+        Route::get('/remark/client/new/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_new'])->name('ld.new');
+        Route::get('/remark/client/renewal/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_renewal'])->name('ld.renewal');
+        Route::get('/remark/client/expired/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_expired'])->name('ld.expired');
+
+        Route::post('/add-client/{address}', [LumberDealerCTRL::class, 'add_client'])->name('client.ld');
+        Route::get('/lumber-dealer/client/new/{id}', [LumberDealerCTRL::class, 'table_new'])->name('ld.table.new');
+        Route::get('/lumber-dealer/client/renewal/{id}', [LumberDealerCTRL::class, 'table_renewal'])->name('ld.table.renewal');
+        Route::get('/lumber-dealer/client/expired/{id}', [LumberDealerCTRL::class, 'table_expired'])->name('ld.table.expired');
+
+        Route::post('/lumber-dealer/client/add-info/{id}', [LumberDealerCTRL::class, 'add_info'])->name('ld.client.info');
+        Route::delete('/lumber-dealer/client-info/{id}', [LumberDealerCTRL::class, 'destroy'])->name('ld.delete');
+        Route::put('/lumber-dealer/edit-info/{id}', [LumberDealerCTRL::class, 'edit'])->name('ld.update.info');
+
+
 
 
     });
 
-    Route::prefix('excel')->group(function () {
 
-        Route::get('/export-template', [ExportController::class, 'exportTemplate'])->name('export.template');
-        Route::post('import/client/{address}',[ChainsawImport::class, 'import_chainsaw'])->name('import.chainsaw');
 
-        Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.tenurial');
+    Route::prefix('tenurial-excel')->group(function () {
+
+
+         Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.tenurial');
         Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
 
         Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
-        Route::get('/permits/all-permits/generate-report',[PermitReportsController::class, 'all_permits'])->name('permit.all');
 
         Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
         Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
         Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
 
+    });
 
+
+    Route::prefix('permit-excel')->group(function () {
+
+        Route::get('/permits/all-permits/generate-report',[PermitReportsController::class, 'all_permits'])->name('permit.all');
+
+
+        Route::prefix('chainsaw')->group(function () {
+
+            Route::get('/export-template', [ExportController::class, 'exportTemplate'])->name('export.template');
+            Route::post('import/client/{address}',[PermitsImportCTRL::class, 'import_chainsaw'])->name('import.chainsaw');
+
+            Route::get('/permits/chainsaw-remarks-new/generate-report',[PermitReportsController::class, 'chainsaw_remarks_new'])->name('chainsaw.remarks.new');
+            Route::get('/permits/chainsaw-remarks-renewal/generate-report',[PermitReportsController::class, 'chainsaw_remarks_renewal'])->name('chainsaw.remarks.renewal');
+            Route::get('/permits/chainsaw-remarks-expired/generate-report',[PermitReportsController::class, 'chainsaw_remarks_expired'])->name('chainsaw.remarks.expired');
+
+
+
+            Route::get('/permits/chainsaw-new/generate-report/{id}',[PermitReportsController::class, 'chainsaw_new'])->name('report.chainsaw.new');
+            Route::get('/permits/chainsaw-renewal/generate-report/{id}',[PermitReportsController::class, 'chainsaw_renewal'])->name('report.chainsaw.renewal');
+            Route::get('/permits/chainsaw-expired/generate-report/{id}',[PermitReportsController::class, 'chainsaw_expired'])->name('report.chainsaw.expired');
+
+        });
+
+
+        Route::prefix('lumber-dealer')->group(function () {
+
+            Route::get('/export-template', [ExportController::class, 'ExportLumberDealerTemplate'])->name('ld.export.template');
+            Route::post('import/client/{address}',[PermitsImportCTRl::class, 'lumber_dealer'])->name('import.ld');
+
+            Route::get('/permits/lumber-dealer/remarks-new/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_new'])->name('ld.remarks.new');
+            Route::get('/permits/lumber-dealer/remarks-renewal/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_renewal'])->name('ld.remarks.renewal');
+            Route::get('/permits/lumber-dealer/remarks-expired/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_expired'])->name('ld.remarks.expired');
+
+
+
+            Route::get('/permits/lumber-dealer/new/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_new'])->name('report.ld.new');
+            Route::get('/permits/lumber-dealer/renewal/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_renewal'])->name('report.ld.renewal');
+            Route::get('/permits/lumber-dealer/expired/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_expired'])->name('report.ld.expired');
+
+        });
 
     });
+
 
 
 

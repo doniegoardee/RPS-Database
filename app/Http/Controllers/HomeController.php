@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Forestry\Permits\Chainsaw;
 use App\Models\GSUP;
 use App\Models\PermitList;
 use App\Models\Permits;
-use App\Models\TenurialInstrument;
+use App\Models\Forestry\Tenurial\TenurialInstrument;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class HomeController extends Controller
 
 
 
-        $ti = TenurialInstrument::count() + GSUP::count() + PermitList::count();
+        $ti = TenurialInstrument::count() + Chainsaw::count() + PermitList::count();
 
         $ppi = TenurialInstrument::where('tenur_type','API / PPI')->count();
 
@@ -32,7 +33,7 @@ class HomeController extends Controller
     public function forestry(){
 
         $ti = TenurialInstrument::count();
-        $per = GSUP::count() + PermitList::count();
+        $per = Chainsaw::count() + PermitList::count();
 
         return view('rps-database.forestry.forestry',compact('ti','per'));
 

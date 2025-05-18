@@ -81,6 +81,7 @@
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
                 </a>
             </div>
+            <h6 style="font-weight: 900">CHAINSAW</h6>
             <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-bordered">
                     <thead class="text-center">
@@ -142,6 +143,7 @@
                     </tbody>
                 </table>
             </div>
+
         </div>
 
     </div>

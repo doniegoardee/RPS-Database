@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\TypeTI;
+use App\Models\Forestry\Tenurial\TypeTI;
 use Illuminate\Http\Request;
 
 class ChartDocsController extends Controller
