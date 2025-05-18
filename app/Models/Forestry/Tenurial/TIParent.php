@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models\Forestry\Tenurial;
+
+use App\Models\Address;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TIParent extends Model
+{
+
+    use HasFactory;
+
+
+    protected $fillable = [
+
+        'name',
+        'address',
+        'type',
+
+
+    ];
+
+    public function TI()
+{
+    return $this->hasMany(TenurialInstrument::class, 'client_id');
+}
+
+public function Tenur_id()
+{
+    return $this->hasMany(TenurialInstrument::class, 'tenur_type_id');
+}
+
+    public function ti_address() {
+        return $this->belongsTo(Address::class, 'address', 'address');
+    }
+
+}

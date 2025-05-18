@@ -1,58 +1,126 @@
-<link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
 
-<div class="container my-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-        </div>
-        <div class="card-body">
-            @forelse ($tenurial as $item)
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p><strong>Name Lessee:</strong> {{ $item->name_lessee }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Address:</strong> {{ $item->address }}</p>
-                    </div>
-                </div>
+*{
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p><strong>Issue Date:</strong> {{ $item->issue_date ? \Carbon\Carbon::parse($item->issue_date)->format('m/d/y') : 'N/A' }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Expired Date:</strong> {{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('m/d/y') : 'N/A' }}</p>
-                    </div>
-                </div>
+    font-family: sans-serif;
+}
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p><strong>Tenurial Number:</strong> {{ $item->tenur_no }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Total Area:</strong> {{ $item->total_area }}</p>
-                    </div>
-                </div>
+    .header-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p><strong>Status:</strong> {{ $item->status }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Remarks:</strong> {{ $item->remarks }}</p>
-                    </div>
-                </div>
+    .header-container .image1 {
+        margin-right: 20px;
+        width: 80px;
+        height: 80px;
+    }
 
-                <hr class="mb-4">
-            @empty
-                <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> No Tenurial Instrument details found.
-                </div>
-            @endforelse
-        </div>
+     .header-container .image2 {
+        margin-right: 20px;
+        width: 110px;
+        height: 80px;
+        position: relative;
+        left: 51rem;
+    }
+
+    .header-container h1,
+    .header-container h2 {
+        margin: 0;
+        line-height: 1.2;
+        text-align:center;
+        bottom: 80px;
+        position: relative;
+    }
+
+    .header-container h1 {
+        font-size: 1.8em;
+        font-weight: bold;
+    }
+
+    .header-container h2 {
+        font-size: 1.4em;
+        font-weight: normal;
+        color: grey;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #ffffff;
+        font-weight: bold;
+    }
+
+    .no-details {
+        margin-top: 20px;
+        color: #a00;
+        font-weight: bold;
+    }
+</style>
+
+<title>Generate Report</title>
+
+<div class="header-container">
+    <img src="images/penro_cag.png" alt="PENRO Logo" class="image1">
+    <img src="images/bagong_pilipinas.png" alt="PENRO Logo" class="image2">
+    <div>
+        <h1>Department of Environment and Natural Resources</h1>
+        <h2>Provincial Environment and Natural Resources Office</h2>
+        <h2>Province of Cagayan</h2>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<hr style="font-weight: 900; color:red; height:5px; background:red;">
+
+@forelse ($tenurial as $index => $item)
+    <div>
+        <h3><strong>Name:</strong> {{ $item->name_lessee }}</h3>
+        <h3><strong>Location:</strong> {{ $item->address }}</h3>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Tenur Type</th>
+                    <th>{{ $item->tenur_type }} Number</th>
+                    <th>Issue Date</th>
+                    <th>Expired Date</th>
+                    <th>Total Area</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $item->tenur_type }}</td>
+                    <td>{{ $item->tenur_no ?? 'N/A' }}</td>
+                    <td>{{ $item->issue_date ? \Carbon\Carbon::parse($item->issue_date)->format('m/d/Y') : 'N/A' }}</td>
+                    <td>{{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('m/d/Y') : 'N/A' }}</td>
+                    <td>{{ $item->total_area ?? 'N/A' }}</td>
+                    <td>
+                            {{ $item->status }}
+                    </td>
+                    <td>{{ $item->remarks ?? 'No Remarks' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+@empty
+    <div class="no-details">
+        <i class="bi bi-exclamation-triangle-fill"></i> No Tenurial Instrument details found.
+    </div>
+@endforelse

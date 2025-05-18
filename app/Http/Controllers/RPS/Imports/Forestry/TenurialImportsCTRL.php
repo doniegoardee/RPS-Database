@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\RPS\Imports\Forestry;
 
 use App\Http\Controllers\Controller;
-use App\Imports\Tenurial\TenurialImports;
+use App\Imports\Forestry\Tenurial\TenurialImports;
 use App\Models\Address;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;

@@ -83,6 +83,10 @@
         {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a> --}}
+        <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
+        </a>
+
 
 
 

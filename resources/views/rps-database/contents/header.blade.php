@@ -28,6 +28,12 @@
 
 </head>
 
+<style>
+    body{
+        background-image: url('file/penro_cag.png');
+    }
+</style>
+
 <body id="page-top">
 
     <!-- Page Wrapper -->

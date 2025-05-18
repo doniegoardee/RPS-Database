@@ -54,9 +54,9 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addInfoModal">
-                <i class="fa-solid fa-chart-simple text-white-50"></i> Generate Report
-            </a>
+            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
+                </a>
         </div>
 
         <div class="card-body">
@@ -113,8 +113,16 @@
                                 <td>{{ $item->length_guidebar }}</td>
                                 <td>{{ $item->sticker }}</td>
                                 <td >{{ $item->purpose }}</td>
-                                <td>No document yet uploaded</td>
                                 <td>{{ $item->remarks ?: 'No Remarks' }}</td>
+                                <td>
+                                    @if($item->document)
+                                        <a href="{{ asset('file/' . $item->document) }}" target="_blank">
+                                            {{ $item->document }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">No document uploaded yet</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"><i class="fas fa-edit"></i></button>
@@ -161,7 +169,7 @@
                                             $dateAcquired = $item->date_acquired ? \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d') : '';
                                         @endphp
 
-                                        <form action="{{ route('update.info', $item->id) }}" method="POST">
+                                        <form action="{{ route('update.info', $item->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
 
@@ -242,11 +250,11 @@
                                                 </select>
                                               </div>
 
-                                                <div class="mb-3">
-                                                    <label for="purpose" class="form-label">Document</label>
-                                                    <input type="file" class="form-control" id="documents" name="document" value="{{ old('document', $item->documents) }}">
+                                               <div class="mb-3">
+                                                <label for="">Documents</label>
+                                                <input type="file" name="document" class="form-control" value="{{ old('document',$item->document) }}" id="">
                                                 <i style="color:red; text-decoration:underline">PDF ONLY</i>
-                                                </div>
+                                            </div>
 
                                             </div>
                                             <div class="modal-footer">

@@ -82,6 +82,11 @@
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a> --}}
 
+        <a href="{{ route('chainsaw.remarks.expired') }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
+                </a>
+
+
 
         <div class="container-fluid px-0">
             <div class="card-body px-0">

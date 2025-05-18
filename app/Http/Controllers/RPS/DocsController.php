@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\RPS;
 
 use App\Http\Controllers\Controller;
-use App\Models\TenurialInstrument;
-use App\Models\TypeTI;
+use App\Models\Forestry\Tenurial\TenurialInstrument;
+use App\Models\Forestry\Tenurial\TypeTI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;

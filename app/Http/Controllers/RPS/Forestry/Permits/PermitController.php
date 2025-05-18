@@ -179,13 +179,7 @@ public function searchPermitList(Request $request)
     return response()->json($permitLists);
 }
 
-public function chainsaw(){
 
-
-    $address = Address::where('type','chainsaw')->get();
-
-    return view('rps-database.forestry.permits.chainsaw.chainsaw',compact('address'));
-}
 
 
 }
