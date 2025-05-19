@@ -23,6 +23,7 @@ class Chainsaw extends Model
         'length_guidebar',
         'sticker',
         'purpose',
+        'status',
         'remarks',
         'client_address',
         'permit_type',

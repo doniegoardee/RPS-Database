@@ -104,6 +104,23 @@
             </a>
         </div>
 
+         <div class="col-lg-3 col-md-6 col-sm-12">
+            <a href="{{ route('chainsaw.renewal',['add' => $address->address]) }}" class="text-decoration-none">
+                <div class="card border-left-primary shadow-lg h-100 py-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="text-lg font-weight-bold text-primary text-uppercase mb-2">
+                                    Existing
+                                </div>
+                                <b class="text-lg font-weight-bold text-primary text-uppercase mb-2">{{ $renewal }}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
         <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('chainsaw.renewal',['add' => $address->address]) }}" class="text-decoration-none">
                 <div class="card border-left-info shadow-lg h-100 py-3">

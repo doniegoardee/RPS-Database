@@ -13,7 +13,7 @@ class AddressSeeder extends Seeder
     public function run(): void
     {
         $types = ['chainsaw', 'CSC', 'SIFMA', 'FLAg', 'FLAgT', 'FLGMA', 'SLUP', 'SAPA', 'CBFMA', 'Tree Cutting',
-         'Lumber Dealer', 'Lumber Supplier','Wildlife','TFPL','Foreshore','SP','FLA','RFPA'];
+         'Lumber Dealer', 'Lumber Supplier','Wildlife','TFPL','Foreshore','SP','FPA','RFPA'];
         $addresses = ['Cenro Aparri', 'Cenro Solana', 'Cenro Sanchez Mira', 'Cenro Alcala', 'Sub Office'];
 
         $data = [];

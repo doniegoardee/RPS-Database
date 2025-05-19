@@ -81,60 +81,72 @@
         <hr>
 
 
-        <div class="row">
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="{{ route('tenurial.new',['title'=>$title,'add' => $add->address]) }}" class="text-decoration-none">
-                    <div class="card border-left-success shadow-lg h-100 py-3">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <div class="text-lg font-weight-bold text-success text-uppercase mb-2">
-                                        New
-                                    </div>
-                                    <b class="text-lg font-weight-bold text-success text-uppercase mb-2">{{ $new }}</b>
-
-                                </div>
-                            </div>
-                        </div>
+   <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <a href="{{ route('tenurial.new', ['title' => $title, 'add' => $add->address]) }}" class="text-decoration-none">
+            <div class="card border-left-success shadow-lg h-100 py-3">
+                <div class="card-body">
+                    <div class="text-lg font-weight-bold text-success text-uppercase mb-2">
+                        New
                     </div>
-                </a>
+                    <b class="text-lg font-weight-bold text-success text-uppercase mb-2">{{ $new }}</b>
+                </div>
             </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="{{ route('tenurial.renewal',['title'=>$title,'add' => $add->address]) }}" class="text-decoration-none">
-                    <div class="card border-left-info shadow-lg h-100 py-3">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <div class="text-lg font-weight-bold text-info text-uppercase mb-2">
-                                        Renewal
-                                    </div>
-                                    <b class="text-lg font-weight-bold text-info text-uppercase mb-2">{{ $renewal }}</b>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <a href="{{ route('tenurial.expired',['title' => $title,'add' => $add->address]) }}" class="text-decoration-none">
-                    <div class="card border-left-secondary shadow-lg h-100 py-3">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <div class="text-lg font-weight-bold text-secondary text-uppercase mb-2">
-                                        Expired
-                                    </div>
-                                    <b class="text-lg font-weight-bold text-secondary text-uppercase mb-2">{{ $expired }}</b>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+        </a>
     </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <a href="{{ route('tenurial.renewal', ['title' => $title, 'add' => $add->address]) }}" class="text-decoration-none">
+            <div class="card border-left-primary shadow-lg h-100 py-3">
+                <div class="card-body">
+                    <div class="text-lg font-weight-bold text-primary text-uppercase mb-2">
+                        Existing
+                    </div>
+                    <b class="text-lg font-weight-bold text-primary text-uppercase mb-2">{{ $renewal }}</b>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <a href="{{ route('tenurial.renewal', ['title' => $title, 'add' => $add->address]) }}" class="text-decoration-none">
+            <div class="card border-left-info shadow-lg h-100 py-3">
+                <div class="card-body">
+                    <div class="text-lg font-weight-bold text-info text-uppercase mb-2">
+                        Renewal
+                    </div>
+                    <b class="text-lg font-weight-bold text-info text-uppercase mb-2">{{ $renewal }}</b>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <a href="{{ route('tenurial.expired', ['title' => $title, 'add' => $add->address]) }}" class="text-decoration-none">
+            <div class="card border-left-secondary shadow-lg h-100 py-3">
+                <div class="card-body">
+                    <div class="text-lg font-weight-bold text-secondary text-uppercase mb-2">
+                        Expired
+                    </div>
+                    <b class="text-lg font-weight-bold text-secondary text-uppercase mb-2">{{ $expired }}</b>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <a href="{{ route('tenurial.renewal', ['title' => $title, 'add' => $add->address]) }}" class="text-decoration-none">
+            <div class="card border-left-danger shadow-lg h-100 py-3">
+                <div class="card-body">
+                    <div class="text-lg font-weight-bold text-danger text-uppercase mb-2">
+                        Cancelled
+                    </div>
+                    <b class="text-lg font-weight-bold text-danger text-uppercase mb-2">{{ $renewal }}</b>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
 
 
 
