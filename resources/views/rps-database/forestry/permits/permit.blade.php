@@ -11,7 +11,7 @@
 
         <div class="row g-4">
             <div class="col-md-4">
-                <a href="{{ route('gsup') }}" class="text-decoration-none">
+                <a href="" class="text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                         <div class="card-body">
                             <img src="{{ asset('images/penro_cag.png') }}" alt="GSUP" class="img-fluid mb-3" style="width: 80px; height: 80px;">

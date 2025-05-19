@@ -34,7 +34,7 @@
 
         <div class="mb-4">
             <div class="d-flex align-items-center mb-2">
-                <a href="{{ route('chainsaw') }}" class="btn btn-sm btn-primary shadow-sm me-3">
+                <a href="{{ route('lumber.dealer') }}" class="btn btn-sm btn-primary shadow-sm me-3">
                     <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
                 </a>
                 <h1 class="h4 mb-0 text-gray-800">{{ $address->address }} Folder</h1>
@@ -77,7 +77,7 @@
          <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#ImportClientModal" >
             <i class="fas fa-solid fa-file-excel fa-sm text-white-50"></i> Import Excel File
         </a>
-        <a href="{{ route('export.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
+        <a href="{{ route('ld.export.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
             <i class="fas fa-solid fa-file-arrow-down fa-sm text-white-50"></i> Download Template
         </a>
 
@@ -87,7 +87,7 @@
         <div class="row">
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('chainsaw.new',['add' => $address->address]) }}" class="text-decoration-none">
+            <a href="{{ route('fpa.new',['add' => $address->address]) }}" class="text-decoration-none">
                 <div class="card border-left-success shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -105,7 +105,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('chainsaw.renewal',['add' => $address->address]) }}" class="text-decoration-none">
+            <a href="{{ route('fpa.renewal',['add' => $address->address]) }}" class="text-decoration-none">
                 <div class="card border-left-info shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -122,7 +122,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('chainsaw.expired',['add' => $address->address]) }}" class="text-decoration-none">
+            <a href="{{ route('fpa.expired',['add' => $address->address]) }}" class="text-decoration-none">
                 <div class="card border-left-secondary shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -153,7 +153,7 @@
                 <h5 class="modal-title" id="ImportClientModalLabel">Import Client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
             </div>
-            <form action="{{ route('import.chainsaw', ['address' => $address->address]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('import.ld', ['address' => $address->address]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">

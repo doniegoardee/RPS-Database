@@ -1,29 +1,30 @@
 <?php
 
-use App\Http\Controllers\ChartDocsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\RPS\AllDocumentsController;
-use App\Http\Controllers\RPS\DocsController;
-use App\Http\Controllers\RPS\Export\ExportController;
+
+use App\Http\Controllers\RPS\AllDocument\ChartDocsController;
+use App\Http\Controllers\RPS\AllDocument\AllDocumentsController;
+
 use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\LumberDealerCTRL;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
 use App\Http\Controllers\RPS\Forestry\Permits\PermitReportsController;
-
+use App\Http\Controllers\RPS\Forestry\Permits\SupplierCTRL;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TenurialReportsController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
 
+use App\Http\Controllers\RPS\Export\ExportController;
+
 use App\Http\Controllers\RPS\Imports\Forestry\TenurialImportsCTRL;
 use App\Http\Controllers\RPS\Imports\Forestry\PermitsImportCTRL;
+use App\Http\Controllers\RPS\Lands\FPAController;
 use App\Http\Controllers\RPS\Viewer\ViewerController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function () {
 
@@ -41,6 +42,21 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
     Route::prefix('lands')->group(function () {
 
+
+
+        Route::prefix('fpa')->group(function () {
+
+            Route::get('/',[FPAController::class, 'index'])->name('FPA');
+
+            Route::get('/fpa/{add}',[FPAController::class, 'remark'])->name('fpa.remark');
+            Route::get('/remark/client/new/FPA/{add}',[FPAController::class, 'remark_new'])->name('fpa.new');
+            Route::get('/remark/client/renewal/FPA/{add}',[FPAController::class, 'remark_renewal'])->name('fpa.renewal');
+            Route::get('/remark/client/expired/FPA/{add}',[FPAController::class, 'remark_expired'])->name('fpa.expired');
+
+
+
+
+        });
 
 
     });
@@ -85,11 +101,6 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
     Route::get('/permit-list/{title}', [PermitController::class, 'permit_list'])->name('permit.list');
     Route::get('/permits/add/{title}', [PermitController::class, 'add_list'])->name('add.list');
     Route::post('/permits/store', [PermitController::class, 'store'])->name('store.list');
-
-    Route::get('/permits/add', [PermitController::class, 'add_gsup'])->name('add.gsup');
-    Route::post('/permits/gsup/store', [PermitController::class, 'gsup_store'])->name('gsup.store');
-    Route::get('/permits/gsup', [PermitController::class, 'gsup'])->name('gsup');
-    Route::get('/permits/gsup/search', [PermitController::class, 'gsupSearch'])->name('gsup.search');
 
 
 
@@ -144,6 +155,33 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
     });
 
 
+        Route::prefix('lumber-supplier')->group(function () {
+
+        Route::get('/',[SupplierCTRL::class, 'index'])->name('lumber.supplier');
+
+        Route::post('/add-folder/lumber-supplier', [SupplierCTRL::class, 'supplier_folder'])->name('supplier.folder');
+
+        Route::get('/remark/{add}',[SupplierCTRL::class, 'remark'])->name('supplier.remark');
+        Route::get('/remark/client/new/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_new'])->name('supplier.new');
+        Route::get('/remark/client/renewal/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_renewal'])->name('supplier.renewal');
+        Route::get('/remark/client/expired/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_expired'])->name('supplier.expired');
+
+        Route::post('/add-client/{address}', [SupplierCTRL::class, 'add_client'])->name('client.supplier');
+        Route::get('/lumber-supplier/client/new/{id}', [SupplierCTRL::class, 'table_new'])->name('supplier.table.new');
+        Route::get('/lumber-supplier/client/renewal/{id}', [SupplierCTRL::class, 'table_renewal'])->name('supplier.table.renewal');
+        Route::get('/lumber-supplier/client/expired/{id}', [SupplierCTRL::class, 'table_expired'])->name('supplier.table.expired');
+
+        Route::post('/lumber-supplier/client/add-info/{id}', [SupplierCTRL::class, 'add_info'])->name('supplier.client.info');
+        Route::delete('/lumber-supplier/client-info/{id}', [SupplierCTRL::class, 'destroy'])->name('supplier.delete');
+        Route::put('/lumber-supplier/edit-info/{id}', [SupplierCTRL::class, 'edit'])->name('supplier.update.info');
+
+
+
+
+    });
+
+
+
 
     Route::prefix('tenurial-excel')->group(function () {
 
@@ -152,6 +190,8 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
 
         Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
+
+        Route::get('all/{tenur_type}',[ExportController::class, 'exportPerType'])->name('ti.all');
 
         Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
         Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
@@ -210,18 +250,36 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
     });
 
-    Route::get('/ppi',[DocsController::class, 'ppi'])->name('ppi.doc');
-    Route::get('/foreshore',[DocsController::class, 'for'])->name('for.doc');
+
+    Route::prefix('lands-excel')->group(function () {
 
 
-    Route::get('/chart/tenurial', [ChartDocsController::class, 'index'])->name('chart.tenurial.index');
-    Route::get('/chart/tenurial/data', [ChartDocsController::class, 'tenurialChart'])->name('chart.tenurial.data');
+        Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.lands');
+        Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
+
+        Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
+
+        Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
+        Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
+        Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
+
+    });
 
 
-    Route::get('/add-documents',[DocsController::class, 'add_doc'])->name('add.doc');
-    Route::post('/store',[DocsController::class, 'store_doc'])->name('store.doc');
 
-    Route::get('/all-documents',[AllDocumentsController::class, 'index'])->name('all.doc');
+
+    Route::prefix('All-Document')->group(function () {
+
+
+        Route::get('/all-documents',[AllDocumentsController::class, 'index'])->name('all.doc');
+
+        Route::get('/chart/tenurial', [ChartDocsController::class, 'index'])->name('chart.tenurial.index');
+        Route::get('/chart/tenurial/data', [ChartDocsController::class, 'tenurialChart'])->name('chart.tenurial.data');
+
+
+    });
+
+
 
 
 });

@@ -45,9 +45,16 @@
             </div>
         @endif
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto mb-3" data-bs-toggle="modal" data-bs-target="#addFolderModal">
-            <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Folder
-        </a>
+        <div class="d-flex gap-2 mb-3">
+            <a href="#" class="btn btn-sm btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+                <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Folder
+            </a>
+
+            <a href="{{ route('ti.all',['tenur_type' => $type->title]) }}" class="btn btn-sm btn-success shadow-sm">
+                <i class="fas fa-file-arrow-down fa-sm text-white-50"></i> Generate Excel Report
+            </a>
+        </div>
+
 
         <div class="container-fluid px-0">
             <div class="card-body px-0">

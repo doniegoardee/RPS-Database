@@ -13,7 +13,7 @@
     <div class="row g-4">
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('tenur.doc') }}" class="text-decoration-none">
+            <a href="{{ route('FPA') }}" class="text-decoration-none">
                 <div class="card border-left-success shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">

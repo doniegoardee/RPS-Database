@@ -36,7 +36,7 @@
             <a href="{{ route('permit.doc') }}" class="btn btn-sm btn-primary shadow-sm me-3">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
-            <h1 class="h3 mb-0 text-gray-800">FPA(Agri. Lands)</h1>
+            <h1 class="h3 mb-0 text-gray-800">Lumber Dealer</h1>
         </div>
 
         @if(session('success'))
@@ -47,17 +47,17 @@
 
 
 
-        {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Folder
         </a>
- --}}
+
 
 
             <div class="container-fluid px-0">
                 <div class="card-body px-0">
                     @foreach ($address as $add)
 
-                    <a href="{{ route('fpa.remark',['add'=>$add->address]) }}" class="address-container">
+                    <a href="{{ route('ld.remark',['add'=>$add->address]) }}" class="address-container">
                         <i class="bi bi-folder-fill text-warning icon-folder"></i>
                         <span class="address-text">{{ $add->address }}</span>
                     </a>

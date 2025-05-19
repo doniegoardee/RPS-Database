@@ -53,7 +53,7 @@
                 aria-labelledby="headingLands" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents:</h6>
-                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">FPA (Agri. Lands)</a>
+                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="{{ route('FPA') }}">FPA (Agri. Lands)</a>
                     <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">RFPA (Residential)</a>
                     <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">SP (School Sites)</a>
                     <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="">Foreshore</a>

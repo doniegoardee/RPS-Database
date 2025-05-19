@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\RPS\AllDocument;
 
 use App\Http\Controllers\Controller;
 use App\Models\Forestry\Tenurial\TypeTI;
