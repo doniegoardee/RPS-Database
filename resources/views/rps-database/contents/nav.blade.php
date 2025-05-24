@@ -49,14 +49,14 @@
                 <i class="fa-solid fa-mountain-sun"></i>
                 <span>Lands</span>
             </a>
-            <div id="collapseLands" class="collapse {{ request()->routeIs('for.doc', 'ppi.doc') ? 'show' : '' }}"
+            <div id="collapseLands" class="collapse {{ request()->routeIs('FPA', 'RFPA','SP') ? 'show' : '' }}"
                 aria-labelledby="headingLands" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents:</h6>
-                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="{{ route('FPA') }}">FPA (Agri. Lands)</a>
-                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">RFPA (Residential)</a>
-                    <a class="collapse-item {{ request()->routeIs('ppi.doc') ? 'active' : '' }}" href="">SP (School Sites)</a>
-                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="">Foreshore</a>
+                    <a class="collapse-item {{ request()->routeIs('FPA') ? 'active' : '' }}" href="{{ route('FPA') }}">FPA (Agri. Lands)</a>
+                    <a class="collapse-item {{ request()->routeIs('RFPA') ? 'active' : '' }}" href="{{ route('RFPA') }}">RFPA (Residential)</a>
+                    <a class="collapse-item {{ request()->routeIs('SP') ? 'active' : '' }}" href="{{ route('SP') }}">SP (School Sites)</a>
+                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('Foreshore') }}">Foreshore</a>
                 </div>
             </div>
         </li>

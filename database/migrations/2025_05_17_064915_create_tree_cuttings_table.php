@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::create('tree_cuttings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cutting_parent_id')->constrained('tree_cutting_parents')->cascadeOnDelete();
-            $table->string('name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('date_registered')->nullable();
-            $table->string('date_expiry')->nullable();
-            $table->string('control_no')->nullable();
-            $table->text('purpose')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('name_permitee')->nullable();
+            $table->string('location')->nullable();
+            $table->string('no_trees')->nullable();
+            $table->string('species')->nullable();
+            $table->string('approved_volume')->nullable();
+            $table->string('date_issuance')->nullable();
+            $table->string('expiration_date')->nullable();
+            $table->string('seed_requirements')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();

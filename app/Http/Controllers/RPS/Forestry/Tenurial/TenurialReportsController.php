@@ -33,12 +33,27 @@ public function tenurial_new($id)
                                   ->where('status', 'new')
                                   ->get();
 
-    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.report-generate', compact('client', 'tenurial'))
+    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.report-generate', compact('client', 'tenurial'))
               ->setPaper('a4', 'landscape');
 
     return $pdf->stream('TI-Report.pdf');
 }
 
+
+public function tenurial_existing($id)
+{
+    $client = TIParent::find($id);
+
+
+    $tenurial = TenurialInstrument::where('client_id', $id)
+                                  ->where('status', 'existing')
+                                  ->get();
+
+    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.report-generate', compact('client', 'tenurial'))
+              ->setPaper('a4', 'landscape');
+
+    return $pdf->stream('TI-Report.pdf');
+}
 
 
 public function tenurial_renewal($id)
@@ -50,7 +65,7 @@ public function tenurial_renewal($id)
                                   ->where('status', 'renewal')
                                   ->get();
 
-    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.report-generate', compact('client', 'tenurial'))
+    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.report-generate', compact('client', 'tenurial'))
               ->setPaper('a4', 'landscape');
 
     return $pdf->stream('TI-Report.pdf');
@@ -67,13 +82,42 @@ public function tenurial_expired($id)
                                   ->where('status', 'expired')
                                   ->get();
 
-    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.report-generate', compact('client', 'tenurial'))
+    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.report-generate', compact('client', 'tenurial'))
               ->setPaper('a4', 'landscape');
 
     return $pdf->stream('TI-Report.pdf');
 }
 
 
+public function tenurial_cancelled($id)
+{
+    $client = TIParent::find($id);
 
+
+    $tenurial = TenurialInstrument::where('client_id', $id)
+                                  ->where('status', 'cancelled')
+                                  ->get();
+
+    $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.report-generate', compact('client', 'tenurial'))
+              ->setPaper('a4', 'landscape');
+
+    return $pdf->stream('TI-Report.pdf');
+}
+
+
+public function status_new($add)
+{
+
+        $tenurial = TenurialInstrument::with('tenurType')
+            ->where('status', 'new')
+            ->where('client_address', $add)
+            ->get()
+            ->groupBy('type');
+
+        $pdf = Pdf::loadView('rps-database.forestry.tenurial-instrument.report.status-report', compact( 'tenurial'))
+                ->setPaper('a4', 'landscape');
+
+        return $pdf->stream('TI-Report.pdf');
+}
 
 }

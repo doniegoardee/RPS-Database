@@ -17,7 +17,7 @@ class HomeController extends Controller
 
 
 
-        $ti = TenurialInstrument::count() + Chainsaw::count() + PermitList::count();
+        $ti = TenurialInstrument::count() + Chainsaw::count();
 
         $ppi = TenurialInstrument::where('tenur_type','API / PPI')->count();
 
@@ -33,7 +33,7 @@ class HomeController extends Controller
     public function forestry(){
 
         $ti = TenurialInstrument::count();
-        $per = Chainsaw::count() + PermitList::count();
+        $per = Chainsaw::count();
 
         return view('rps-database.forestry.forestry',compact('ti','per'));
 
@@ -56,31 +56,9 @@ class HomeController extends Controller
             ];
         });
 
-        $gsup = GSUP::all()->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'tracking_num' => $item->tracking_num,
-                'subject' => $item->subject,
-                'date' => $item->file_year,
-                'file' => $item->document,
-                'type' => 'GSUP',
-                'remarks' => $item->remarks
-            ];
-        });
 
-        $permitList = PermitList::all()->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'tracking_num' => $item->app_no,
-                'name' => $item->name,
-                'subject' => $item->subject,
-                'date' => $item->date,
-                'file' => $item->document,
-                'remarks' => $item->remarks
-            ];
-        });
 
-        return view('rps-database.documents.all-doc', compact('tenurial', 'gsup', 'permitList'));
+        return view('rps-database.documents.all-doc', compact('tenurial'));
     }
 
 

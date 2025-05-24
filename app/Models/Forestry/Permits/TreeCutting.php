@@ -12,13 +12,14 @@ class TreeCutting extends Model
        use HasFactory;
 
      protected $fillable = [
-        'name',
-        'address',
-        'date_registered',
-        'date_expiry',
-        'control_no',
-        'purpose',
-        'remarks',
+        'name_permitee',
+        'location',
+        'no_trees',
+        'species',
+        'approved_volume',
+        'date_issuance',
+        'expiration_date',
+        'seed_requirements',
         'client_address',
         'permit_type',
         'user_id',

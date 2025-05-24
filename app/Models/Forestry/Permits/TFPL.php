@@ -12,12 +12,14 @@ class TFPL extends Model
        use HasFactory;
 
      protected $fillable = [
-        'name',
-        'address',
-        'date_registered',
-        'date_expiry',
-        'control_no',
-        'purpose',
+        'name_permitee',
+        'place_of_loading',
+        'destination',
+        'species',
+        'volume_to_transport',
+        'no_finish_product',
+        'no_finish_lumber',
+        'date_transport',
         'remarks',
         'client_address',
         'permit_type',

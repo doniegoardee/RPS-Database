@@ -36,7 +36,7 @@
             <a href="{{ route('permit.doc') }}" class="btn btn-sm btn-primary shadow-sm me-3">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
-            <h1 class="h3 mb-0 text-gray-800">Lumber Dealer</h1>
+            <h1 class="h3 mb-0 text-gray-800">Lumber Supplier</h1>
         </div>
 
         @if(session('success'))
@@ -47,17 +47,24 @@
 
 
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+        {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Folder
-        </a>
+        </a> --}}
 
+
+        <div class="d-flex gap-2 mb-3">
+
+            <a href="" class="btn btn-sm btn-success shadow-sm">
+                <i class="fas fa-file-arrow-down fa-sm text-white-50"></i> Generate Excel Report
+            </a>
+        </div>
 
 
             <div class="container-fluid px-0">
                 <div class="card-body px-0">
                     @foreach ($address as $add)
 
-                    <a href="{{ route('ld.remark',['add'=>$add->address]) }}" class="address-container">
+                    <a href="{{ route('lumber-supplier.client',['add'=>$add->address]) }}" class="address-container">
                         <i class="bi bi-folder-fill text-warning icon-folder"></i>
                         <span class="address-text">{{ $add->address }}</span>
                     </a>
@@ -75,7 +82,7 @@
 
 
 <!-- Add Folder Modal -->
-<div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,4 +104,4 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}

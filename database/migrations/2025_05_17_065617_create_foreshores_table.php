@@ -13,16 +13,14 @@ return new class extends Migration
     {
         Schema::create('foreshores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('foreshore_parent_id')->constrained('foreshore_parents')->cascadeOnDelete();
-            $table->string('name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('date_registered')->nullable();
-            $table->string('date_expiry')->nullable();
-            $table->string('control_no')->nullable();
-            $table->text('purpose')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('applicant')->nullable();
+            $table->string('location')->nullable();
+            $table->string('fla_no')->nullable();
+            $table->string('area')->nullable();
+            $table->string('remarks_status')->nullable();
             $table->string('client_address')->nullable();
-            $table->string('permit_type')->nullable();
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->string('lands_type')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('document')->nullable();
             $table->timestamps();

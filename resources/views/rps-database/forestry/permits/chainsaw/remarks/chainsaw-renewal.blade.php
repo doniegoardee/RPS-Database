@@ -123,7 +123,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="clientName" class="form-label">Client Name</label>
-                        <input type="text" class="form-control" id="clientName" name="name" placeholder="Enter client name">
+                        <input type="text" class="form-control" id="clientName" name="name" placeholder="Enter client name" required>
                     </div>
 
                 </div>

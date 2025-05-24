@@ -112,8 +112,8 @@ class ExportData implements WithMultipleSheets
                         AfterSheet::class => function (AfterSheet $event) {
                             $sheet = $event->sheet->getDelegate();
 
-                            $sheet->getColumnDimension('A')->setWidth(25);
-                            $sheet->getColumnDimension('B')->setWidth(30);
+                            $sheet->getColumnDimension('A')->setWidth(30);
+                            $sheet->getColumnDimension('B')->setWidth(40);
                             $sheet->getColumnDimension('C')->setWidth(15);
                             $sheet->getColumnDimension('D')->setWidth(15);
                             $sheet->getColumnDimension('E')->setWidth(15);

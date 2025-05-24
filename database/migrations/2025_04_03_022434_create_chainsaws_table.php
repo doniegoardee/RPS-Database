@@ -26,7 +26,6 @@ return new class extends Migration
             $table->text('length_guidebar')->nullable();
             $table->string('sticker')->nullable();
             $table->text('purpose')->nullable();
-            $table->text('status')->nullable();
             $table->string('remarks')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();
