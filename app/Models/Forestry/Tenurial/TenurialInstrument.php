@@ -22,6 +22,7 @@ class TenurialInstrument extends Model
         'tenur_type',
         'tenur_type_id',
         'client_id',
+        'client_address',
         'user_id',
         'status',
         'remarks',

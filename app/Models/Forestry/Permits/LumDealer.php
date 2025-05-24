@@ -12,12 +12,12 @@ class LumDealer extends Model
 
      protected $fillable = [
         'name',
-        'address',
-        'date_registered',
-        'date_expiry',
-        'control_no',
-        'purpose',
-        'remarks',
+        'business_name',
+        'location',
+        'supplier_name',
+        'volume',
+        'date_issuance',
+        'date_expiration',
         'client_address',
         'permit_type',
         'user_id',

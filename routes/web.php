@@ -16,22 +16,30 @@ use App\Http\Controllers\RPS\Forestry\Tenurial\TenurialReportsController;
 use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
 
 use App\Http\Controllers\RPS\Export\ExportController;
-
+use App\Http\Controllers\RPS\Forestry\Permits\TFPLCTRL;
+use App\Http\Controllers\RPS\Forestry\Permits\TreeCuttingCTRL;
+use App\Http\Controllers\RPS\Forestry\Permits\WildlifeCTRL;
 use App\Http\Controllers\RPS\Imports\Forestry\TenurialImportsCTRL;
 use App\Http\Controllers\RPS\Imports\Forestry\PermitsImportCTRL;
+use App\Http\Controllers\RPS\Lands\BaseController;
+use App\Http\Controllers\RPS\Lands\ForeshoreController;
 use App\Http\Controllers\RPS\Lands\FPAController;
+use App\Http\Controllers\RPS\Lands\RFPAController;
+use App\Http\Controllers\RPS\Lands\SPController;
 use App\Http\Controllers\RPS\Viewer\ViewerController;
+use App\Models\Forestry\Permits\TreeCutting;
+use App\Models\Forestry\Permits\WildLife;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function () {
+Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
 
 
-    Route::prefix('home')->group(function () {
+    Route::prefix('/RPS')->group(function () {
 
-        Route::get('/', [HomeController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
         Route::get('/lands', [HomeController::class, 'land'])->name('lands');
 
@@ -48,13 +56,62 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
             Route::get('/',[FPAController::class, 'index'])->name('FPA');
 
-            Route::get('/fpa/{add}',[FPAController::class, 'remark'])->name('fpa.remark');
-            Route::get('/remark/client/new/FPA/{add}',[FPAController::class, 'remark_new'])->name('fpa.new');
-            Route::get('/remark/client/renewal/FPA/{add}',[FPAController::class, 'remark_renewal'])->name('fpa.renewal');
-            Route::get('/remark/client/expired/FPA/{add}',[FPAController::class, 'remark_expired'])->name('fpa.expired');
+            Route::get('/{address}',[FPAController::class, 'client'])->name('fpa.client');
+
+            Route::post('/add-client/{address}', [FPAController::class, 'add_client'])->name('add-client.fpa');
+            Route::get('/client/{id}', [FPAController::class, 'client_data'])->name('fpa.client-data');
+
+            Route::post('/store/{id}/{add}',[FPAController::class, 'store'])->name('fpa-data.store');
+            Route::put('/edit/{id}', [FPAController::class, 'edit'])->name('update-data.fpa');
+            Route::delete('/delete/{id}', [FPAController::class, 'delete'])->name('delete-data.fpa');
+
+        });
 
 
+         Route::prefix('rfpa')->group(function () {
 
+            Route::get('/',[RFPAController::class, 'index'])->name('RFPA');
+
+            Route::get('/{address}',[RFPAController::class, 'client'])->name('rfpa.client');
+
+            Route::post('/add-client/{address}', [RFPAController::class, 'add_client'])->name('add-client.rfpa');
+            Route::get('/client/{id}', [RFPAController::class, 'client_data'])->name('rfpa.client-data');
+
+            Route::post('/store/{id}/{add}',[RFPAController::class, 'store'])->name('rfpa-data.store');
+            Route::put('/edit/{id}', [RFPAController::class, 'edit'])->name('update-data.rfpa');
+            Route::delete('/delete/{id}', [RFPAController::class, 'delete'])->name('delete-data.rfpa');
+
+        });
+
+
+        Route::prefix('sp')->group(function () {
+
+            Route::get('/',[SPController::class, 'index'])->name('SP');
+
+            Route::get('/{address}',[SPController::class, 'client'])->name('sp.client');
+
+            Route::post('/add-client/{address}', [SPController::class, 'add_client'])->name('add-client.sp');
+            Route::get('/client/{id}', [SPController::class, 'client_data'])->name('sp.client-data');
+
+            Route::post('/store/{id}/{add}',[SPController::class, 'store'])->name('sp-data.store');
+            Route::put('/edit/{id}', [SPController::class, 'edit'])->name('update-data.sp');
+            Route::delete('/delete/{id}', [SPController::class, 'delete'])->name('delete-data.sp');
+
+        });
+
+
+        Route::prefix('foreshore')->group(function () {
+
+            Route::get('/',[ForeshoreController::class, 'index'])->name('Foreshore');
+
+            Route::get('/{address}',[ForeshoreController::class, 'client'])->name('foreshore.client');
+
+            Route::post('/add-client/{address}', [ForeshoreController::class, 'add_client'])->name('add-client.foreshore');
+            Route::get('/client/{id}', [ForeshoreController::class, 'client_data'])->name('foreshore.client-data');
+
+            Route::post('/store/{id}/{add}',[ForeshoreController::class, 'store'])->name('foreshore-data.store');
+            Route::put('/edit/{id}', [ForeshoreController::class, 'edit'])->name('update-data.foreshore');
+            Route::delete('/delete/{id}', [ForeshoreController::class, 'delete'])->name('delete-data.foreshore');
 
         });
 
@@ -63,45 +120,42 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
     Route::prefix('tenurial')->group(function () {
 
+
+        Route::get('/tenurial-instrument',[TIController::class, 'tenurial'])->name('tenur.doc');
+
         Route::get('ti-folder/{title}',[TIController::class, 'ti_folder'])->name('ti.folder');
-        Route::post('add-ti/{title}',[TIController::class, 'ti_add_folder'])->name('ti-add.folder');
+
         Route::get('tenur-client/{title}/{add}', [TIController::class, 'ti_client'])->name('tenur.client');
         Route::post('add-client/folder/tenurial/{type}/{id}', [TIController::class, 'add_client_folder'])->name('add.client.ti');
-        Route::get('/tenurial-type/{id}', [TIController::class, 'tenur_con'])->name('client.data');
         Route::post('/tenurial-instrument/add/{id}',[TIController::class, 'store'])->name('add.client.data');
 
         Route::get('/remark/client/new/{title}/{add}',[TIController::class, 'status_new'])->name('tenurial.new');
+        Route::get('/remark/client/existing/{title}/{add}',[TIController::class, 'status_existing'])->name('tenurial.existing');
         Route::get('/remark/client/renewal/{title}/{add}',[TIController::class, 'status_renewal'])->name('tenurial.renewal');
         Route::get('/remark/client/expired/{title}/{add}',[TIController::class, 'status_expired'])->name('tenurial.expired');
+        Route::get('/remark/client/cancelled/{title}/{add}',[TIController::class, 'status_cancelled'])->name('tenurial.cancelled');
 
         Route::get('folder/client/tenurial-new/{title}/{id}', [TIController::class, 'tenurial_new'])->name('ti.new');
+        Route::get('folder/client/tenurial-existing/{title}/{id}', [TIController::class, 'tenurial_existing'])->name('ti.existing');
         Route::get('folder/client/tenurial-renewal/{title}/{id}', [TIController::class, 'tenurial_renewal'])->name('ti.renewal');
         Route::get('folder/client/tenurial-expired/{title}/{id}', [TIController::class, 'tenurial_expired'])->name('ti.expired');
+        Route::get('folder/client/tenurial-cancelled/{title}/{id}', [TIController::class, 'tenurial_cancelled'])->name('ti.cancelled');
 
         Route::put('/client/tenurial/update/{id}',[TIController::class, 'update'])->name('tenurial.update');
         Route::delete('/client/tenurial/delete/{id}',[TIController::class, 'delete'])->name('tenurial.delete');
 
-        Route::get('/tenurial-instrument',[TIController::class, 'tenurial'])->name('tenur.doc');
+
 
         route::get('view/tenurial/{id}',[AllDocumentsController::class, 'view_tenurial'])->name('view.tenurial');
-
-
-
-        Route::get('/clients/search', [TIController::class, 'searchClients'])->name('clients.search');
-
 
 
     });
 
 
 
-    Route::prefix('permit')->group(function () {
+    Route::prefix('permits')->group(function () {
 
     Route::get('/permits',[PermitController::class, 'permit'])->name('permit.doc');
-    Route::get('/permit-list/{title}', [PermitController::class, 'permit_list'])->name('permit.list');
-    Route::get('/permits/add/{title}', [PermitController::class, 'add_list'])->name('add.list');
-    Route::post('/permits/store', [PermitController::class, 'store'])->name('store.list');
-
 
 
     Route::prefix('chainsaw')->group(function () {
@@ -111,6 +165,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::get('folder/client/{id}', [ChainsawCTRL::class, 'client'])->name('table.chainsaw');
         Route::get('folder/client/new/{id}', [ChainsawCTRL::class, 'table_new'])->name('table.new');
         Route::get('folder/client/renewal/{id}', [ChainsawCTRL::class, 'table_renewal'])->name('table.renewal');
+        // Route::get('folder/client/existing/{id}', [ChainsawCTRL::class, 'table_existing'])->name('table.existing');
         Route::get('folder/client/expired/{id}', [ChainsawCTRL::class, 'table_expired'])->name('table.expired');
 
         Route::post('/add-folder', [ChainsawCTRL::class, 'add_folder'])->name('folder.chainsaw');
@@ -119,6 +174,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::get('/remark/{add}',[ChainsawCTRL::class, 'remark'])->name('chainsaw.remark');
         Route::get('/remark/client/new/chainsaw/{add}',[ChainsawCTRL::class, 'remark_new'])->name('chainsaw.new');
         Route::get('/remark/client/renewal/chainsaw/{add}',[ChainsawCTRL::class, 'remark_renewal'])->name('chainsaw.renewal');
+        // Route::get('/remark/client/existing/chainsaw/{add}',[ChainsawCTRL::class, 'remark_existing'])->name('chainsaw.existing');
         Route::get('/remark/client/expired/chainsaw/{add}',[ChainsawCTRL::class, 'remark_expired'])->name('chainsaw.expired');
 
         Route::post('/client/add-info/{id}', [ChainsawCTRL::class, 'add_info'])->name('client.info');
@@ -129,26 +185,37 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
     });
 
 
+    Route::prefix('tree-cutting')->group(function () {
+
+        Route::get('/',[TreeCuttingCTRL::class,'index'])->name('tree.cutting');
+
+        Route::get('/status/{add}',[TreeCuttingCTRL::class, 'client'])->name('tree-cutting.client');
+        Route::post('/add-client/{address}', [TreeCuttingCTRL::class, 'add_client'])->name('add-client.tree-cutting');
+
+        Route::get('/client/{id}', [TreeCuttingCTRL::class, 'client_data'])->name('tree-cutting.client-data');
+
+
+        Route::post('/client/add-data/{id}', [TreeCuttingCTRL::class, 'store'])->name('add.tree-cutting');
+        Route::put('/edit/tree-cutting/{id}', [TreeCuttingCTRL::class, 'edit'])->name('update.tree-cutting');
+        Route::delete('/delete/tree-cutting/{id}', [TreeCuttingCTRL::class, 'destroy'])->name('delete-data.tree-cutting');
+
+
+    });
+
+
     Route::prefix('lumber-dealer')->group(function () {
 
         Route::get('/',[LumberDealerCTRL::class, 'index'])->name('lumber.dealer');
 
-        Route::post('/add-folder/lumber-dealer', [LumberDealerCTRL::class, 'dealer_folder'])->name('ld.folder');
+        Route::get('/status/{add}',[LumberDealerCTRL::class, 'client'])->name('lumber-dealer.client');
+        Route::post('/add-client/{address}', [LumberDealerCTRL::class, 'add_client'])->name('add-client.lumber-dealer');
 
-        Route::get('/remark/{add}',[LumberDealerCTRL::class, 'remark'])->name('ld.remark');
-        Route::get('/remark/client/new/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_new'])->name('ld.new');
-        Route::get('/remark/client/renewal/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_renewal'])->name('ld.renewal');
-        Route::get('/remark/client/expired/lumber-dealer/{add}',[LumberDealerCTRL::class, 'remark_expired'])->name('ld.expired');
+        Route::get('/client/{id}', [LumberDealerCTRL::class, 'client_data'])->name('lumber-dealer.client-data');
 
-        Route::post('/add-client/{address}', [LumberDealerCTRL::class, 'add_client'])->name('client.ld');
-        Route::get('/lumber-dealer/client/new/{id}', [LumberDealerCTRL::class, 'table_new'])->name('ld.table.new');
-        Route::get('/lumber-dealer/client/renewal/{id}', [LumberDealerCTRL::class, 'table_renewal'])->name('ld.table.renewal');
-        Route::get('/lumber-dealer/client/expired/{id}', [LumberDealerCTRL::class, 'table_expired'])->name('ld.table.expired');
 
-        Route::post('/lumber-dealer/client/add-info/{id}', [LumberDealerCTRL::class, 'add_info'])->name('ld.client.info');
-        Route::delete('/lumber-dealer/client-info/{id}', [LumberDealerCTRL::class, 'destroy'])->name('ld.delete');
-        Route::put('/lumber-dealer/edit-info/{id}', [LumberDealerCTRL::class, 'edit'])->name('ld.update.info');
-
+        Route::post('/client/add-data/{id}', [LumberDealerCTRL::class, 'store'])->name('add-data.lumber-dealer');
+        Route::put('/edit/tree-cutting/{id}', [LumberDealerCTRL::class, 'edit'])->name('update-data.lumber-dealer');
+        Route::delete('/delete/tree-cutting/{id}', [LumberDealerCTRL::class, 'destroy'])->name('delete-data.lumber-dealer');
 
 
 
@@ -159,23 +226,50 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
         Route::get('/',[SupplierCTRL::class, 'index'])->name('lumber.supplier');
 
-        Route::post('/add-folder/lumber-supplier', [SupplierCTRL::class, 'supplier_folder'])->name('supplier.folder');
+        Route::get('/status/{add}',[SupplierCTRL::class, 'client'])->name('lumber-supplier.client');
+        Route::post('/add-client/{address}', [SupplierCTRL::class, 'add_client'])->name('add-client.lumber-supplier');
 
-        Route::get('/remark/{add}',[SupplierCTRL::class, 'remark'])->name('supplier.remark');
-        Route::get('/remark/client/new/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_new'])->name('supplier.new');
-        Route::get('/remark/client/renewal/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_renewal'])->name('supplier.renewal');
-        Route::get('/remark/client/expired/lumber-supplier/{add}',[SupplierCTRL::class, 'remark_expired'])->name('supplier.expired');
-
-        Route::post('/add-client/{address}', [SupplierCTRL::class, 'add_client'])->name('client.supplier');
-        Route::get('/lumber-supplier/client/new/{id}', [SupplierCTRL::class, 'table_new'])->name('supplier.table.new');
-        Route::get('/lumber-supplier/client/renewal/{id}', [SupplierCTRL::class, 'table_renewal'])->name('supplier.table.renewal');
-        Route::get('/lumber-supplier/client/expired/{id}', [SupplierCTRL::class, 'table_expired'])->name('supplier.table.expired');
-
-        Route::post('/lumber-supplier/client/add-info/{id}', [SupplierCTRL::class, 'add_info'])->name('supplier.client.info');
-        Route::delete('/lumber-supplier/client-info/{id}', [SupplierCTRL::class, 'destroy'])->name('supplier.delete');
-        Route::put('/lumber-supplier/edit-info/{id}', [SupplierCTRL::class, 'edit'])->name('supplier.update.info');
+        Route::get('/client/{id}', [SupplierCTRL::class, 'client_data'])->name('lumber-supplier.client-data');
 
 
+        Route::post('/client/add-data/{id}', [SupplierCTRL::class, 'store'])->name('add-data.lumber-supplier');
+        Route::put('/edit/tree-cutting/{id}', [SupplierCTRL::class, 'edit'])->name('update-data.lumber-supplier');
+        Route::delete('/delete/tree-cutting/{id}', [SupplierCTRL::class, 'destroy'])->name('delete-data.lumber-supplier');
+
+    });
+
+
+    Route::prefix('wildlife')->group(function () {
+
+        Route::get('/',[WildlifeCTRL::class,'index'])->name('wildlife');
+
+        Route::get('/status/{add}',[WildlifeCTRL::class, 'client'])->name('wildlife.client');
+        Route::post('/add-client/{address}', [WildlifeCTRL::class, 'add_client'])->name('add-client.wildlife');
+
+        Route::get('/client/{id}', [WildlifeCTRL::class, 'client_data'])->name('wildlife.client-data');
+
+
+        Route::post('/client/add-data/{id}', [WildlifeCTRL::class, 'store'])->name('add-data.wildlife');
+        Route::put('/edit/tree-cutting/{id}', [WildlifeCTRL::class, 'edit'])->name('update-data.wildlife');
+        Route::delete('/delete/tree-cutting/{id}', [WildlifeCTRL::class, 'destroy'])->name('delete-data.wildlife');
+
+
+    });
+
+
+        Route::prefix('tfpl')->group(function () {
+
+        Route::get('/',[TFPLCTRL::class,'index'])->name('tfpl');
+
+        Route::get('/status/{add}',[TFPLCTRL::class, 'client'])->name('tfpl.client');
+        Route::post('/add-client/{address}', [TFPLCTRL::class, 'add_client'])->name('add-client.tfpl');
+
+        Route::get('/client/{id}', [TFPLCTRL::class, 'client_data'])->name('tfpl.client-data');
+
+
+        Route::post('/client/add-data/{id}', [TFPLCTRL::class, 'store'])->name('add-data.tfpl');
+        Route::put('/edit/tree-cutting/{id}', [TFPLCTRL::class, 'edit'])->name('update-data.tfpl');
+        Route::delete('/delete/tree-cutting/{id}', [TFPLCTRL::class, 'destroy'])->name('delete-data.tfpl');
 
 
     });
@@ -183,10 +277,11 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
 
 
-    Route::prefix('tenurial-excel')->group(function () {
+    Route::prefix('tenurial-report')->group(function () {
 
 
-         Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.tenurial');
+        Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.tenurial');
+
         Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
 
         Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
@@ -196,6 +291,8 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
         Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
         Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
+
+        Route::get('status/new/{add}/{type}',[TenurialReportsController::class, 'status_new'])->name('pdf.status.new');
 
     });
 
@@ -223,22 +320,14 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
         });
 
 
-        Route::prefix('lumber-dealer')->group(function () {
+        Route::prefix('lumber-dealer-pdf')->group(function () {
 
             Route::get('/export-template', [ExportController::class, 'ExportLumberDealerTemplate'])->name('ld.export.template');
             Route::post('import/client/{address}',[PermitsImportCTRl::class, 'lumber_dealer'])->name('import.ld');
 
-            Route::get('/permits/lumber-dealer/remarks-new/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_new'])->name('ld.remarks.new');
-            Route::get('/permits/lumber-dealer/remarks-renewal/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_renewal'])->name('ld.remarks.renewal');
-            Route::get('/permits/lumber-dealer/remarks-expired/generate-report',[PermitReportsController::class, 'lumber_dealer_remarks_expired'])->name('ld.remarks.expired');
-
-
-
-            Route::get('/permits/lumber-dealer/new/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_new'])->name('report.ld.new');
-            Route::get('/permits/lumber-dealer/renewal/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_renewal'])->name('report.ld.renewal');
-            Route::get('/permits/lumber-dealer/expired/generate-report/{id}',[PermitReportsController::class, 'lumber_dealer_expired'])->name('report.ld.expired');
-
         });
+
+
 
     });
 
@@ -259,9 +348,6 @@ Route::prefix('dashboard')->middleware(['auth', 'role:admin'])->group(function (
 
         Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
 
-        Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
-        Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
-        Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
 
     });
 

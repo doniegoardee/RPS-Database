@@ -13,16 +13,15 @@ class Supplier extends Model
 
      protected $fillable = [
         'name',
-        'address',
-        'date_registered',
-        'date_expiry',
-        'control_no',
-        'purpose',
-        'remarks',
+        'business_name',
+        'location',
+        'volume',
+        'date_issuance',
+        'date_expiration',
         'client_address',
         'permit_type',
         'user_id',
-        'suppiler_parent_id',
+        'supplier_parent_id',
         'document',
     ];
 

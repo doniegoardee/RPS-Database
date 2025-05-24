@@ -45,68 +45,17 @@
             </div>
         @endif
 
-        {{-- <div class="input-group mb-4">
-            <input type="search" id="searchInput" class="form-control" placeholder="Search...">
-            <button class="btn btn-primary" id="searchBtn">Search</button>
-            <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
-        </div> --}}
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+        {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Folder
-        </a>
+        </a> --}}
 
+        <div class="d-flex gap-2 mb-3">
 
-        {{-- <div class="container-fluid px-0">
-            <div class="card-body px-0">
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Sta. Teresita</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Allacapan</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Lasam</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Gattaran</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Aparri</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Gonzaga</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Sta. Ana</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Lal-lo</span>
-                </a>
-
-                <a href="#" class="address-container">
-                    <i class="bi bi-folder-fill text-warning icon-folder"></i>
-                    <span class="address-text">Buguey</span>
-                </a>
-
-            </div>
-        </div> --}}
-
+            <a href="" class="btn btn-sm btn-success shadow-sm">
+                <i class="fas fa-file-arrow-down fa-sm text-white-50"></i> Generate Excel Report
+            </a>
+        </div>
 
             <div class="container-fluid px-0">
                 <div class="card-body px-0">

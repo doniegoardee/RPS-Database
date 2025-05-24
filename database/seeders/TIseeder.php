@@ -56,6 +56,11 @@ class TIseeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'title' => 'GSUP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -53,7 +53,7 @@ class TenurialImports implements ToModel, WithHeadingRow
         $expiredDate = $this->parseDate($row['expired_date'] ?? null);
 
         $status = strtolower(trim($row['status'] ?? ''));
-        $validStatuses = ['new', 'renewal', 'expired'];
+        $validStatuses = ['new','existing', 'renewal', 'expired','cancelled'];
         if (!in_array($status, $validStatuses)) {
             $status = 'NEW';
         } else {

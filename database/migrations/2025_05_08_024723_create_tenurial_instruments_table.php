@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('tenur_type')->nullable();
             $table->foreignId('tenur_type_id')->nullable()->constrained('type_t_i_s')->nullOnDelete();
             $table->foreignId('client_id')->nullable()->constrained('t_i_parents')->nullOnDelete();
+            $table->string('client_address')->nullable()->constrained('t_i_parents')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('status')->nullable();
             $table->string('remarks')->nullable();

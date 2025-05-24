@@ -104,7 +104,7 @@
             </a>
         </div>
 
-         <div class="col-lg-3 col-md-6 col-sm-12">
+         {{-- <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('chainsaw.renewal',['add' => $address->address]) }}" class="text-decoration-none">
                 <div class="card border-left-primary shadow-lg h-100 py-3">
                     <div class="card-body">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
             </a>
-        </div>
+        </div> --}}
 
         <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('chainsaw.renewal',['add' => $address->address]) }}" class="text-decoration-none">

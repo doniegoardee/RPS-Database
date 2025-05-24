@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('t_f_p_l_s', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tfpl_parent_id')->constrained('t_f_p_l_parents')->cascadeOnDelete();
-            $table->string('name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('date_registered')->nullable();
-            $table->string('date_expiry')->nullable();
-            $table->string('control_no')->nullable();
-            $table->text('purpose')->nullable();
+            $table->string('name_permitee')->nullable();
+            $table->string('place_of_loading')->nullable();
+            $table->string('destination')->nullable();
+            $table->string('species')->nullable();
+            $table->string('volume_to_transport')->nullable();
+            $table->string('no_finish_product')->nullable();
+            $table->string('no_finish_lumber')->nullable();
+            $table->string('date_transport')->nullable();
             $table->string('remarks')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();

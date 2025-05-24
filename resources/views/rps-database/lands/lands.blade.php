@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('tenur.doc') }}" class="text-decoration-none">
+            <a href="{{ route('RFPA') }}" class="text-decoration-none">
                 <div class="card border-left-warning shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('tenur.doc') }}" class="text-decoration-none">
+            <a href="{{ route('SP') }}" class="text-decoration-none">
                 <div class="card border-left-info shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -61,7 +61,7 @@
         </div>
 
         <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('tenur.doc') }}" class="text-decoration-none">
+            <a href="{{ route('foreshore') }}" class="text-decoration-none">
                 <div class="card border-left-primary shadow-lg h-100 py-3">
                     <div class="card-body">
                         <div class="row align-items-center">

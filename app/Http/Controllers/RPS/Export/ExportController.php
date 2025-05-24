@@ -40,7 +40,7 @@ class ExportController extends Controller
 
 
 
-public function exportPerType(Request $request, $tenur_type)
+public function exportPerType($tenur_type)
 {
     $type = $tenur_type;
 

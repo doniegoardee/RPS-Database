@@ -12,9 +12,4 @@ class Permits extends Model
 
     protected $fillable = ['permit_title'];
 
-    public function permitLists()
-    {
-        return $this->hasMany(PermitList::class, 'permit_id');
-    }
-
 }

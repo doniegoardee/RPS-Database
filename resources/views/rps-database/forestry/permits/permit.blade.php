@@ -10,33 +10,11 @@
         </div>
 
         <div class="row g-4">
-            <div class="col-md-4">
-                <a href="" class="text-decoration-none">
-                    <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
-                        <div class="card-body">
-                            <img src="{{ asset('images/penro_cag.png') }}" alt="GSUP" class="img-fluid mb-3" style="width: 80px; height: 80px;">
-                            <h5 class="card-title fw-bold text-primary">GSUP</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
 
-            {{-- @foreach ($title as $permit)
-                <div class="col-md-4">
-                    <a href="{{ route('permit.list', ['title' => $permit->permit_title]) }}" class="text-decoration-none">
-                        <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
-                            <div class="card-body">
-                                <img src="{{ asset('images/penro_cag.png') }}" alt="{{ $permit->permit_title }}" class="img-fluid mb-3" style="width: 80px; height: 80px;">
-                                <h5 class="card-title fw-bold text-primary">{{ $permit->permit_title }}</h5>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            @endforeach --}}
 
 
             <div class="col-md-4">
-                <a href="" class="text-decoration-none">
+                <a href="{{ route('tree.cutting') }}" class="text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                         <div class="card-body">
                             <img src="{{ asset('images/penro_cag.png') }}" alt="" class="img-fluid mb-3" style="width: 80px; height: 80px;">
@@ -58,7 +36,7 @@
             </div>
 
             <div class="col-md-4">
-                <a href="" class="text-decoration-none">
+                <a href="{{ route('lumber.supplier') }}" class="text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                         <div class="card-body">
                             <img src="{{ asset('images/penro_cag.png') }}" alt="" class="img-fluid mb-3" style="width: 80px; height: 80px;">
@@ -80,7 +58,7 @@
             </div>
 
             <div class="col-md-4">
-                <a href="" class="text-decoration-none">
+                <a href="wildlife" class="text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                         <div class="card-body">
                             <img src="{{ asset('images/penro_cag.png') }}" alt="" class="img-fluid mb-3" style="width: 80px; height: 80px;">
@@ -91,7 +69,7 @@
             </div>
 
             <div class="col-md-4">
-                <a href="" class="text-decoration-none">
+                <a href="{{ route('tfpl') }}" class="text-decoration-none">
                     <div class="card shadow-sm border-0 rounded-3 text-center hover-card">
                         <div class="card-body">
                             <img src="{{ asset('images/penro_cag.png') }}" alt="" class="img-fluid mb-3" style="width: 80px; height: 80px;">

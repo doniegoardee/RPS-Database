@@ -120,6 +120,24 @@ public function remark_renewal($address) {
 }
 
 
+// public function remark_existing($address) {
+
+//     $add = Address::where('address', $address)->firstOrFail();
+
+//     $client = ChainsawParent::where('address', $address)
+//     ->whereHas('chainsaws',function($query){
+//         $query->where('remarks','existing');
+//     }) ->with(['chainsaws' => function($query){
+//             $query->where('remarks','renewal');
+//         }])
+//         ->orderBy('name','asc')
+//         ->get();
+
+
+//     return view('rps-database.forestry.permits.chainsaw.remarks.chainsaw-existing', compact('add', 'client'));
+// }
+
+
 public function remark_expired($address){
 
 
@@ -151,8 +169,9 @@ public function table_new($name)
 
     $parent = $table->isEmpty() ? null : $table->first()->parent;
 
-    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-new', compact('client', 'parent', 'table'));
+    return view('rps-database.forestry.permits.chainsaw.table.remark-new', compact('client', 'parent', 'table'));
 }
+
 
 public function table_renewal($name)
 {
@@ -165,8 +184,24 @@ public function table_renewal($name)
 
     $parent = $table->isEmpty() ? null : $table->first()->parent;
 
-    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-renewal', compact('client', 'parent', 'table'));
+    return view('rps-database.forestry.permits.chainsaw.table.remark-renewal', compact('client', 'parent', 'table'));
 }
+
+
+// public function table_existing($name)
+// {
+//     $client = ChainsawParent::where('id', $name)->firstOrFail();
+
+//     $table = Chainsaw::where('chainsaw_parent_id', $name)
+//         ->where('client_address', $client->address)
+//         ->where('remarks','existing')
+//         ->get();
+
+//     $parent = $table->isEmpty() ? null : $table->first()->parent;
+
+//     return view('rps-database.forestry.permits.chainsaw.table.remark-existing
+//     ', compact('client', 'parent', 'table'));
+// }
 
 
 public function table_expired($name)
@@ -180,7 +215,7 @@ public function table_expired($name)
 
     $parent = $table->isEmpty() ? null : $table->first()->parent;
 
-    return view('rps-database.forestry.permits.chainsaw.remarks.table.remark-expired', compact('client', 'parent', 'table'));
+    return view('rps-database.forestry.permits.chainsaw.table.remark-expired', compact('client', 'parent', 'table'));
 }
 
 

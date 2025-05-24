@@ -29,7 +29,7 @@ class TIController extends Controller
 
         $address = Address::where('type', $type->title)->get();
 
-        return view('rps-database.forestry.tenurial-instrument.ti-folder', compact('address', 'type'));
+        return view('rps-database.forestry.tenurial-instrument.index', compact('address', 'type'));
     }
 
 
@@ -73,6 +73,12 @@ class TIController extends Controller
         })
         ->count();
 
+    $existing = TIParent::where('address', $address)->where('type', $title)
+        ->whereHas('TI', function ($q) {
+            $q->where('status', 'existing');
+        })
+        ->count();
+
     $renewal = TIParent::where('address', $address)->where('type', $title)
         ->whereHas('TI', function ($q) {
             $q->where('status', 'renewal');
@@ -85,7 +91,14 @@ class TIController extends Controller
         })
         ->count();
 
-    return view('rps-database.forestry.tenurial-instrument.tenurial-doc.tenurial-remarks', compact('add', 'folder', 'title', 'new', 'renewal', 'expired'));
+    $cancelled = TIParent::where('address', $address)->where('type', $title)
+        ->whereHas('TI', function ($q) {
+            $q->where('status', 'cancelled');
+        })
+        ->count();
+
+    return view('rps-database.forestry.tenurial-instrument.status.tenurial-remarks',
+     compact('add', 'folder', 'title', 'new','existing', 'renewal', 'expired', 'cancelled'));
 }
 
 
@@ -129,7 +142,7 @@ class TIController extends Controller
         ->orderBy('name', 'asc')
         ->get();
 
-    return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.status-new', compact('add', 'client', 'title'));
+    return view('rps-database.forestry.tenurial-instrument.status.status-new', compact('add', 'client', 'title'));
 }
 
 
@@ -153,11 +166,30 @@ class TIController extends Controller
             ->orderBy('name','asc')
             ->get();
 
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.status-renewal',compact('add','client','title'));
+        return view('rps-database.forestry.tenurial-instrument.status.status-renewal',compact('add','client','title'));
 
     }
 
+    public function status_existing($title, $address){
 
+
+        $add = Address::where('address', $address)->firstOrFail();
+
+        $client = TIParent::where('type', $title)->where('address',$address)
+            ->where(function ($query) {
+                $query->whereHas('TI', function ($q) {
+                    $q->where('status', 'existing');
+                });
+            })
+            ->with(['TI' => function ($q) {
+                $q->where('status', 'existing');
+            }])
+            ->orderBy('name','asc')
+            ->get();
+
+        return view('rps-database.forestry.tenurial-instrument.status.status-renewal',compact('add','client','title'));
+
+    }
 
 
     public function status_expired($title, $address){
@@ -180,7 +212,29 @@ class TIController extends Controller
 
 
 
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.status-expired',compact('add','client','title'));
+        return view('rps-database.forestry.tenurial-instrument.status.status-expired',compact('add','client','title'));
+    }
+
+
+    public function status_cancelled($title, $address){
+
+
+        $add = Address::where('address', $address)->firstOrFail();
+
+        $client = TIParent::where('type', $title)->where('address',$address)
+            ->where(function ($query) {
+                $query->whereHas('TI', function ($q) {
+                    $q->where('status', 'cancelled');
+                });
+            })
+            ->with(['TI' => function ($q) {
+                $q->where('status', 'cancelled');
+            }])
+            ->orderBy('name','asc')
+            ->get();
+
+        return view('rps-database.forestry.tenurial-instrument.status.status-renewal',compact('add','client','title'));
+
     }
 
 
@@ -192,7 +246,18 @@ class TIController extends Controller
                               ->where('status', 'new')
                               ->get();
 
-    return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.tenurial-new', compact('client', 'data', 'title'));
+    return view('rps-database.forestry.tenurial-instrument.table.new', compact('client', 'data', 'title'));
+}
+
+    public function tenurial_existing($title, $id)
+{
+    $client = TIParent::findOrFail($id);
+
+    $data = TenurialInstrument::where('client_id', $client->id)
+                              ->where('status', 'existing')
+                              ->get();
+
+    return view('rps-database.forestry.tenurial-instrument.table.existing', compact('client', 'data', 'title'));
 }
 
 
@@ -203,7 +268,7 @@ class TIController extends Controller
         $data = TenurialInstrument::where('client_id',$client->id)->where('status','renewal')->get();
 
 
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.tenurial-renewal',compact('client','data','title'));
+        return view('rps-database.forestry.tenurial-instrument.table.renewal',compact('client','data','title'));
 
     }
 
@@ -215,29 +280,20 @@ class TIController extends Controller
         $data = TenurialInstrument::where('client_id',$client->id)->where('status','EXPIRED')->get();
 
 
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.status.table.tenurial-expired',compact('client','data','title'));
+        return view('rps-database.forestry.tenurial-instrument.table.expired',compact('client','data','title'));
 
     }
 
-    public function tenur_con($id)
-    {
+     public function tenurial_cancelled($title, $id)
+{
+    $client = TIParent::findOrFail($id);
 
-        $client = TIParent::where('id', $id)->firstorFail();
-        $data = TenurialInstrument::where('tenur_type_id', $id)->get();
+    $data = TenurialInstrument::where('client_id', $client->id)
+                              ->where('status', 'cancelled')
+                              ->get();
 
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.tenur-docs', compact('client','data'));
-    }
-
-
-
-
-    public function add_tenurial($title){
-
-        $tenurType = TypeTI::where('title', $title)->firstOrFail();
-
-        return view('rps-database.forestry.tenurial-instrument.tenurial-doc.add-tenurial', compact('tenurType'));
-    }
-
+    return view('rps-database.forestry.tenurial-instrument.table.cancelled', compact('client', 'data', 'title'));
+}
 
 
     public function store(Request $request, $id)
@@ -282,11 +338,13 @@ class TIController extends Controller
             'user_id' => Auth::id(),
             'tenur_type' => $type->type,
             'client_id' => $type->id,
+            'client_address' => $type->address,
             'tenur_type_id' => $tenur_type->id,
         ]);
 
         return redirect()->back()->with('success', 'Information added successfully');
     }
+
 
 
     public function update(Request $request, $id)
@@ -330,22 +388,6 @@ class TIController extends Controller
 
     }
 
-
-    public function searchClients(Request $request)
-    {
-        $title = $request->query('title');
-        $address = $request->query('address');
-        $query = $request->query('query');
-
-        $clients = TIParent::where('type', $title)
-            ->where('address', $address)
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'LIKE', "%$query%");
-            })
-            ->get();
-
-        return response()->json($clients);
-    }
 
 
 }

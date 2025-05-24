@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('dealer_parent_id')->constrained('lum_dealer_parents')->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->string('address')->nullable();
-            $table->string('date_registered')->nullable();
-            $table->string('date_expiry')->nullable();
-            $table->string('control_no')->nullable();
-            $table->text('purpose')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('business_name')->nullable();
+            $table->string('location')->nullable();
+            $table->string('supplier_name')->nullable();
+            $table->string('volume')->nullable();
+            $table->string('date_issuance')->nullable();
+            $table->string('date_expiration')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
