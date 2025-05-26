@@ -80,17 +80,36 @@
             <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
         </div>
 
-        <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
+
+ <div class="d-flex justify-content-between flex-wrap gap-2 mt-3">
+
+    <div class="d-flex gap-2">
+        <a href="#" class="btn btn-sm btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a>
 
-         <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#ImportClientModal" >
+        <a href="#" class="btn btn-sm btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#ImportClientModal">
             <i class="fas fa-solid fa-file-excel fa-sm text-white-50"></i> Import Excel File
         </a>
 
-        <a href="{{ route('ld.export.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
+        <a href="{{ route('export.lands') }}" class="btn btn-sm btn-success shadow-sm">
             <i class="fas fa-solid fa-file-arrow-down fa-sm text-white-50"></i> Download Template
         </a>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="{{ route('generate-report.lands',['add' => $add->address,'type' => 'FPA']) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+        </a>
+
+        <a href="{{ route('lands-data.excel', ['address' => $add->address, 'type' => 'FPA']) }}" class="btn btn-sm btn-success shadow-sm">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+        </a>
+    </div>
+
+</div>
+
+
 
         <hr>
 
@@ -137,6 +156,39 @@
                     <button type="submit" class="btn btn-primary">Save Client</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ImportClientModal" tabindex="-1" aria-labelledby="ImportClientModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="ImportClientModalLabel">Import Lands</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+            </div>
+
+            <form action="{{ route('lands.import',['address' => $add->address,'lands_type' => 'FPA']) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="">Import Excel File</label>
+                        <input class="form-control" type="file" name="file" id="file" required> <br>
+
+                        <i style="color: red; font-style: italic;">
+                            Ensure your Excel file has matching column headers.
+                        </i>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>

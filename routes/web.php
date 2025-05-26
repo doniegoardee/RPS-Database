@@ -1,34 +1,34 @@
 <?php
 
+use App\Exports\Forestry\Tenurial\TenurialExports;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 
-use App\Http\Controllers\RPS\AllDocument\ChartDocsController;
-use App\Http\Controllers\RPS\AllDocument\AllDocumentsController;
+use App\Http\Controllers\AllDocument\ChartDocsController;
+use App\Http\Controllers\AllDocument\AllDocumentsController;
 
-use App\Http\Controllers\RPS\Forestry\Permits\ChainsawCTRL;
-use App\Http\Controllers\RPS\Forestry\Permits\LumberDealerCTRL;
-use App\Http\Controllers\RPS\Forestry\Permits\PermitController;
-use App\Http\Controllers\RPS\Forestry\Permits\PermitReportsController;
-use App\Http\Controllers\RPS\Forestry\Permits\SupplierCTRL;
-use App\Http\Controllers\RPS\Forestry\Tenurial\TenurialReportsController;
-use App\Http\Controllers\RPS\Forestry\Tenurial\TIController;
+use App\Http\Controllers\Forestry\Permits\ChainsawCTRL;
+use App\Http\Controllers\Forestry\Permits\LumberDealerCTRL;
+use App\Http\Controllers\Forestry\Permits\PermitController;
+use App\Http\Controllers\Forestry\Permits\PermitReportsController;
+use App\Http\Controllers\Forestry\Permits\SupplierCTRL;
+use App\Http\Controllers\Forestry\Tenurial\TenurialReportsController;
+use App\Http\Controllers\Forestry\Tenurial\TIController;
 
-use App\Http\Controllers\RPS\Export\ExportController;
-use App\Http\Controllers\RPS\Forestry\Permits\TFPLCTRL;
-use App\Http\Controllers\RPS\Forestry\Permits\TreeCuttingCTRL;
-use App\Http\Controllers\RPS\Forestry\Permits\WildlifeCTRL;
-use App\Http\Controllers\RPS\Imports\Forestry\TenurialImportsCTRL;
-use App\Http\Controllers\RPS\Imports\Forestry\PermitsImportCTRL;
-use App\Http\Controllers\RPS\Lands\BaseController;
-use App\Http\Controllers\RPS\Lands\ForeshoreController;
-use App\Http\Controllers\RPS\Lands\FPAController;
-use App\Http\Controllers\RPS\Lands\RFPAController;
-use App\Http\Controllers\RPS\Lands\SPController;
-use App\Http\Controllers\RPS\Viewer\ViewerController;
-use App\Models\Forestry\Permits\TreeCutting;
-use App\Models\Forestry\Permits\WildLife;
+use App\Http\Controllers\Export\ExportController;
+use App\Http\Controllers\Forestry\Permits\TFPLCTRL;
+use App\Http\Controllers\Forestry\Permits\TreeCuttingCTRL;
+use App\Http\Controllers\Forestry\Permits\WildlifeCTRL;
+use App\Http\Controllers\Imports\Forestry\TenurialImportsCTRL;
+use App\Http\Controllers\Imports\Forestry\PermitsImportCTRL;
+use App\Http\Controllers\Imports\Lands\LandsImportController;
+use App\Http\Controllers\Lands\ForeshoreController;
+use App\Http\Controllers\Lands\FPAController;
+use App\Http\Controllers\Lands\LandsReportController;
+use App\Http\Controllers\Lands\RFPAController;
+use App\Http\Controllers\Lands\SPController;
+use App\Http\Controllers\Viewer\ViewerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -159,6 +159,7 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
 
 
     Route::prefix('chainsaw')->group(function () {
+
         Route::get('/',[ChainsawCTRL::class, 'index'])->name('chainsaw');
 
         Route::get('folder/{add}', [ChainsawCTRL::class, 'folder'])->name('folder');
@@ -222,7 +223,7 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
 
-        Route::prefix('lumber-supplier')->group(function () {
+    Route::prefix('lumber-supplier')->group(function () {
 
         Route::get('/',[SupplierCTRL::class, 'index'])->name('lumber.supplier');
 
@@ -257,7 +258,7 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
     });
 
 
-        Route::prefix('tfpl')->group(function () {
+    Route::prefix('tfpl')->group(function () {
 
         Route::get('/',[TFPLCTRL::class,'index'])->name('tfpl');
 
@@ -289,10 +290,21 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('all/{tenur_type}',[ExportController::class, 'exportPerType'])->name('ti.all');
 
         Route::get('/tenurial/tenurial-new/generate-report/{id}', [TenurialReportsController::class, 'tenurial_new'])->name('ti.new.report');
+        Route::get('/tenurial/tenurial-existing/generate-report/{id}', [TenurialReportsController::class, 'tenurial_existing'])->name('ti.existing.report');
         Route::get('/tenurial/tenurial-renewal/generate-report/{id}', [TenurialReportsController::class, 'tenurial_renewal'])->name('ti.renewal.report');
         Route::get('/tenurial/tenurial-expired/generate-report/{id}', [TenurialReportsController::class, 'tenurial_expired'])->name('ti.expired.report');
+        Route::get('/tenurial/tenurial-cancelled/generate-report/{id}', [TenurialReportsController::class , 'tenurial_cancelled'])->name('ti.cancelled.report');
 
         Route::get('status/new/{add}/{type}',[TenurialReportsController::class, 'status_new'])->name('pdf.status.new');
+        Route::get('status/existing/{add}/{type}',[TenurialReportsController::class, 'status_existing'])->name('pdf.status.existing');
+        Route::get('status/renewal/{add}/{type}',[TenurialReportsController::class, 'status_renewal'])->name('pdf.status.renewal');
+        Route::get('status/expired/{add}/{type}',[TenurialReportsController::class, 'status_expired'])->name('pdf.status.expired');
+        Route::get('status/cancelled/{add}/{type}',[TenurialReportsController::class, 'status_cancelled'])->name('pdf.status.cancelled');
+
+        Route::get('/export/tenurial-new/{id}/{status}', [ExportController::class, 'exportTenurialNewExcel'])->name('excel-data.tenurial');
+
+        Route::get('/export/tenurial/{address}/{status}/{type}', [ExportController::class, 'exportStatusExcel'])->name('excel-status.tenurial');
+
 
     });
 
@@ -307,26 +319,114 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
             Route::get('/export-template', [ExportController::class, 'exportTemplate'])->name('export.template');
             Route::post('import/client/{address}',[PermitsImportCTRL::class, 'import_chainsaw'])->name('import.chainsaw');
 
-            Route::get('/permits/chainsaw-remarks-new/generate-report',[PermitReportsController::class, 'chainsaw_remarks_new'])->name('chainsaw.remarks.new');
-            Route::get('/permits/chainsaw-remarks-renewal/generate-report',[PermitReportsController::class, 'chainsaw_remarks_renewal'])->name('chainsaw.remarks.renewal');
-            Route::get('/permits/chainsaw-remarks-expired/generate-report',[PermitReportsController::class, 'chainsaw_remarks_expired'])->name('chainsaw.remarks.expired');
+            Route::get('/chainsaw/export', [ExportController::class, 'exportAllChainsawExcel'])->name('all-data.chainsaw-excel');
 
+            Route::get('/permits/chainsaw-remarks-new/generate-report/{add}',[PermitReportsController::class, 'chainsaw_remarks_new'])->name('chainsaw.remarks.new');
+            Route::get('/permits/chainsaw-remarks-renewal/generate-report/{add}',[PermitReportsController::class, 'chainsaw_remarks_renewal'])->name('chainsaw.remarks.renewal');
+            Route::get('/permits/chainsaw-remarks-expired/generate-report/{add}',[PermitReportsController::class, 'chainsaw_remarks_expired'])->name('chainsaw.remarks.expired');
 
 
             Route::get('/permits/chainsaw-new/generate-report/{id}',[PermitReportsController::class, 'chainsaw_new'])->name('report.chainsaw.new');
             Route::get('/permits/chainsaw-renewal/generate-report/{id}',[PermitReportsController::class, 'chainsaw_renewal'])->name('report.chainsaw.renewal');
             Route::get('/permits/chainsaw-expired/generate-report/{id}',[PermitReportsController::class, 'chainsaw_expired'])->name('report.chainsaw.expired');
 
-        });
 
+            Route::get('/chainsaw/export/{add}/{remarks}', [ExportController::class, 'exportChainsaw'])->name('status.chainsaw-excel');
+            Route::get('/chainsaw/export/{id}', [ExportController::class, 'excelChainsawData'])->name('data.chainsaw-excel');
 
-        Route::prefix('lumber-dealer-pdf')->group(function () {
-
-            Route::get('/export-template', [ExportController::class, 'ExportLumberDealerTemplate'])->name('ld.export.template');
-            Route::post('import/client/{address}',[PermitsImportCTRl::class, 'lumber_dealer'])->name('import.ld');
 
         });
 
+        Route::prefix('tree-cutting')->group(function () {
+
+            Route::get('/export-template', [ExportController::class, 'Tree_Cutting_Template'])->name('tree-cutting.template');
+
+            Route::get('/export', [ExportController::class, 'exportTreeCuttingExcel'])->name('all-data.tree-cutting');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'tree_cutting_export'])->name('tree-cutting.address');
+
+            Route::get('/client-tree-cutting/{id}/{add}', [ExportController::class, 'Tree_cutting_data'])->name('client-report.tree-cutting');
+
+
+
+            Route::post('/import/{add}', [PermitsImportCTRL::class, 'importTreeCutting'])->name('tree-cutting.import');
+
+
+
+        });
+
+
+
+        Route::prefix('lumber-dealer')->group(function () {
+
+
+            Route::get('/export-template', [ExportController::class, 'ExportLumberDealerTemplate'])->name('lumber-dealer.template');
+
+            Route::get('/export', [ExportController::class, 'exportLumberDealerExcel'])->name('all-data.lumber-dealer');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'lumber_dealer_export'])->name('lumber-dealer.address');
+
+            Route::get('/client-lumber-dealer/{id}/{add}', [ExportController::class, 'lumber_dealer_data'])->name('client-report.lumber-dealer');
+
+
+            Route::post('/import/{add}', [PermitsImportCTRL::class, 'importLumberDealer'])->name('lumber-dealer.import');
+
+
+        });
+
+
+        Route::prefix('lumber-supplier')->group(function () {
+
+
+            Route::get('/export-template', [ExportController::class, 'ExportLumberSupplierTemplate'])->name('lumber-supplier.template');
+
+            Route::get('/export', [ExportController::class, 'exportLumberSupplierExcel'])->name('all-data.lumber-supplier');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'lumber_supplier_export'])->name('lumber-supplier.address');
+
+            Route::get('/client-lumber-supplier/{id}/{add}', [ExportController::class, 'lumber_supplier_data'])->name('client-report.lumber-supplier');
+
+
+            Route::post('/import/{add}', [PermitsImportCTRL::class, 'importLumberSupplier'])->name('lumber-supplier.import');
+
+
+        });
+
+
+        Route::prefix('wildlife')->group(function () {
+
+
+            Route::get('/export-template', [ExportController::class, 'ExportWildlifeTemplate'])->name('wildlife.template');
+
+            Route::get('/export', [ExportController::class, 'exportWildlifeExcel'])->name('all-data.wildlife');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'wildlife_export'])->name('wildlife.address');
+
+            Route::get('/client-wildlife/{id}/{add}', [ExportController::class, 'wildlife_data'])->name('client-report.wildlife');
+
+
+            Route::post('/import/{add}', [PermitsImportCTRL::class, 'importLWildlife'])->name('wildlife.import');
+
+
+        });
+
+
+        Route::prefix('transport-finish-product-lumber')->group(function () {
+
+
+            Route::get('/export-template', [ExportController::class, 'ExportTFPLTemplate'])->name('tfpl.template');
+
+            Route::get('/export', [ExportController::class, 'exportTFPLExcel'])->name('all-data.tfpl');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'TFPL_export'])->name('tfpl.address');
+
+            Route::get('/client-TFPL/{id}/{add}', [ExportController::class, 'TFPL_data'])->name('client-report.tfpl');
+
+
+            Route::post('/import/{add}', [PermitsImportCTRL::class, 'importTFPL'])->name('tfpl.import');
+
+
+        });
 
 
     });
@@ -334,23 +434,53 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
 
 
 
-    Route::get('/search-permit-list', [PermitController::class, 'searchPermitList'])->name('search.permitList');
+});
 
 
-    });
+Route::prefix('lands-excel')->group(function () {
 
 
-    Route::prefix('lands-excel')->group(function () {
+    Route::get('/export-lands-template', [ExportController::class, 'Lands_Template'])->name('export.lands');
+
+    Route::post('/lands/import/{address}/{lands_type}', [LandsImportController::class, 'import'])->name('lands.import');
+
+    Route::get('/report/{add}/{type}',[LandsReportController::class, 'generate_report'])->name('generate-report.lands');
+
+    Route::get('/{id}/{add}',[LandsReportController::class, 'client_report'])->name('client-report.lands');
 
 
-        Route::get('/export-tenurial-template', [ExportController::class, 'ExportTenurialTemplate'])->name('export.lands');
-        Route::post('/import/tenurial-instrument/{address}/{title}', [TenurialImportsCTRL::class, 'importExcel'])->name('ti.import');
+    Route::get('/export-lands/{address}/{type}', [ExportController::class, 'Lands_export'])->name('lands-data.excel');
 
-        Route::get('/tenurial/all-tenurial/generate-report',[TenurialReportsController::class, 'all_tenurial'])->name('tenurial.all');
+    Route::get('/client-report-excel/{id}/{add}', [ExportController::class, 'client_report_excel'])->name('client-report.excel');
+
+    Route::get('/all-lands/excel/{lands_type}', [ExportController::class, 'all_Lands_data'])->name('all.lands-excel');
 
 
-    });
+        Route::prefix('foreshore')->group(function () {
 
+
+            Route::get('/export-template', [ExportController::class, 'ExportForeshoreTemplate'])->name('foreshore.template');
+
+            Route::get('/export', [ExportController::class, 'exportForeshoreExcel'])->name('all-data.foreshore');
+
+            Route::get('/export-data/{address}', [ExportController::class, 'foreshore_export'])->name('foreshore.address');
+
+            Route::get('/client-foreshore/{id}/{add}', [ExportController::class, 'foreshore_data'])->name('client-report.foreshore');
+
+
+            Route::post('/import/{add}', [LandsImportController::class, 'importForeshore'])->name('foreshore.import');
+
+
+        });
+
+
+
+
+
+
+});
+
+Route::get('/search-permit-list', [PermitController::class, 'searchPermitList'])->name('search.permitList');
 
 
 

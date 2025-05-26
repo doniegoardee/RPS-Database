@@ -41,9 +41,10 @@
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
         </a>
 
-         <a href="{{ route('report.ld.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+        <a href="{{ route('excel-data.tenurial', ['id' => $client->id, 'status' => 'new']) }}" class="btn btn-success btn-sm shadow-sm">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
         </a>
+
 
     </div>
 
@@ -195,8 +196,10 @@
                                                 <label for="status">Status</label>
                                                 <select name="status" class="form-control" id="status">
                                                     <option value="NEW" {{ old('status', $item->status) == 'NEW' ? 'selected' : '' }}>New</option>
+                                                    <option value="EXISTING" {{ old('status', $item->status) == 'EXISTING' ? 'selected' : '' }}>Existing</option>
                                                     <option value="RENEWAL" {{ old('status', $item->status) == 'RENEWAL' ? 'selected' : '' }}>Renewal</option>
                                                     <option value="EXPIRED" {{ old('status', $item->status) == 'EXPIRED' ? 'selected' : '' }}>Expired</option>
+                                                    <option value="CANCELLED" {{ old('status', $item->status) == 'CANCELLED' ? 'selected' : '' }}>Cancelled</option>
                                                 </select>
                                             </div>
 
@@ -303,8 +306,10 @@
                     <label for="">Status</label>
                     <select class="form-control" name="status" id="">
                         <option value="NEW">New</option>
+                        <option value="EXISTING">Existing</option>
                         <option value="RENEWAL">Renewal</option>
                         <option value="EXPIRED">Expired</option>
+                        <option value="CANCELLED">Cancelled</option>
                     </select>
                    </div>
 

@@ -80,6 +80,9 @@
             <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
         </div>
 
+    <div class="d-flex justify-content-between flex-wrap gap-2 mt-3">
+
+            <div class="d-flex gap-2">
         <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a>
@@ -88,10 +91,21 @@
             <i class="fas fa-solid fa-file-excel fa-sm text-white-50"></i> Import Excel File
         </a>
 
-        <a href="{{ route('ld.export.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
+        <a href="{{ route('lumber-dealer.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
             <i class="fas fa-solid fa-file-arrow-down fa-sm text-white-50"></i> Download Template
         </a>
+            </div>
 
+            <div class="d-flex gap-2">
+                <a href="{{ route('generate-report.lands',['add' => $add->address,'type' => 'SP']) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+                </a>
+
+                <a href="{{ route('lumber-dealer.address', ['address' => $add->address]) }}" class="btn btn-sm btn-success shadow-sm">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+                </a>
+            </div>
+        </div>
         <hr>
 
 
@@ -139,4 +153,33 @@
             </form>
         </div>
     </div>
+</div>
+
+
+<div class="modal fade" id="ImportClientModal" tabindex="-1" aria-labelledby="ImportClientModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{ route('lumber-dealer.import',['add' => $add->address]) }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ImportClientModalLabel">Import Lumber Dealer Excel File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="excel_file" class="form-label">Choose Excel File</label>
+            <input type="file" name="excel_file" id="excel_file" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-upload"></i> Import
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

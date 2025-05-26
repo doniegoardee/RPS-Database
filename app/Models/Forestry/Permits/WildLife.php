@@ -13,7 +13,7 @@ class WildLife extends Model
      protected $fillable = [
         'name',
         'address',
-        'no',
+        'permit_no',
         'date_issuance',
         'date_expiry',
         'fee',
@@ -24,7 +24,6 @@ class WildLife extends Model
         'origin',
         'destination',
         'purpose',
-        'status',
         'client_address',
         'permit_type',
         'user_id',

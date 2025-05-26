@@ -71,11 +71,11 @@
             <button class="btn btn-primary" id="searchBtn">Search</button>
             <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
         </div>
-        <a href="{{ route('pdf.status.new',['add' => $add->address , 'type' => $title ]) }}" class="btn btn-sm btn-danger shadow-sm ms-auto" target="_blank">
+        <a href="{{ route('pdf.status.cancelled',['add' => $add->address , 'type' => $title ]) }}" class="btn btn-sm btn-danger shadow-sm ms-auto" target="_blank">
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
         </a>
 
-        <a href="#" class="btn btn-sm btn-success shadow-sm ms-auto">
+        <a href="{{ route('excel-status.tenurial', ['address' => $add->address, 'status' => 'cancelled', 'type' => $title]) }}" class="btn btn-sm btn-success shadow-sm ms-auto">
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
         </a>
 

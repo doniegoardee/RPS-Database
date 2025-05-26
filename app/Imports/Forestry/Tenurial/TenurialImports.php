@@ -70,6 +70,7 @@ class TenurialImports implements ToModel, WithHeadingRow
             'tenur_type'    => $this->title,
             'tenur_type_id' => $tenurType->id,
             'client_id'     => $tiParent->id,
+            'client_address'  => $this->address,
             'status'        => $status,
             'remarks'       => $row['remarks'] ?? 'No Remarks',
             'user_id'       => Auth::id(),

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('wildlife_parent_id')->constrained('wild_life_parents')->cascadeOnDelete();
             $table->string('name')->nullable();
             $table->string('address')->nullable();
-            $table->string('no')->nullable();
+            $table->string('permit_no')->nullable();
             $table->string('date_issuance')->nullable();
             $table->string('date_expiry')->nullable();
             $table->string('fee')->nullable();
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('origin')->nullable();
             $table->string('destination')->nullable();
             $table->string('purpose')->nullable();
-            $table->string('status')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
