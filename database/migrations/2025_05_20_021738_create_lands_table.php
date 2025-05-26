@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('client_address')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('status')->nullable();
-            $table->string('remarks')->nullable();
             $table->string('document')->nullable();
             $table->timestamps();
         });

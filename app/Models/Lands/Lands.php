@@ -22,8 +22,6 @@ class Lands extends Model
         'client_address',
         'client_id',
         'user_id',
-        'status',
-        'remarks',
         'document',
     ];
 

@@ -54,9 +54,15 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+            </a>
+
+            <a href="{{ route('data.chainsaw-excel', $client->id) }}" class="btn btn-sm btn-success shadow-sm ms-auto">
+                <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+            </a>
+
+
         </div>
 
         <div class="card-body">
@@ -169,7 +175,7 @@
                                             $dateAcquired = $item->date_acquired ? \Carbon\Carbon::parse($item->date_acquired)->format('Y-m-d') : '';
                                         @endphp
 
-                                        <form action="{{ route('update.info', $item->id) }}" method="POST" enctype="multipart/form-data">
+                                        <form id="Table" action="{{ route('update.info', $item->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
 
@@ -259,7 +265,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                                <button type="submit" id="submitBtn" class="btn btn-primary">Save Information</button>
                                             </div>
                                         </form>
                                     </div>
@@ -291,7 +297,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('client.info',$client->id) }}" method="POST">
+            <form id="addTable" action="{{ route('client.info',$client->id) }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -301,7 +307,7 @@
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="folderAddress" name="address" value="{{ old('address', $client->address) }}" placeholder="Enter address..">
+                        <input type="text" class="form-control" id="folderAddress" name="address" value="{{ old('address', $item->address) }}" placeholder="Enter address..">
                     </div>
 
                     <div class="mb-3">
@@ -369,10 +375,20 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('Table');
+  const btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

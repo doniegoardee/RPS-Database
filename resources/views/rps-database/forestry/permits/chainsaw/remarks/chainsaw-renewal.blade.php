@@ -83,9 +83,13 @@
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a> --}}
 
-        <a href="{{ route('chainsaw.remarks.renewal') }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+        <a href="{{ route('chainsaw.remarks.renewal',['add' => $add->address]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+        </a>
+
+        <a href="{{ route('status.chainsaw-excel', ['add' => $add->address, 'remarks' => 'renewal']) }}" class="btn btn-sm btn-success shadow-sm ms-auto">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+        </a>
 
 
 

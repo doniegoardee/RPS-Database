@@ -35,9 +35,9 @@
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
             </a>
 
-            <a href="{{ route('report.ld.new',$client->id) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
-             </a>
+        <a href="{{ route('excel-data.tenurial', ['id' => $client->id, 'status' => 'existing']) }}" class="btn btn-success btn-sm shadow-sm">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+        </a>
     </div>
 
 

@@ -35,34 +35,34 @@ class LumberDealerImport implements ToModel, WithHeadingRow
             'type'    => 'Lumber Dealer',
         ]);
 
-        $dateRegistered = $this->parseDate($row['date_registered_or_renewal']);
-        $dateExpiry = $this->parseDate($row['date_expiry']);
+        $dateIssuance = $this->parseDate($row['date_issuance']);
+        $expirationDate = $this->parseDate($row['date_expiration']);
 
-        $existingChainsaw = LumDealer::where([
+        $dealer = LumDealer::where([
             ['name', '=', $row['name']],
-            ['address', '=', $row['address']],
-            ['date_registered', '=', $dateRegistered],
-            ['date_expiry', '=', $dateExpiry],
-            ['control_no', '=', $row['control_no']],
-            ['purpose', '=', $row['purpose']],
-            ['remarks', '=', $row['remarks']],
+            ['business_name', '=', $row['business_name']],
+            ['location', '=', $row['location']],
+            ['supplier_name', '=', $row['supplier_name']],
+            ['volume', '=', $row['volume']],
+            ['date_issuance', '=', $dateIssuance],
+            ['date_expiration', '=', $expirationDate],
             ['client_address', '=', $address->address],
             ['permit_type', '=', 'Lumber Dealer'],
         ])->first();
 
-        if ($existingChainsaw) {
+        if ($dealer) {
             logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
         return new LumDealer([
             'name'               => $row['name'] ?? null,
-            'address'            => $row['address'] ?? null,
-            'date_registered'    => $dateRegistered,
-            'date_expiry'        => $dateExpiry,
-            'control_no'         => $row['control_no'] ?? null,
-            'purpose'            => $row['purpose'] ?? null,
-            'remarks'            => $row['remarks'] ?? null,
+            'business_name'      => $row['business_name'] ?? null,
+            'location'           => $row['location'] ?? null,
+            'supplier_name'      => $row['supplier_name'] ?? null,
+            'volume'             => $row['volume'] ?? null,
+            'date_issuance'      => $dateIssuance,
+            'date_expiration'    => $expirationDate,
             'client_address'     => $address->address,
             'permit_type'        => 'Lumber Dealer',
             'user_id'            => Auth::id(),
@@ -109,6 +109,7 @@ class LumberDealerImport implements ToModel, WithHeadingRow
             try {
                 return Carbon::createFromFormat($format, $value)->format('Y-m-d');
             } catch (\Exception $e) {
+                continue;
             }
         }
 

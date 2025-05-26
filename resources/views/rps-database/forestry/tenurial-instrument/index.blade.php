@@ -45,6 +45,12 @@
             </div>
         @endif
 
+                @if(session('errors'))
+            <div class="alert alert-danger">
+                {{ session('errors') }}
+            </div>
+        @endif
+
         <div class="d-flex gap-2 mb-3">
 
             <a href="{{ route('ti.all',['tenur_type' => $type->title]) }}" class="btn btn-sm btn-success shadow-sm">

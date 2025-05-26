@@ -94,7 +94,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th></th>
                     <th>Name Lessee</th>
                     <th>Address</th>
                     <th>Issue Date</th>
@@ -106,9 +106,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($docs as $doc)
+                @foreach($docs as $index => $doc)
                     <tr>
-                        <td>{{ $doc->id }}</td>
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ $doc->name_lessee }}</td>
                         <td>{{ $doc->address }}</td>
                         <td>{{ $doc->issue_date }}</td>

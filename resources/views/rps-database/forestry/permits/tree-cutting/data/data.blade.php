@@ -40,6 +40,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -54,9 +60,13 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+            <a href="{{ route('client-report.lands',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+            </a>
+
+            <a href="{{ route('client-report.tree-cutting',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-success btn-sm shadow-sm">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+            </a>
         </div>
 
         <div class="card-body">

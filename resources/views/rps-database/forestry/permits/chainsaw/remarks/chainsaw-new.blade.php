@@ -84,9 +84,14 @@
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a>
 
-        <a href="{{ route('chainsaw.remarks.new') }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+        <a href="{{ route('chainsaw.remarks.new',['add' => $add->address]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+        </a>
+
+        <a href="{{ route('status.chainsaw-excel', ['add' => $add->address, 'remarks' => 'new']) }}" class="btn btn-sm btn-success shadow-sm ms-auto">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+        </a>
+
 
 
 
@@ -118,21 +123,29 @@
                 <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('client.chainsaw',[ 'address'=> $add->address]) }}" method="POST">
+            <form id="addClientForm" action="{{ route('client.chainsaw',[ 'address'=> $add->address]) }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="clientName" class="form-label">Client Name</label>
                         <input type="text" class="form-control" id="clientName" name="name" placeholder="Enter client name" required>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Client</button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary">Save Client</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+  const form = document.getElementById('addClientForm');
+  const btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>
 
