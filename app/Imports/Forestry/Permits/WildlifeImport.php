@@ -5,130 +5,101 @@ namespace App\Imports\Forestry\Permits;
 use App\Models\Address;
 use App\Models\Forestry\Permits\WildLife;
 use App\Models\Forestry\Permits\WildLifeParent;
-use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 
-class WildlifeImport implements ToModel, WithHeadingRow
+class WildlifeImport implements ToCollection, WithHeadingRow
 {
     protected $requestAddress;
+    protected $startTime;
 
-    public function __construct($address)
+    public function __construct($address,$startTime)
     {
         $this->requestAddress = $address;
+        $this->startTime = $startTime;
     }
 
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        logger()->info('Importing row:', $row);
+
+        $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
 
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
-            'type' => 'Wildlife',
+            'type' => 'wildlife',
         ]);
 
-        $parent = WildLifeParent::firstOrCreate([
-            'name'    => $row['name'],
-            'address' => $address->address,
-            'type'    => 'Wildlife',
-        ]);
+        $batch = [];
+        $existingPermitNos = WildLife::whereIn('permit_no', $rows->pluck('permit_no')->toArray())
+                            ->pluck('permit_no')->toArray();
 
-        $dateIssuance = $this->parseDate($row['date_issuance']);
-        $expirationDate = $this->parseDate($row['date_expiry']);
+        foreach ($rows as $row) {
+            if (collect($row)->filter()->isEmpty()) {
+                continue;
+            }
 
-        $wildlife = WildLife::where([
-            ['name', '=', $row['name']],
-            ['address', '=', $row['address']],
-            ['permit_no', '=', $row['permit_no']],
-            ['date_issuance', '=', $dateIssuance],
-            ['date_expiry', '=', $expirationDate],
-            ['fee', '=', $row['fee']],
-            ['species_name', '=', $row['species_name']],
-            ['description', '=', $row['description']],
-            ['quantity', '=', $row['quantity']],
-            ['unit_measure', '=', $row['unit_measure']],
-            ['origin', '=', $row['origin']],
-            ['destination', '=', $row['destination']],
-            ['purpose', '=', $row['purpose']],
-            ['client_address', '=', $address->address],
-            ['permit_type', '=', 'Wildlife'],
-        ])->first();
+            if (!empty($row['permit_no']) && in_array($row['permit_no'], $existingPermitNos)) {
+                continue;
+            }
 
-        if ($wildlife) {
-            logger()->info('Duplicate row found, skipping import:', $row);
-            return null;
+            $parent = WildLifeParent::firstOrCreate([
+                'name' => $row['name'] ?? null,
+                'address' => $address->address,
+                'type' => 'wildlife',
+            ]);
+
+            $dateIssuance = $this->parseDate($row['date_issuance'] ?? null);
+            $dateExpiry = $this->parseDate($row['date_expiry'] ?? null);
+
+            $batch[] = [
+                'name' => $row['name'] ?? null,
+                'address' => $row['address'] ?? null,
+                'species_name' => $row['species_name'] ?? null,
+                'quantity' => $row['quantity'] ?? null,
+                'unit_measure' => $row['unit_measure'] ?? null,
+                'fee' => $row['fee'] ?? null,
+                'origin' => $row['origin'] ?? null,
+                'description' => $row['description'] ?? null,
+                'purpose' => $row['purpose'] ?? null,
+                'destination' => $row['destination'] ?? null,
+                'permit_no' => $row['permit_no'] ?? null,
+                'date_issuance' => $dateIssuance,
+                'date_expiry' => $dateExpiry,
+                'client_address' => $address->address,
+                'permit_type' => 'Wildlife',
+                'user_id' => Auth::id(),
+                'wildlife_parent_id' => $parent->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
         }
 
-        return new WildLife([
-            'name'               => $row['name'] ?? null,
-            'address'      => $row['address'] ?? null,
-            'permit_no'           => $row['permit_no'] ?? null,
-            'date_issuance'      => $dateIssuance,
-            'date_expiry'    => $expirationDate,
-            'fee'      => $row['fee'] ?? null,
-            'species_name'             => $row['species_name'] ?? null,
-            'description'             => $row['description'] ?? null,
-            'quantity'             => $row['quantity'] ?? null,
-            'unit_measure'             => $row['unit_measure'] ?? null,
-            'origin'             => $row['origin'] ?? null,
-            'destination'             => $row['destination'] ?? null,
-            'purpose'             => $row['purpose'] ?? null,
-            'client_address'     => $address->address,
-            'permit_type'        => 'Wildlife',
-            'user_id'            => Auth::id(),
-            'wildlife_parent_id'   => $parent->id,
-        ]);
+        foreach (array_chunk($batch, 500) as $chunk) {
+            WildLife::insert($chunk);
+        }
     }
 
     protected function parseDate($value)
     {
-        if (is_numeric($value)) {
-            return Carbon::instance(Date::excelToDateTimeObject($value))->format('Y-m-d');
-        }
-
-        $formats = [
-            'Y-m-d',
-            'Y/m/d',
-            'm-d-Y',
-            'm/d/Y',
-            'd-m-Y',
-            'd/m/Y',
-            'Ymd',
-            'dmY',
-            'mdY',
-            'M d, Y',
-            'd M Y',
-            'Y M d',
-            'F d, Y',
-            'd F Y',
-            'F j, Y',
-            'j F Y',
-            'd-M-Y',
-            'd-M-y',
-            'Y-M-d',
-            'Y-M-d H:i:s',
-            'Y-m-d H:i:s',
-            'd/m/y',
-            'm/d/y',
-            'd-m-y',
-            'Y.m.d',
-            'YmdHis'
-        ];
-
-        foreach ($formats as $format) {
-            try {
-                return Carbon::createFromFormat($format, $value)->format('Y-m-d');
-            } catch (\Exception $e) {
-                continue;
-            }
+        if (empty($value)) {
+            return null;
         }
 
         try {
+            if (is_numeric($value)) {
+                return Carbon::instance(Date::excelToDateTimeObject($value))->format('Y-m-d');
+            }
+
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
-            logger()->warning('Failed to parse date: ' . $value);
+            logger()->warning('Invalid date format: ' . $value);
             return null;
         }
     }

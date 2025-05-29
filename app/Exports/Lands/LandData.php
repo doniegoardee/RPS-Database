@@ -27,10 +27,10 @@ class LandData implements FromCollection, WithHeadings, WithEvents, WithColumnWi
                     ->where('lands_type', $this->type)
                     ->get([
                         'applicant',
+                        'applicant_no',
                         'location',
                         'lot_no',
                         'area',
-                        'date_approved',
                         'dpli_mi_si'
                     ]);
     }
@@ -39,10 +39,10 @@ class LandData implements FromCollection, WithHeadings, WithEvents, WithColumnWi
     {
         return [
             'Applicant',
+            'Applicant No.',
             'Location',
             'Lot No.',
             'Area',
-            'Date Approved',
             'DPLI/MI/SI',
         ];
     }

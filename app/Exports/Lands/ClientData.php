@@ -26,10 +26,10 @@ class ClientData implements FromCollection, WithHeadings, WithEvents, WithColumn
                     ->where('client_address', $this->client_address)
                     ->get([
                         'applicant',
+                        'applicant_no',
                         'location',
                         'lot_no',
                         'area',
-                        'date_approved',
                         'dpli_mi_si'
                     ]);
     }
@@ -38,10 +38,10 @@ class ClientData implements FromCollection, WithHeadings, WithEvents, WithColumn
     {
         return [
             'Applicant',
+            'Applicant No.',
             'Location',
             'Lot No.',
             'Area',
-            'Date Approved',
             'DPLI/MI/SI',
         ];
     }

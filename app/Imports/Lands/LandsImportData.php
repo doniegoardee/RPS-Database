@@ -15,16 +15,25 @@ class LandsImportData implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
     protected $lands_type;
+    protected $startTime;
 
-public function __construct($address, $lands_type)
+public function __construct($address, $lands_type,$startTime)
 {
     $this->requestAddress = $address;
     $this->lands_type = $lands_type;
+    $this->startTime = $startTime;
+
 }
 
 
     public function model(array $row)
     {
+
+         $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
             'type' => $this->lands_type,
@@ -36,13 +45,12 @@ public function __construct($address, $lands_type)
             'type'    => $this->lands_type,
         ]);
 
-        $dateApproved = $this->parseDate($row['date_approved']);
 
         $existingLands = Lands::where([
             ['applicant', '=', $row['applicant']],
+            ['applicant_no', '=', $row['applicant_no']],
             ['lot_no', '=', $row['lot_no']],
             ['area', '=', $row['area']],
-            ['date_approved', '=', $dateApproved],
             ['location', '=', $row['location']],
             ['dpli_mi_si', '=', $row['dpli_mi_si']],
             ['client_address', '=', $address->address],
@@ -55,9 +63,9 @@ public function __construct($address, $lands_type)
 
         return new Lands([
             'applicant'               => $row['applicant'] ?? null,
+            'applicant_no'               => $row['applicant_no'] ?? null,
             'lot_no'            => $row['lot_no'] ?? null,
             'area'         => $row['area'] ?? null,
-            'date_approved'      => $dateApproved,
             'location'            => $row['location'] ?? null,
             'dpli_mi_si'            => $row['dpli_mi_si'] ?? null,
             'client_address'     => $address->address,

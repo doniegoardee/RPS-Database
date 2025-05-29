@@ -40,6 +40,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -54,9 +60,13 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+            <a href="{{ route('data-report.tfpl',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+            </a>
+
+            <a href="{{ route('client-report.tfpl',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-success btn-sm shadow-sm">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+            </a>
         </div>
 
         <div class="card-body">
@@ -69,10 +79,13 @@
                             <th style="width: 10%;">Place of Loading</th>
                             <th style="width: 15%;">Destination</th>
                             <th style="width: 8%;">Species</th>
+                            <th style="width: 8%;">Permit No.</th>
                             <th style="width: 10%;">Volume to be Transport</th>
                             <th style="width: 15%;">No of Finish Product</th>
                             <th style="width: 15%;">No of Finish Lumber/Timber</th>
                             <th style="width: 10%;">Date Transport</th>
+                            <th style="width: 10%;">Cert and Oath</th>
+                            <th style="width: 10%;">Inspection</th>
                             <th style="width: 10%;">Remarks</th>
                             <th>Document</th>
                             <th style="width: 12%;">Actions</th>
@@ -86,6 +99,7 @@
                                 <td>{{ $item->place_of_loading }}</td>
                                 <td>{{ $item->destination }}</td>
                                 <td>{{ $item->species }}</td>
+                                <td>{{ $item->permit_no }}</td>
                                 <td>{{ $item->volume_to_transport }}</td>
                                 <td>{{ $item->no_finish_product }}</td>
                                 <td>{{ $item->no_finish_lumber }}</td>
@@ -95,6 +109,8 @@
                                     @else
                                     @endif
                                 </td>
+                                <td>{{ $item->cert_and_oath }}</td>
+                                <td>{{ $item->inspection }}</td>
                                 <td>{{ $item->remarks }}</td>
 
 
@@ -151,7 +167,7 @@
                                             $dateTransport = $item->date_transport ? \Carbon\Carbon::parse($item->date_transport)->format('Y-m-d') : '';
                                         @endphp
 
-                                        <form action="{{ route('update-data.tfpl', $item->id) }}" method="POST" enctype="multipart/form-data">
+                                        <form action="{{ route('update-data.tfpl', $item->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
 
@@ -178,6 +194,10 @@
                                                     <input type="text" class="form-control" id="" name="species" value="{{ old('species', $item->species) }}" placeholder="Enter Species..">
                                                 </div>
 
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Permit No.</label>
+                                                    <input type="text" class="form-control" id="" name="permit_no" value="{{ old('permit_no', $item->permit_no) }}" placeholder="Enter Permit No..">
+                                                </div>
 
                                                 <div class="mb-3">
                                                     <label for="" class="form-label">Volume to be Transport</label>
@@ -203,6 +223,15 @@
                                                            value="{{ old('date_transport', $dateTransport) }}">
                                                 </div>
 
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Cert and Oath</label>
+                                                    <input type="text" class="form-control" id="" name="cert_and_oath" value="{{ old('cert_and_oath', $item->cert_and_oath) }}" placeholder="Enter Cert and oath..">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="" class="form-label">Inspection</label>
+                                                    <input type="text" class="form-control" id="" name="inspection" value="{{ old('inspection', $item->inspection) }}" placeholder="Enter Inspection..">
+                                                </div>
 
                                                 <div class="mb-3">
                                                     <label for="" class="form-label">Remarks</label>
@@ -219,7 +248,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                                <button type="submit" id="Sbtn" class="btn btn-primary">Save Information</button>
                                             </div>
                                         </form>
                                     </div>
@@ -251,7 +280,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('add-data.tfpl',$client->id) }}" method="POST">
+            <form action="{{ route('add-data.tfpl',$client->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -274,6 +303,11 @@
                     <div class="mb-3">
                         <label for="" class="form-label">Species</label>
                         <input type="text" class="form-control" id="" name="species" placeholder="Enter Species..">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label">Permit No.</label>
+                        <input type="text" class="form-control" id="" name="permit_no" placeholder="Enter Permit No..">
                     </div>
 
 
@@ -299,19 +333,43 @@
                         <input type="text" class="form-control" id="" name="no_finish_product" placeholder="Enter No of Finish Product..">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Cert and Oath</label>
+                        <input type="date" class="form-control" id="" name="cert_and_oath" placeholder="Enter Cert and Oath..">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label">Inspection</label>
+                        <input type="date" class="form-control" id="" name="inspection" placeholder="Enter Inspection..">
+                    </div>
 
                     <div class="mb-3">
                         <label for="" class="form-label">Remarks</label>
                         <input type="date" class="form-control" id="" name="remarks" placeholder="Enter Remarks..">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

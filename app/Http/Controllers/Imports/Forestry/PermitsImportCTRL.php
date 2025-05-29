@@ -14,94 +14,124 @@ use Illuminate\Http\Request;
 
 class PermitsImportCTRL extends Controller
 {
-
-
-    public function import_chainsaw(Request $request, $address){
-
-
+    public function import_chainsaw(Request $request, $address)
+    {
         $request->validate([
             'import' => 'required|file|mimes:xlsx,xls,csv',
         ]);
 
         try {
-            Excel::import(new ChainsawImport($address), $request->file('import'));
+            $startTime = microtime(true);
+            Excel::import(new ChainsawImport($address, $startTime), $request->file('import'));
 
-            return back()->with('success', 'Data imported successfully.');
+            return back()->with('success', 'Chainsaw data imported successfully.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                return back()->with('error', 'The data is too many, please reduce the number of rows.');
+            }
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
         } catch (\Exception $e) {
-
-            return back()->with('error', 'Error importing file: ' . $e->getMessage() . '. Please download the proper template.');
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
         }
     }
 
-public function importTreeCutting(Request $request, $add)
-{
-    $request->validate([
-        'excel_file' => 'required|file|mimes:xlsx,xls,csv',
-    ]);
+    public function importTreeCutting(Request $request, $add)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
 
-    $clientAddress = $add;
+        try {
+            $startTime = microtime(true);
+            Excel::import(new TreeCuttingImport($add, $startTime), $request->file('excel_file'));
 
-    Excel::import(new TreeCuttingImport($clientAddress), $request->file('excel_file'));
+            return back()->with('success', 'Tree Cutting data imported successfully.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                return back()->with('error', 'The data is too many, please reduce the number of rows.');
+            }
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+    }
 
-    return redirect()->back()->with('success', 'Tree Cutting data imported successfully.');
-}
+    public function importLumberDealer(Request $request, $add)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
 
+        try {
+            $startTime = microtime(true);
+            Excel::import(new LumberDealerImport($add, $startTime), $request->file('excel_file'));
 
-public function importLumberDealer(Request $request, $add)
-{
-    $request->validate([
-        'excel_file' => 'required|file|mimes:xlsx,xls,csv',
-    ]);
+            return back()->with('success', 'Lumber Dealer data imported successfully.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                return back()->with('error', 'The data is too many, please reduce the number of rows.');
+            }
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+    }
 
-    $clientAddress = $add;
+    public function importLumberSupplier(Request $request, $add)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
 
-    Excel::import(new LumberDealerImport($clientAddress), $request->file('excel_file'));
+        try {
+            $startTime = microtime(true);
+            Excel::import(new LumberSupplierImport($add, $startTime), $request->file('excel_file'));
 
-    return redirect()->back()->with('success', 'Lumber data imported successfully.');
-}
+            return back()->with('success', 'Lumber Supplier data imported successfully.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                return back()->with('error', 'The data is too many, please reduce the number of rows.');
+            }
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+    }
 
+    public function importWildlife(Request $request, $add)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
 
-public function importLumberSupplier(Request $request, $add)
-{
-    $request->validate([
-        'excel_file' => 'required|file|mimes:xlsx,xls,csv',
-    ]);
+        try {
+            $startTime = microtime(true);
+            Excel::import(new WildlifeImport($add, $startTime), $request->file('excel_file'));
 
-    $clientAddress = $add;
+            return back()->with('success', 'Wildlife data imported successfully.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                return back()->with('error', 'The data is too many, please reduce the number of rows.');
+            }
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+    }
 
-    Excel::import(new LumberSupplierImport($clientAddress), $request->file('excel_file'));
+    public function importTFPL(Request $request, $add)
+    {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
 
-    return redirect()->back()->with('success', 'Lumber data imported successfully.');
-}
+        try {
+            $startTime = microtime(true);
+            Excel::import(new TFPLImport($add, $startTime), $request->file('excel_file'));
 
-
-public function importWildlife(Request $request, $add)
-{
-    $request->validate([
-        'excel_file' => 'required|file|mimes:xlsx,xls,csv',
-    ]);
-
-    $clientAddress = $add;
-
-    Excel::import(new WildlifeImport($clientAddress), $request->file('excel_file'));
-
-    return redirect()->back()->with('success', 'Lumber data imported successfully.');
-}
-
-
-public function importTFPL(Request $request, $add)
-{
-    $request->validate([
-        'excel_file' => 'required|file|mimes:xlsx,xls,csv',
-    ]);
-
-    $clientAddress = $add;
-
-    Excel::import(new TFPLImport($clientAddress), $request->file('excel_file'));
-
-    return redirect()->back()->with('success', 'Lumber data imported successfully.');
-}
-
-
-
+            return back()->with('success', 'Data imported successfully.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Import error: ' . $e->getMessage());
+        }
+    }
 }

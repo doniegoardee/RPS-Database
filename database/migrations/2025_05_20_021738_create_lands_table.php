@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('lands', function (Blueprint $table) {
             $table->id();
             $table->string('applicant')->nullable();
+            $table->string('applicant_no')->nullable();
             $table->string('lot_no')->nullable();
             $table->string('area')->nullable();
-            $table->string('date_approved')->nullable();
             $table->string('location')->nullable();
             $table->string('dpli_mi_si')->nullable();
             $table->string('lands_type')->nullable();

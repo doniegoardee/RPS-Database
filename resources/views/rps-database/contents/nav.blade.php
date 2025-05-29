@@ -49,14 +49,15 @@
                 <i class="fa-solid fa-mountain-sun"></i>
                 <span>Lands</span>
             </a>
-            <div id="collapseLands" class="collapse {{ request()->routeIs('FPA', 'RFPA','SP') ? 'show' : '' }}"
+            <div id="collapseLands" class="collapse {{ request()->routeIs('FPA', 'RFPA','SP','Foreshore','fpa.client','fpa.client-data','rfpa.client',
+            'rfpa.client-data','sp.client','sp.client-data','foreshore.client','foreshore.client-data') ? 'show' : '' }}"
                 aria-labelledby="headingLands" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents:</h6>
-                    <a class="collapse-item {{ request()->routeIs('FPA') ? 'active' : '' }}" href="{{ route('FPA') }}">FPA (Agri. Lands)</a>
-                    <a class="collapse-item {{ request()->routeIs('RFPA') ? 'active' : '' }}" href="{{ route('RFPA') }}">RFPA (Residential)</a>
-                    <a class="collapse-item {{ request()->routeIs('SP') ? 'active' : '' }}" href="{{ route('SP') }}">SP (School Sites)</a>
-                    <a class="collapse-item {{ request()->routeIs('for.doc') ? 'active' : '' }}" href="{{ route('Foreshore') }}">Foreshore</a>
+                    <a class="collapse-item {{ request()->routeIs('FPA','fpa.client','fpa.client-data') ? 'active' : '' }}" href="{{ route('FPA') }}">FPA (Agri. Lands)</a>
+                    <a class="collapse-item {{ request()->routeIs('RFPA','rfpa.client','rfpa.client-data') ? 'active' : '' }}" href="{{ route('RFPA') }}">RFPA (Residential)</a>
+                    <a class="collapse-item {{ request()->routeIs('SP','sp.client','sp.client-data') ? 'active' : '' }}" href="{{ route('SP') }}">SP (School Sites)</a>
+                    <a class="collapse-item {{ request()->routeIs('Foreshore','foreshore.client','foreshore.client-data') ? 'active' : '' }}" href="{{ route('Foreshore') }}">Foreshore</a>
                 </div>
             </div>
         </li>
@@ -68,12 +69,20 @@
                 <i class="fa-solid fa-tree"></i>
                 <span>Forestry</span>
             </a>
-            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'permit.doc') ? 'show' : '' }}"
+            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'permit.doc','ti.folder','tenur.client','tenurial.new','tenurial.existing'
+            ,'tenurial.renewal','tenurial.expired','tenurial.cancelled','ti.new','ti.existing','ti.renewal','ti.expired','ti.cancelled','chainsaw','folder',
+            'table.chainsaw','table.new','table.renewal','table.expired','chainsaw.remark','chainsaw.new','chainsaw.renewal','chainsaw.expired','tree.cutting',
+            'tree-cutting.client','tree-cutting.client-data','lumber.dealer','lumber-dealer.client','lumber-dealer.client-data','lumber.supplier',
+            'lumber-supplier.client','lumber-supplier.client-data','wildlife','wildlife.client','wildlife.client-data','tfpl','tfpl.client','tfpl.client-data') ? 'show' : '' }}"
                 aria-labelledby="headingForestry" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Documents:</h6>
-                    <a class="collapse-item {{ request()->routeIs('tenur.doc') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument (TI)</a>
-                    <a class="collapse-item {{ request()->routeIs('permit.doc') ? 'active' : '' }}" href="{{ route('permit.doc') }}">Permits</a>
+                    <a class="collapse-item {{ request()->routeIs('tenur.doc','ti.folder','tenur.client','tenurial.new','tenurial.existing'
+            ,'tenurial.renewal','tenurial.expired','tenurial.cancelled','ti.new','ti.existing','ti.renewal','ti.expired','ti.cancelled') ? 'active' : '' }}" href="{{ route('tenur.doc') }}">Tenurial Instrument (TI)</a>
+                    <a class="collapse-item {{ request()->routeIs('permit.doc','chainsaw','folder',
+            'table.chainsaw','table.new','table.renewal','table.expired','chainsaw.remark','chainsaw.new','chainsaw.renewal','chainsaw.expired','tree.cutting',
+            'tree-cutting.client','tree-cutting.client-data','lumber.dealer','lumber-dealer.client','lumber-dealer.client-data','lumber.supplier',
+            'lumber-supplier.client','lumber-supplier.client-data','wildlife','wildlife.client','wildlife.client-data','tfpl','tfpl.client','tfpl.client-data') ? 'active' : '' }}" href="{{ route('permit.doc') }}">Permits</a>
                 </div>
             </div>
         </li>
@@ -107,12 +116,12 @@
             <i class="fa-solid fa-list-check"></i>
             <span>Manage Documents</span>
         </a>
-        <div id="collapseUtilities" class="collapse {{ request()->routeIs( 'all.doc') ? 'show' : '' }}" aria-labelledby="headingUtilities"
+        <div id="collapseUtilities" class="collapse {{ request()->routeIs( 'all.doc','documents.view') ? 'show' : '' }}" aria-labelledby="headingUtilities"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Manage:</h6>
-                <a class="collapse-item {{ request()->routeIs('all.doc') ? 'active' : '' }}" href="{{ route('all.doc') }}">All Documents</a>
-                <a class="collapse-item" href="utilities-border.html">Archive Documents</a>
+                <a class="collapse-item {{ request()->routeIs('all.doc','documents.view') ? 'active' : '' }}" href="{{ route('all.doc') }}">All Documents</a>
+                {{-- <a class="collapse-item" href="utilities-border.html">Archive Documents</a> --}}
                 {{-- Keep these comments without affecting active status --}}
                 {{-- <a class="collapse-item" href="utilities-animation.html">Unarchive Documents</a>
                 <a class="collapse-item" href="utilities-other.html">Other</a> --}}

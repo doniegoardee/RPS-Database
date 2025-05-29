@@ -40,6 +40,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -54,9 +60,13 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="{{ route('report.chainsaw.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-                </a>
+            <a href="{{ route('data-report.lumber-supplier',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+            </a>
+
+            <a href="{{ route('client-report.lumber-supplier',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-success btn-sm shadow-sm">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+            </a>
         </div>
 
         <div class="card-body">
@@ -149,7 +159,7 @@
                                             $dateExpiry = $item->date_expiry ? \Carbon\Carbon::parse($item->date_expiry)->format('Y-m-d') : '';
                                         @endphp
 
-                                        <form action="{{ route('update-data.lumber-supplier', $item->id) }}" method="POST" enctype="multipart/form-data">
+                                        <form action="{{ route('update-data.lumber-supplier', $item->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
 
@@ -199,7 +209,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                                <button type="submit" id="Sbtn" class="btn btn-primary">Save Information</button>
                                             </div>
                                         </form>
                                     </div>
@@ -231,7 +241,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('add-data.lumber-supplier',$client->id) }}" method="POST">
+            <form action="{{ route('add-data.lumber-supplier',$client->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -268,13 +278,27 @@
                         <input type="date" class="form-control" id="" name="date_expiration">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

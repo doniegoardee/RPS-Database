@@ -10,69 +10,57 @@
         </div>
 
         <div class="input-group mb-3">
-            <a href="{{ route('tenurial.all') }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
+            {{-- <a href="{{ route('tenurial.all') }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
                 <i class="fa-solid fa-chart-simple me-1"></i> Generate Report
-            </a>
+            </a> --}}
         </div>
 
 
         <div class="container my-4">
             <div class="card shadow-sm">
 
-                <div class="card-body">
-                    @foreach ($view as $item)
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <strong>Name Lessee:</strong> {{ $item->name_lessee }}
-                            </div>
-                            <div class="col-md-6">
-                                <strong>Address:</strong> {{ $item->address }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <strong>Issue Date:</strong>
-                                {{ $item->issue_date ? \Carbon\Carbon::parse($item->issue_date)->format('m/d/y') : 'N/A' }}
-                            </div>
-                            <div class="col-md-6">
-                                <strong>Expired Date:</strong>
-                                {{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('m/d/y') : 'N/A' }}
-                            </div>
-                        </div>
+<div class="container">
+    <h3 class="mb-4 text-capitalize">{{ str_replace('-', ' ', $type) }} Document Details</h3>
+    <div class="card">
+        <div class="card-body">
+@php
+    // List of fields to exclude
+    $excludeFields = [
+        'id',
+        'user_id',
+        'client_address',
+        'created_at',
+        'updated_at',
+        'client_id',
+        'permit_type',
+        'lands_type',
+        'tenur_type',
+        'tenur_type_id',
+        'cutting_parent_id',
+        'dealer_parent_id',
+        'supplier_parent_id',
+        'wildlife_parent_id',
+        'tfpl_parent_id',
+        'chainsaw_parent_id',
 
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <strong>Tenurial Number:</strong> {{ $item->tenur_no }}
-                            </div>
-                            <div class="col-md-6">
-                                <strong>Total Area:</strong> {{ $item->total_area }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <strong>Status:</strong> {{ $item->status }}
-                            </div>
-                            <div class="col-md-6">
-                                <strong>Remarks:</strong> {{ $item->remarks }}
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row mb-2">
-                            <div class="col-md-12">
-                                <strong>Download Document:</strong>  @if ($item['document'])
-                                <a href="{{ url('file/' . $item['document']) }}" target="_blank">
-                                    {{ $item['document'] }}
-                                </a>
-                            @else
-                                <span class="text-muted">No Document yet uploaded</span>
-                            @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+    ];
+@endphp
+
+@foreach ($record->getAttributes() as $field => $value)
+    @if (!in_array($field, $excludeFields))
+        <p><strong>{{ ucwords(str_replace('_', ' ', $field)) }}:</strong> {{ $value ?: 'N/A' }}</p>
+    @endif
+@endforeach
+
+            @if (!empty($record->document))
+                <p><strong>Document File:</strong>
+                    <a href="{{ asset('storage/' . $record->document) }}" target="_blank">View Document</a>
+                </p>
+            @endif
+
+        </div>
+    </div>
+</div>
             </div>
         </div>
 

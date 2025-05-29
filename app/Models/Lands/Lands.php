@@ -13,9 +13,9 @@ class Lands extends Model
 
     protected $fillable = [
         'applicant',
+        'applicant_no',
         'lot_no',
         'area',
-        'date_approved',
         'location',
         'dpli_mi_si',
         'lands_type',

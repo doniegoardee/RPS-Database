@@ -42,6 +42,13 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -73,9 +80,9 @@
                         <tr>
                             <th style="width: 3%;"></th>
                             <th style="width: 10%;">Applicant</th>
+                            <th style="width: 10%;">Applicant No.</th>
                             <th style="width: 15%;">Lot No.</th>
                             <th style="width: 10%;">Area</th>
-                            <th style="width: 10%;">Date Approved</th>
                             <th style="width: 8%;">Location</th>
                             <th style="width: 10%;">DPLI/MI/SI</th>
                             <th>Document</th>
@@ -87,14 +94,9 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $item->applicant }}</td>
+                                <td>{{ $item->applicant_no }}</td>
                                 <td>{{ $item->lot_no }}</td>
                                 <td>{{ $item->area }}</td>
-                                <td>
-                                    @if ($item->date_approved)
-                                        {{ \Carbon\Carbon::parse($item->date_approved)->format('F j, Y') }}
-                                    @else
-                                    @endif
-                                </td>
                                 <td>{{ $item->location }}</td>
                                 <td >{{ $item->dpli_mi_si }}</td>
                                 <td>
@@ -162,6 +164,11 @@
                                                 </div>
 
                                                 <div class="mb-3">
+                                                    <label for="" class="form-label">Applicant No</label>
+                                                    <input type="text" class="form-control" id="name" name="applicant_no" value="{{ old('applicant_no', $item->applicant_no) }}" placeholder="Enter Applicant No..">
+                                                </div>
+
+                                                <div class="mb-3">
                                                     <label for="" class="form-label">Lot No.</label>
                                                     <input type="text" class="form-control" id="address" name="lot_no" value="{{ old('lot_no', $item->lot_no) }}" placeholder="Enter Lot No..">
                                                 </div>
@@ -170,13 +177,6 @@
                                                 <div class="mb-3">
                                                     <label for="" class="form-label">Area</label>
                                                     <input type="text" class="form-control" id="" name="area" value="{{ old('area', $item->area) }}" placeholder="Enter area..">
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="" class="form-label">Date Approved</label>
-                                                    <input type="date" class="form-control" id="" name="date_approved"
-                                                           value="{{ old('date_approved', $dateApproved) }}"
-                                                           placeholder="Enter date expiry">
                                                 </div>
 
                                                 <div class="mb-3">
@@ -232,32 +232,32 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('fpa-data.store',[$client->id , 'add' => $client->address]) }}" method="POST">
+            <form action="{{ route('fpa-data.store',[$client->id , 'add' => $client->address]) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Applicant</label>
-                        <input type="text" class="form-control" id="folderAddress" name="applicant" value="{{ old('name',$client->name) }}" placeholder="Enter applicant..">
+                        <input type="text" class="form-control" id="folderAddress" name="applicant" value="{{ old('name',$client->name) }}" placeholder="Enter Applicant..">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="folderAddress" class="form-label">Applicant No.</label>
+                        <input type="text" class="form-control" id="folderAddress" name="applicant_no" value="" placeholder="Enter Applicant No..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Lot No.</label>
-                        <input type="text" class="form-control" id="folderAddress" name="lot_no"  placeholder="Enter lot no..">
+                        <input type="text" class="form-control" id="folderAddress" name="lot_no"  placeholder="Enter Lot No..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Area</label>
-                        <input type="text" class="form-control" id="folderAddress" name="area" placeholder="Enter area..">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="" class="form-label">Date Approved</label>
-                        <input type="date" class="form-control" id="" name="date_approved" placeholder="Enter date approved..">
+                        <input type="text" class="form-control" id="folderAddress" name="area" placeholder="Enter Area..">
                     </div>
 
                     <div class="mb-3">
                         <label for="folderAddress" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="folderAddress" name="location" placeholder="Enter location..">
+                        <input type="text" class="form-control" id="folderAddress" name="location" placeholder="Enter Location..">
                     </div>
 
                     <div class="mb-3">
@@ -265,13 +265,27 @@
                         <input type="text" class="form-control" id="folderAddress" name="dpli_mi_si" placeholder="Enter DPLI/MI/SI..">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

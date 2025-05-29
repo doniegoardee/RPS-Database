@@ -206,7 +206,7 @@ public function exportTreeCuttingExcel()
                        ->exists();
 
         if (!$exists) {
-            return redirect()->back()->with('error', 'No data found for the selected client address and land type.');
+            return redirect()->back()->with('error', 'No data found for the selected client address and tree cutting.');
         }
 
         return Excel::download(new TreeCuttingAddress($address), "tree-cutting-{$address}.xlsx");
@@ -249,7 +249,7 @@ public function exportTreeCuttingExcel()
                        ->exists();
 
         if (!$exists) {
-            return redirect()->back()->with('error', 'No data found for the selected client address and land type.');
+            return redirect()->back()->with('error', 'No data found for the selected client address and lumber dealer.');
         }
 
         return Excel::download(new LumberDealerAddress($address), "lumber-dealer-{$address}.xlsx");
@@ -292,7 +292,7 @@ public function exportTreeCuttingExcel()
                        ->exists();
 
         if (!$exists) {
-            return redirect()->back()->with('error', 'No data found for the selected client address and land type.');
+            return redirect()->back()->with('error', 'No data found for the selected client address and lumber supplier.');
         }
 
         return Excel::download(new LumberSupplierAddress($address), "lumber-supplier-{$address}.xlsx");
@@ -334,7 +334,7 @@ public function exportTreeCuttingExcel()
                        ->exists();
 
         if (!$exists) {
-            return redirect()->back()->with('error', 'No data found for the selected client address and land type.');
+            return redirect()->back()->with('error', 'No data found for the selected client address and Wildlife.');
         }
 
         return Excel::download(new WildlifeAddress($address), "wildlife-{$address}.xlsx");
@@ -377,7 +377,7 @@ public function exportTreeCuttingExcel()
                        ->exists();
 
         if (!$exists) {
-            return redirect()->back()->with('error', 'No data found for the selected client address and land type.');
+            return redirect()->back()->with('error', 'No data found for the selected client address and Transport Finish Product Lumber.');
         }
 
         return Excel::download(new TFPLAddress($address), "tfpl-{$address}.xlsx");

@@ -79,11 +79,13 @@ public function store(Request $request,$id,$add){
         $request->validate([
 
             'applicant'         => 'nullable|string|max:255',
+            'applicant_no'      => 'nullable|string|max:255',
             'lot_no'            => 'nullable|string|max:255',
             'area'              => 'nullable|string|max:255',
             'date_approved'     => 'nullable|string|max:255',
             'location'          => 'nullable|string|max:255',
             'dpli_mi_si'        => 'nullable|string|max:255',
+            'document'          => 'nullable|files|mimes:pdf',
 
         ]);
 
@@ -91,6 +93,7 @@ public function store(Request $request,$id,$add){
         Lands::Create([
 
             'applicant' => $request->applicant,
+            'applicant_no' => $request->applicant_no,
             'lot_no' => $request->lot_no,
             'area' => $request->area,
             'date_approved' => $request->date_approved,
@@ -100,6 +103,8 @@ public function store(Request $request,$id,$add){
             'client_address' => $add,
             'client_id' => $client->id,
             'user_id' => Auth::id(),
+            'document' => $request->document,
+
 
         ]);
 
@@ -115,11 +120,13 @@ public function store(Request $request,$id,$add){
         $validated = $request->validate([
 
             'applicant' => 'nullable|string|max:255',
+            'applicant_no' => 'nullable|string|max:255',
             'lot_no' => 'nullable|string|max:255',
             'area' => 'nullable|string|max:255',
             'date_approved' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'dpli_mi_si' => 'nullable|string|max:255',
+            'document' => 'nullable|files|mimes:pdf',
 
         ]);
 

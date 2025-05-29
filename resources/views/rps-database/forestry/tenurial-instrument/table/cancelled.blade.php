@@ -12,11 +12,29 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('danger'))
+        <div class="alert alert-danger">
+            {{ session('danger') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        @if(session('primary'))
+        <div class="alert alert-primary">
+            {{ session('primary') }}
+        </div>
+        @endif
 
     <div class="input-group mb-4">
         <input type="search" id="searchInput" class="form-control" placeholder="Search...">
@@ -145,7 +163,7 @@
                                         $expiredDate = $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('Y-m-d') : '';
                                        @endphp
 
-                                        <form action="{{ route('tenurial.update', $item->id)}}" method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('tenurial.update', $item->id)}}" id="Client" method="post" enctype="multipart/form-data">
                                             @method('PUT')
                                             @csrf
 
@@ -214,7 +232,7 @@
 
                                         <div class="modal-footer">
 
-                                            <button type="submit" class="btn btn-primary" value="">Edit Information</button>
+                                            <button type="submit" id="Sbtn" class="btn btn-primary" value="">Edit Information</button>
                                             <button class="btn btn-danger" type="button" data-bs-dismiss="modal" >close</button>
 
                                         </div>
@@ -252,7 +270,7 @@
                 <h5 class="modal-title" id="AddDataClient">Add New Data</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="close"></button>
             </div>
-            <form action="{{ route('add.client.data',$client->id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('add.client.data',$client->id) }}" id="Client" method="post" enctype="multipart/form-data">
                 @csrf
             <div class="modal-body">
 
@@ -299,9 +317,15 @@
                     <input class="form-control" name="remarks" type="text" placeholder="Enter Remarks">
                    </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
+
                    <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Information</button>
+                    <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                    </div>
 
                 </div>
@@ -311,3 +335,11 @@
     </div>
 </div>
 
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

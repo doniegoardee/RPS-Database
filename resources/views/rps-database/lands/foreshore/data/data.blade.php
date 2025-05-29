@@ -42,6 +42,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -60,7 +66,7 @@
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
             </a>
 
-            <a href="" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+            <a href="{{ route('data-report.foreshore',[$client->id, 'add' => $client->address]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
              </a>
         </div>
@@ -220,7 +226,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('foreshore-data.store',[$client->id , 'add' => $client->address]) }}" method="POST">
+            <form action="{{ route('foreshore-data.store',[$client->id , 'add' => $client->address]) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -248,13 +254,28 @@
                         <input type="text" class="form-control" id="" name="remarks_status" placeholder="Enter Remarks/Status..">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

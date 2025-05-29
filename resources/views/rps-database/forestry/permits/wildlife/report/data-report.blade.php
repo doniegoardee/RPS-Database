@@ -1,0 +1,142 @@
+<style>
+
+*{
+
+    font-family: sans-serif;
+}
+
+    .header-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .header-container .image1 {
+        margin-right: 20px;
+        width: 80px;
+        height: 80px;
+    }
+
+     .header-container .image2 {
+        margin-right: 20px;
+        width: 110px;
+        height: 80px;
+        position: relative;
+        left: 51rem;
+    }
+
+    .header-container h1,
+    .header-container h2 {
+        margin: 0;
+        line-height: 1.2;
+        text-align:center;
+        bottom: 80px;
+        position: relative;
+    }
+
+    .header-container h1 {
+        font-size: 1.8em;
+        font-weight: bold;
+    }
+
+    .header-container h2 {
+        font-size: 1.4em;
+        font-weight: normal;
+        color: grey;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #ffffff;
+        font-weight: bold;
+    }
+
+    .no-details {
+        margin-top: 20px;
+        color: #a00;
+        font-weight: bold;
+    }
+</style>
+
+<title>Generate Report</title>
+
+<div class="header-container">
+    <img src="images/penro_cag.png" alt="PENRO Logo" class="image1">
+    <img src="images/bagong_pilipinas.png" alt="PENRO Logo" class="image2">
+    <div>
+        <h1>Department of Environment and Natural Resources</h1>
+        <h2>Provincial Environment and Natural Resources Office</h2>
+        <h2>Province of Cagayan</h2>
+    </div>
+</div>
+
+
+<hr style="font-weight: 900; color:red; height:5px; background:red;">
+
+
+    @forelse ($grouped as $type => $items)
+        <div>
+            <h3><strong>Name:</strong> {{ $items->first()->name ?? 'N/A' }}</h3>
+            <h3><strong>Address:</strong> {{ $items->first()->address ?? 'N/A' }}</h3>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th style="width: 8%;">Permit No.</th>
+                        <th style="width: 10%;">Date Issuance</th>
+                        <th style="width: 10%;">Date Expiry</th>
+                        <th style="width: 10%;">Fee</th>
+                        <th style="width: 8%;">Species Name</th>
+                        <th style="width: 10%;">Description</th>
+                        <th style="width: 7%;">Quantity</th>
+                        <th style="width: 7%;">Unit Measure</th>
+                        <th style="width: 7%;">Origin</th>
+                        <th style="width: 7%;">Destination</th>
+                        <th style="width: 7%;">Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($items as $index => $item)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->permit_no }}</td>
+                            <td>
+                                @if ($item->date_issuance)
+                                    {{ \Carbon\Carbon::parse($item->date_issuance)->format('F j, Y') }}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($item->date_expiry)
+                                    {{ \Carbon\Carbon::parse($item->date_expiry)->format('F j, Y') }}
+                                @endif
+                            </td>
+                            <td>{{ $item->fee }}</td>
+                            <td>{{ $item->species_name }}</td>
+                            <td>{{ $item->description }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>{{ $item->unit_measure }}</td>
+                            <td>{{ $item->origin }}</td>
+                            <td>{{ $item->destination }}</td>
+                            <td>{{ $item->purpose }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @empty
+        <div class="no-details">
+            <i class="bi bi-exclamation-triangle-fill"></i> No Wildlife details found.
+        </div>
+    @endforelse

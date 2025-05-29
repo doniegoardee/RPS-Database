@@ -81,10 +81,13 @@ class TFPLAll implements WithMultipleSheets
                             'Place of Loading' => $item->place_of_loading,
                             'Destination' => $item->destination,
                             'Species' => $item->spicies,
+                            'Permit No.' => $item->permit_no,
                             'Volume to Transport' => $item->volume_to_transport,
                             'No. Finish Product' => $item->no_finish_product,
                             'No. Finish Lumber' => $item->no_finish_lumber,
                             'Date Transport' => \Carbon\Carbon::parse($item->date_transport)->format('Y-m-d'),
+                            'Cert and Oath' => $item->cert_and_oath,
+                            'Inspection' => $item->inspection,
                             'Remarks' => $item->remarks,
 
                         ];
@@ -105,10 +108,13 @@ class TFPLAll implements WithMultipleSheets
                         'Place of Loading',
                         'Destination',
                         'Species',
+                        'Permit No.',
                         'Volume to Transport',
                         'No. Finish Product',
                         'No. Finish Lumber',
                         'Date Transport',
+                        'Cert and Oath',
+                        'Inspection',
                         'Remarks',
                     ];
                 }
@@ -129,7 +135,7 @@ class TFPLAll implements WithMultipleSheets
                         AfterSheet::class => function (AfterSheet $event) {
                             $sheet = $event->sheet->getDelegate();
 
-                            foreach (range('A', 'I') as $column) {
+                            foreach (range('A', 'L') as $column) {
                                 $sheet->getColumnDimension($column)->setAutoSize(true);
                             }
 

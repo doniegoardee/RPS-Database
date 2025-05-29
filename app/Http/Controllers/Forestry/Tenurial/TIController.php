@@ -23,14 +23,41 @@ class TIController extends Controller
 
 
 
-    public function ti_folder($title)
-    {
-        $type = TypeTI::where('title', $title)->first();
+public function ti_folder($title)
+{
+    $type = TypeTI::where('title', $title)->first();
 
-        $address = Address::where('type', $type->title)->get();
+    $address = Address::where('type', $type->title)->get();
 
-        return view('rps-database.forestry.tenurial-instrument.index', compact('address', 'type'));
+    $now = \Carbon\Carbon::now()->startOfDay();
+
+    foreach ($address as $addr) {
+        $tenurials = TenurialInstrument::where('client_address', $addr->address)->get();
+
+        foreach ($tenurials as $tenurial) {
+            $issueDate = \Carbon\Carbon::parse($tenurial->issue_date)->startOfDay();
+            $expiryDate = \Carbon\Carbon::parse($tenurial->expired_date)->startOfDay();
+
+            if ($now->eq($issueDate)) {
+                $status = 'NEW';
+            } elseif ($now->gt($expiryDate)) {
+                $status = 'EXPIRED';
+            } else {
+                $status = 'EXISTING';
+            }
+
+            if ($tenurial->status !== $status) {
+                $tenurial->status = $status;
+                $tenurial->save();
+            }
+        }
     }
+
+    return view('rps-database.forestry.tenurial-instrument.index', compact('address', 'type'));
+}
+
+
+
 
 
 
@@ -308,6 +335,8 @@ class TIController extends Controller
             'total_area' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'remarks' => 'nullable|string|max:255',
+            'document'  => 'nullable|files|mimes:pdf',
+
         ]);
 
         $type = TIParent::findOrFail($id);
@@ -340,6 +369,7 @@ class TIController extends Controller
             'client_id' => $type->id,
             'client_address' => $type->address,
             'tenur_type_id' => $tenur_type->id,
+            'document' => $request->document,
         ]);
 
         return redirect()->back()->with('success', 'Information added successfully');

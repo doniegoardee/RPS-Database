@@ -74,12 +74,10 @@
             </ul>
         </div>
     @endif
-        <div class="input-group mb-4">
-            <input type="search" id="searchInput" class="form-control" placeholder="Search...">
-            <button class="btn btn-primary" id="searchBtn">Search</button>
-            <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
-        </div>
 
+    <div class="d-flex justify-content-between flex-wrap gap-2 mt-3">
+
+            <div class="d-flex gap-2">
         <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add Client
         </a>
@@ -88,25 +86,93 @@
             <i class="fas fa-solid fa-file-excel fa-sm text-white-50"></i> Import Excel File
         </a>
 
-        <a href="{{ route('ld.export.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
+        <a href="{{ route('lumber-supplier.template') }}" class="btn btn-sm btn-success shadow-sm ms-auto" >
             <i class="fas fa-solid fa-file-arrow-down fa-sm text-white-50"></i> Download Template
         </a>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{{ route('client.lumber-supplier',['add' => $add->address]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+                </a>
+
+
+                <a href="{{ route('lumber-supplier.address', ['address' => $add->address]) }}" class="btn btn-sm btn-success shadow-sm">
+                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
+                </a>
+            </div>
+
+        </div>
+
 
         <hr>
 
 
 
 
-        <div class="container-fluid px-0">
-            <div class="card-body px-0">
-                @foreach ($client as $item)
-                    <a href="{{ route('lumber-supplier.client-data', $item->id) }}" class="d-flex align-items-center gap-3 py-3 px-4 mb-2 bg-light rounded shadow-sm text-decoration-none address-container hover-shadow">
-                        <i class="fa-regular fa-circle-user fa-lg text-primary"></i>
-                        <span class="fw-medium text-dark">{{ $item->name }}</span>
-                    </a>
-                @endforeach
-            </div>
-        </div>
+<div style="margin-bottom: 1rem;">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search clients..."
+        style="
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        "
+    >
+</div>
+
+<!-- Client List -->
+<div id="clientList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+    @foreach ($client as $item)
+    <a
+        href="{{ route('lumber-supplier.client-data',  $item->id) }}"
+        class="client-item"
+        style="
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #222;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='#f0f0f0';"
+        onmouseout="this.style.backgroundColor='';"
+    >
+        <i class="fa-regular fa-circle-user" style="font-size: 1.2rem; color: #0d6efd;"></i>
+        <span>{{ $item->name }}</span>
+    </a>
+    @endforeach
+</div>
+
+<p id="noClientMessage" style="margin-top: 1rem; color: #888; display: {{ $client->isEmpty() ? 'block' : 'none' }};">
+    No client found.
+</p>
+
+<!-- Search Filter Script -->
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const clients = document.querySelectorAll('#clientList .client-item');
+        let visibleCount = 0;
+
+        clients.forEach(function (client) {
+            const name = client.textContent.toLowerCase();
+            const match = name.includes(query);
+            client.style.display = match ? 'flex' : 'none';
+            if (match) visibleCount++;
+        });
+
+        document.getElementById('noClientMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+</script>
+
 
 
     </div>
@@ -123,7 +189,7 @@
                 <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('add-client.lumber-supplier',[ 'address'=> $add->address]) }}" method="POST">
+            <form action="{{ route('add-client.lumber-supplier',[ 'address'=> $add->address]) }}" id="Client" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -134,9 +200,47 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Client</button>
+                    <button type="submit" id="Sbtn" class="btn btn-primary">Save Client</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="ImportClientModal" tabindex="-1" aria-labelledby="ImportClientModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form action="{{ route('lumber-supplier.import',['add' => $add->address]) }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ImportClientModalLabel">Import Lumber Supplier Excel File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="excel_file" class="form-label">Choose Excel File</label>
+            <input type="file" name="excel_file" id="excel_file" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-upload"></i> Import
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

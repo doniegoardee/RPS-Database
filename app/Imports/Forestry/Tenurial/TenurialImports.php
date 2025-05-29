@@ -16,15 +16,23 @@ class TenurialImports implements ToModel, WithHeadingRow
 {
     protected $address;
     protected $title;
+    protected $startTime;
 
-    public function __construct($address, $title)
+    public function __construct($address, $title,$startTime)
     {
         $this->address = $address;
         $this->title = $title;
+        $this->startTime = $startTime;
     }
 
     public function model(array $row)
     {
+
+    $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
         $isEmptyRow = empty($row['name_lessee']) &&
                       empty($row['issue_date']) &&
                       empty($row['expired_date']) &&

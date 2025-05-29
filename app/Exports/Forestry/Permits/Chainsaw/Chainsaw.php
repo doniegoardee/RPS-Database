@@ -4,8 +4,11 @@ namespace App\Exports\Forestry\Permits\Chainsaw;
 
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class Chainsaw implements FromArray, WithHeadings
+class Chainsaw implements FromArray, WithHeadings, WithColumnWidths, WithStyles
 {
     public function headings(): array
     {
@@ -29,22 +32,31 @@ class Chainsaw implements FromArray, WithHeadings
     public function array(): array
     {
         return [
-            // [
-            //     'John Doe',
-            //     'San. Gabriel, Tuguegarao City, Cagayan',
-            //     'HHIS',
-            //     'D123456789',
-            //     '12-12-2025',
-            //     '12-12-2025',
-            //     '1234567890',
-            //     '12-12-2025',
-            //     '4.8',
-            //     '36"',
-            //     '11-111111',
-            //     'Renovation .....',
-            //     'New',
-
-            // ],
+            // Add your data arrays here
         ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'A' => 33,
+            'B' => 33,
+            'C' => 33,
+            'D' => 33,
+            'E' => 33,
+            'F' => 33,
+            'G' => 33,
+            'H' => 33,
+            'I' => 33,
+            'J' => 33,
+            'K' => 33,
+            'L' => 33,
+            'M' => 33,
+        ];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:M1048576')->getAlignment()->setWrapText(true);
     }
 }

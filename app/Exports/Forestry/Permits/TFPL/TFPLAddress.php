@@ -27,10 +27,13 @@ class TFPLAddress implements FromCollection, WithHeadings, WithEvents, WithColum
                         'place_of_loading',
                         'destination',
                         'species',
+                        'permit_no',
                         'volume_to_transport',
                         'no_finish_product',
                         'no_finish_lumber',
                         'date_transport',
+                        'cert_and_oath',
+                        'inspection',
                         'remarks',
                     ]);
     }
@@ -42,10 +45,13 @@ class TFPLAddress implements FromCollection, WithHeadings, WithEvents, WithColum
             'Place of Loading',
             'Destination',
             'Species',
+            'Permit No.',
             'Volume to Transport',
             'No. Finish Product',
             'No. Finish Lumber',
             'Date Transport',
+            'Cert and Oath',
+            'Inspection',
             'Remarks',
         ];
     }
@@ -62,6 +68,9 @@ class TFPLAddress implements FromCollection, WithHeadings, WithEvents, WithColum
             'G' => 25,
             'H' => 25,
             'I' => 25,
+            'J' => 25,
+            'K' => 25,
+            'L' => 25,
         ];
     }
 
@@ -69,7 +78,7 @@ class TFPLAddress implements FromCollection, WithHeadings, WithEvents, WithColum
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getDelegate()->setAutoFilter('A1:I1');
+                $event->sheet->getDelegate()->setAutoFilter('A1:L1');
             },
         ];
     }

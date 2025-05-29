@@ -85,11 +85,12 @@
 
 <hr style="font-weight: 900; color:red; height:5px; background:red;">
 
-@forelse ($tenurial as $index => $item)
     <div>
         <h3><strong>Name:</strong> {{ $item->name_lessee }}</h3>
         <h3><strong>Location:</strong> {{ $item->address }}</h3>
         <br>
+@forelse ($tenurial as $index => $item)
+
         <table>
             <thead>
                 <tr>
@@ -104,6 +105,7 @@
                 </tr>
             </thead>
             <tbody>
+
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->tenur_type }}</td>

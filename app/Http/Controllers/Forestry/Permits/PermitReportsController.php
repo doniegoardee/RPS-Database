@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Forestry\Permits\Chainsaw;
 use App\Models\Forestry\Permits\ChainsawParent;
 use App\Models\Forestry\Permits\LumDealer;
+use App\Models\Forestry\Permits\Supplier;
+use App\Models\Forestry\Permits\TFPL;
+use App\Models\Forestry\Permits\TreeCutting;
+use App\Models\Forestry\Permits\WildLife;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PermitReportsController extends Controller
@@ -122,99 +126,151 @@ class PermitReportsController extends Controller
 
 
 
-//               LUMBER DEALER
+//               TREE CUTTING
 
 
-public function lumber_dealer_remarks_new(){
+    public function treecutting_report($add){
 
-      $grouped = LumDealer::where('remarks', 'new')
+   $grouped = TreeCutting::where('client_address', $add)
     ->get()
     ->groupBy('permit_type');
 
-        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-remarks-report', compact('grouped'))
+        $pdf = Pdf::loadView('rps-database.forestry.permits.tree-cutting.report.client-report', compact('grouped'))
                   ->setPaper('a4', 'landscape');
 
-                  return $pdf->stream('permits_report.pdf');
-
+                  return $pdf->stream('foreshore_report.pdf');
 
     }
 
 
-    public function Lumber_dealer_remarks_renewal(){
+    public function treecutting_data($id,$add){
 
-      $grouped = LumDealer::where('remarks', 'renewal')
+      $grouped = TreeCutting::where('cutting_parent_id',$id)
+      ->where('client_address', $add)
     ->get()
     ->groupBy('permit_type');
 
-        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-remarks-report', compact('grouped'))
+        $pdf = Pdf::loadView('rps-database.forestry.permits.tree-cutting.report.data-report', compact('grouped'))
                   ->setPaper('a4', 'landscape');
 
-                  return $pdf->stream('permits_report.pdf');
+                  return $pdf->stream('client_report.pdf');
 
     }
 
 
-    public function lumber_dealer_remarks_expired(){
+    public function lumberdealer_report($add){
 
-      $grouped = LumDealer::where('remarks', 'expired')
+   $grouped = LumDealer::where('client_address', $add)
     ->get()
     ->groupBy('permit_type');
 
-        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-remarks-report', compact('grouped'))
+        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.client-report', compact('grouped'))
                   ->setPaper('a4', 'landscape');
 
-                  return $pdf->stream('permits_report.pdf');
+                  return $pdf->stream('foreshore_report.pdf');
 
     }
 
 
+    public function lumberdealer_data($id,$add){
 
-    public function lumber_dealer_new($id){
+      $grouped = LumDealer::where('dealer_parent_id',$id)
+      ->where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
 
-        $grouped = LumDealer::where('remarks', 'new')
-        ->where('dealer_parent_id',$id)
-        ->get()
-        ->groupBy('permit_type');
+        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.data-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
 
-            $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-report', compact('grouped'))
-                    ->setPaper('a4', 'landscape');
-
-                    return $pdf->stream('permits_report.pdf');
+                  return $pdf->stream('client_report.pdf');
 
     }
 
 
+    public function lumbersupplier_report($add){
 
-    public function lumber_dealer_renewal($id){
+   $grouped = Supplier::where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
 
-            $grouped = LumDealer::where('remarks', 'renewal')
-            ->where('dealer_parent_id',$id)
-            ->get()
-            ->groupBy('permit_type');
+        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-supplier.reports.client-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
 
-                $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-report', compact('grouped'))
-                        ->setPaper('a4', 'landscape');
+                  return $pdf->stream('foreshore_report.pdf');
 
-                        return $pdf->stream('permits_report.pdf');
-
-        }
+    }
 
 
+    public function lumbersupplier_data($id,$add){
 
-    public function lumber_dealer_expired($id){
+      $grouped = Supplier::where('supplier_parent_id',$id)
+      ->where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
 
-            $grouped = LumDealer::where('remarks', 'expired')
-            ->where('dealer_parent_id',$id)
-            ->get()
-            ->groupBy('permit_type');
+        $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-supplier.reports.data-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
 
-                $pdf = Pdf::loadView('rps-database.forestry.permits.lumber-dealer.reports.lumber-dealer-report', compact('grouped'))
-                        ->setPaper('a4', 'landscape');
+                  return $pdf->stream('client_report.pdf');
 
-                        return $pdf->stream('permits_report.pdf');
-
-        }
+    }
 
 
+    public function tfpl_report($add){
+
+   $grouped = TFPL::where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
+
+        $pdf = Pdf::loadView('rps-database.forestry.permits.tfpl.report.client-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('foreshore_report.pdf');
+
+    }
+
+
+    public function tfpl_data($id,$add){
+
+      $grouped = TFPL::where('tfpl_parent_id',$id)
+      ->where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
+
+        $pdf = Pdf::loadView('rps-database.forestry.permits.tfpl.report.data-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('client_report.pdf');
+
+    }
+
+
+    public function wildlife_report($add){
+
+   $grouped = WildLife::where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
+
+        $pdf = Pdf::loadView('rps-database.forestry.permits.wildlife.report.client-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('foreshore_report.pdf');
+
+    }
+
+
+    public function wildlife_data($id,$add){
+
+      $grouped = WildLife::where('wildlife_parent_id',$id)
+      ->where('client_address', $add)
+    ->get()
+    ->groupBy('permit_type');
+
+        $pdf = Pdf::loadView('rps-database.forestry.permits.wildlife.report.data-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('client_report.pdf');
+
+    }
 
 }

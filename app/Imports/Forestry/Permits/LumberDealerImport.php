@@ -14,31 +14,49 @@ use Carbon\Carbon;
 class LumberDealerImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
+    protected $address;
+    protected $parentCache = [];
+    protected $startTime;
 
-    public function __construct($address)
+    public function __construct($address,$startTime)
     {
         $this->requestAddress = $address;
+        $this->startTime = $startTime;
+
+
+        $this->address = Address::firstOrCreate([
+            'address' => $this->requestAddress,
+            'type' => 'Lumber Dealer',
+        ]);
     }
 
     public function model(array $row)
     {
+
+         $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
         logger()->info('Importing row:', $row);
 
-        $address = Address::firstOrCreate([
-            'address' => $this->requestAddress,
-            'type' => 'Lumber Dealer',
-        ]);
+        // Cache parent by name
+        $parentKey = strtolower(trim($row['name'] ?? ''));
+        if (!isset($this->parentCache[$parentKey])) {
+            $this->parentCache[$parentKey] = LumDealerParent::firstOrCreate([
+                'name'    => $row['name'],
+                'address' => $this->address->address,
+                'type'    => 'Lumber Dealer',
+            ]);
+        }
 
-        $parent = LumDealerParent::firstOrCreate([
-            'name'    => $row['name'],
-            'address' => $address->address,
-            'type'    => 'Lumber Dealer',
-        ]);
+        $parent = $this->parentCache[$parentKey];
 
         $dateIssuance = $this->parseDate($row['date_issuance']);
         $expirationDate = $this->parseDate($row['date_expiration']);
 
-        $dealer = LumDealer::where([
+        // Use hash check or reduced WHERE conditions if many fields are optional
+        $dealerExists = LumDealer::where([
             ['name', '=', $row['name']],
             ['business_name', '=', $row['business_name']],
             ['location', '=', $row['location']],
@@ -46,11 +64,11 @@ class LumberDealerImport implements ToModel, WithHeadingRow
             ['volume', '=', $row['volume']],
             ['date_issuance', '=', $dateIssuance],
             ['date_expiration', '=', $expirationDate],
-            ['client_address', '=', $address->address],
+            ['client_address', '=', $this->address->address],
             ['permit_type', '=', 'Lumber Dealer'],
-        ])->first();
+        ])->exists();
 
-        if ($dealer) {
+        if ($dealerExists) {
             logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
@@ -63,7 +81,7 @@ class LumberDealerImport implements ToModel, WithHeadingRow
             'volume'             => $row['volume'] ?? null,
             'date_issuance'      => $dateIssuance,
             'date_expiration'    => $expirationDate,
-            'client_address'     => $address->address,
+            'client_address'     => $this->address->address,
             'permit_type'        => 'Lumber Dealer',
             'user_id'            => Auth::id(),
             'dealer_parent_id'   => $parent->id,
@@ -77,32 +95,11 @@ class LumberDealerImport implements ToModel, WithHeadingRow
         }
 
         $formats = [
-            'Y-m-d',
-            'Y/m/d',
-            'm-d-Y',
-            'm/d/Y',
-            'd-m-Y',
-            'd/m/Y',
-            'Ymd',
-            'dmY',
-            'mdY',
-            'M d, Y',
-            'd M Y',
-            'Y M d',
-            'F d, Y',
-            'd F Y',
-            'F j, Y',
-            'j F Y',
-            'd-M-Y',
-            'd-M-y',
-            'Y-M-d',
-            'Y-M-d H:i:s',
-            'Y-m-d H:i:s',
-            'd/m/y',
-            'm/d/y',
-            'd-m-y',
-            'Y.m.d',
-            'YmdHis'
+            'Y-m-d', 'Y/m/d', 'm-d-Y', 'm/d/Y', 'd-m-Y', 'd/m/Y',
+            'Ymd', 'dmY', 'mdY', 'M d, Y', 'd M Y', 'Y M d',
+            'F d, Y', 'd F Y', 'F j, Y', 'j F Y', 'd-M-Y', 'd-M-y',
+            'Y-M-d', 'Y-M-d H:i:s', 'Y-m-d H:i:s', 'd/m/y', 'm/d/y',
+            'd-m-y', 'Y.m.d', 'YmdHis'
         ];
 
         foreach ($formats as $format) {

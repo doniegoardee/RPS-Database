@@ -5,8 +5,15 @@ namespace App\Http\Controllers\AllDocument;
 use App\Http\Controllers\Controller;
 use App\Models\Forestry\Permits\Chainsaw;
 use App\Models\Forestry\Permits\LumDealer;
+use App\Models\Forestry\Permits\Supplier;
+use App\Models\Forestry\Permits\TFPL;
+use App\Models\Forestry\Permits\TreeCutting;
+use App\Models\Forestry\Permits\WildLife;
 use App\Models\Forestry\Tenurial\TenurialInstrument;
+use App\Models\Lands\Foreshore;
+use App\Models\Lands\Lands;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AllDocumentsController extends Controller
 {
@@ -14,73 +21,135 @@ class AllDocumentsController extends Controller
 
 public function index()
 {
-    // Tenurial Instruments
-    $tenurial = TenurialInstrument::all()->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'name_lessee' => $item->name_lessee,
-            'address' => $item->address,
-            'issue_date' => $item->issue_date,
-            'expired_date' => $item->expired_date,
-            'tenur_no' => $item->tenur_no,
-            'total_area' => $item->total_area,
-            'tenur_type' => $item->tenur_type,
-            'status' => $item->status,
-            'remarks' => $item->remarks,
-            'document' => $item->document,
-        ];
-    });
+    $data = collect();
 
-    $permitList = Chainsaw::all()->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'name' => $item->name,
-            'address' => $item->address,
-            'brand' => $item->brand,
-            'serial_num' => $item->serial_num,
-            'date_registered' => $item->date_registered,
-            'date_expiry' => $item->date_expiry,
-            'control_no' => $item->control_no,
-            'date_acquired' => $item->date_acquired,
-            'horse_power' => $item->horse_power,
-            'length_guidebar' => $item->length_guidebar,
-            'sticker' => $item->sticker,
-            'purpose' => $item->purpose,
-            'remarks' => $item->remarks,
-            'document' => $item->document,
-            'permit_type' => $item->permit_type,
-        ];
-    });
+    $data = $data->merge(
+        TenurialInstrument::select(
+            'id',
+            DB::raw("'Tenurial Instrument' as type"),
+            'name_lessee as name',
+            'address as location',
+            DB::raw("NULL as permit_type"),
+            'document'
+        )->get()
+    );
 
-    $lumberList = LumDealer::all()->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'name' => $item->name,
-            'address' => $item->address,
-            'license_no' => $item->license_no,
-            'date_issued' => $item->date_issued,
-            'date_expiry' => $item->date_expiry,
-            'status' => $item->status,
-            'remarks' => $item->remarks,
-            'document' => $item->document,
-            'permit_type' => $item->permit_type,
-        ];
-    });
+    $data = $data->merge(
+        Chainsaw::select(
+            'id',
+            DB::raw("'Chainsaw' as type"),
+            'name',
+            'address as location',
+            'permit_type',
+            'document'
+        )->get()
+    );
 
-    $permitList = $permitList->merge($lumberList);
+    $data = $data->merge(
+        TreeCutting::select(
+            'id',
+            DB::raw("'Tree Cutting' as type"),
+            'name_permitee as name',
+            'location',
+            'permit_type',
+            'document'
+        )->get()
+    );
 
-    return view('rps-database.documents.all-doc', compact('tenurial', 'permitList'));
+    $data = $data->merge(
+        LumDealer::select(
+            'id',
+            DB::raw("'Lumber Dealer' as type"),
+            'name',
+            'location',
+            'permit_type',
+            'document'
+        )->get()
+    );
+
+    $data = $data->merge(
+        Supplier::select(
+            'id',
+            DB::raw("'Supplier' as type"),
+            'name',
+            'location',
+            'permit_type',
+            'document'
+        )->get()
+    );
+
+    $data = $data->merge(
+        TFPL::select(
+            'id',
+            DB::raw("'TFPL' as type"),
+            'name_permitee as name',
+            'place_of_loading as location',
+            'permit_type',
+            'document'
+        )->get()
+    );
+
+    $data = $data->merge(
+        WildLife::select(
+            'id',
+            DB::raw("'Wildlife' as type"),
+            'name',
+            'address as location',
+            'permit_type',
+            'document'
+        )->get()
+    );
+
+    $data = $data->merge(
+        Lands::select(
+            'id',
+            DB::raw("'Lands' as type"),
+            'applicant as name',
+            'location',
+            'lands_type as permit_type',
+            'document'
+        )->get()
+    );
+
+    $data = $data->merge(
+        Foreshore::select(
+            'id',
+            DB::raw("'Foreshore' as type"),
+            'applicant as name',
+            'location',
+            'lands_type as permit_type',
+            'document'
+        )->get()
+    );
+
+    return view('rps-database.documents.all-doc', compact('data'));
 }
 
 
 
-    public function view_tenurial($id){
 
-        $view = TenurialInstrument::where('id',$id)->get();
+public function viewDocument($type, $id)
+{
+    $modelMap = [
+        'tenurial-instrument' => TenurialInstrument::class,
+        'chainsaw' => Chainsaw::class,
+        'tree-cutting' => TreeCutting::class,
+        'lumber-dealer' => LumDealer::class,
+        'supplier' => Supplier::class,
+        'tfpl' => TFPL::class,
+        'wildlife' => WildLife::class,
+        'lands' => Lands::class,
+        'foreshore' => Foreshore::class,
+    ];
 
-
-        return view('rps-database.documents.view-document',compact('view'));
-
+    if (!array_key_exists($type, $modelMap)) {
+        abort(404, 'Document type not recognized.');
     }
+
+    $model = $modelMap[$type];
+    $record = $model::findOrFail($id);
+
+    return view('rps-database.documents.view-document', compact('record', 'type'));
+}
 
 }

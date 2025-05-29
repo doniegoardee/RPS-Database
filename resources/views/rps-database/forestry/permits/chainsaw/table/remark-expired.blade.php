@@ -40,6 +40,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('primary'))
         <div class="alert alert-primary">
             {{ session('primary') }}
@@ -161,7 +167,7 @@
                                         @endphp
 
 
-                                        <form action="{{ route('update.info', $item->id) }}" method="POST">
+                                        <form action="{{ route('update.info', $item->id) }}" id="Client" method="POST">
                                             @csrf
                                             @method('PUT')
 
@@ -249,7 +255,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                                <button type="submit" id="Sbtn" class="btn btn-primary">Save Information</button>
                                             </div>
                                         </form>
                                     </div>
@@ -281,7 +287,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('client.info',$client->id) }}" method="POST">
+            <form action="{{ route('client.info',$client->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -347,21 +353,29 @@
 
                     <input type="hidden" name="remarks" value="EXPIRED" id="">
 
-                    {{-- <div class="mb-3">
-                        <label for="remarks" class="form-label">Remarks</label>
-                       <select class="form-control" name="remarks" id="">
-                        <option value="NEW">New</option>
-                        <option value="RENEWAL">Renewal</option>
-                        <option value="EXPIRED">Expired</option>
-                       </select>
-                    </div> --}}
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

@@ -106,6 +106,7 @@
                 @foreach ($items as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->applicant_no ?? 'N/A' }}</td>
                         <td>{{ $item->lot_no ?? 'N/A' }}</td>
                         <td>{{ $item->area ?? 'N/A' }}</td>
                         <td>{{ $item->date_approved ? \Carbon\Carbon::parse($item->date_approved)->format('m/d/Y') : 'N/A' }}</td>

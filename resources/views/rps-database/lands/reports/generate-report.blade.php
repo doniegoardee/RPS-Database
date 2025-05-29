@@ -96,6 +96,7 @@
                 <tr>
                     <th></th>
                     <th>Applicant</th>
+                    <th>Applicant No.</th>
                     <th>Lot No.</th>
                     <th>Date Approved</th>
                     <th>Area</th>
@@ -108,6 +109,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $doc->applicant }}</td>
+                        <td>{{ $doc->applicant_no }}</td>
                         <td>{{ $doc->lot_no }}</td>
                         <td>{{ $doc->date_approved }}</td>
                         <td>{{ $doc->area }}</td>

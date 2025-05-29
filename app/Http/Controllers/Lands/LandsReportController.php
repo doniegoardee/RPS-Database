@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Lands;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lands\Foreshore;
 use App\Models\Lands\Lands;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -38,6 +39,35 @@ public function generate_report($add,$type){
     ->groupBy('lands_type');
 
         $pdf = Pdf::loadView('rps-database.lands.reports.client-report', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('client_report.pdf');
+
+    }
+
+
+    public function foreshore_report($add){
+
+   $grouped = Foreshore::where('client_address', $add)
+    ->get()
+    ->groupBy('lands_type');
+
+        $pdf = Pdf::loadView('rps-database.lands.foreshore.report.report-client', compact('grouped'))
+                  ->setPaper('a4', 'landscape');
+
+                  return $pdf->stream('foreshore_report.pdf');
+
+    }
+
+
+    public function data_report($id,$add){
+
+      $grouped = Foreshore::where('client_id',$id)
+      ->where('client_address', $add)
+    ->get()
+    ->groupBy('lands_type');
+
+        $pdf = Pdf::loadView('rps-database.lands.foreshore.report.client-report', compact('grouped'))
                   ->setPaper('a4', 'landscape');
 
                   return $pdf->stream('client_report.pdf');

@@ -9,7 +9,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-
 class TenurialImportsCTRL extends Controller
 {
     public function showImportForm($address)
@@ -27,12 +26,27 @@ class TenurialImportsCTRL extends Controller
         $file = $request->file('import');
 
         try {
-            Excel::import(new TenurialImports($address, $title), $file);
+            $startTime = microtime(true);  // Start time for import
+            Excel::import(new TenurialImports($address, $title, $startTime), $file);
+
             return back()->with('success', 'Tenurial data imported successfully.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('QueryException during import: ' . $e->getMessage());
+            return back()->with('error', 'Import failed: A database error occurred. Please check your file.');
+        } catch (\Symfony\Component\HttpFoundation\File\Exception\FileException $e) {
+            Log::error('FileException during import: ' . $e->getMessage());
+            return back()->with('error', 'Import failed: Unable to read the file. Try a different format.');
+        } catch (\ErrorException $e) {
+            if (str_contains(strtolower($e->getMessage()), 'maximum execution time')) {
+                Log::error('Timeout during import: ' . $e->getMessage());
+                return back()->with('error', 'Import failed: The data is too many, please reduce the number of rows.');
+            }
+
+            Log::error('ErrorException during import: ' . $e->getMessage());
+            return back()->with('error', 'Import failed due to a system error.');
         } catch (\Exception $e) {
+            Log::error('General exception during import: ' . $e->getMessage());
             return back()->with('error', 'Import failed: ' . $e->getMessage());
         }
     }
-
-
 }

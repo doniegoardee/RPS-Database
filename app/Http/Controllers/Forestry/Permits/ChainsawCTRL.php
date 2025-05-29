@@ -9,16 +9,39 @@ use App\Models\Forestry\Permits\ChainsawParent;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ChainsawCTRL extends Controller
 {
 
-    public function index(){
 
+public function index()
+{
+    $now = Carbon::now()->startOfDay();
 
-    $address = Address::where('type','chainsaw')->get();
+    $chainsaws = Chainsaw::all();
 
-    return view('rps-database.forestry.permits.chainsaw.chainsaw',compact('address'));
+    foreach ($chainsaws as $chainsaw) {
+        $registered = Carbon::parse($chainsaw->date_registered)->startOfDay();
+        $expiry = Carbon::parse($chainsaw->date_expiry)->startOfDay();
+
+        if ($now->eq($registered)) {
+            $status = 'NEW';
+        } elseif ($now->gt($expiry)) {
+            $status = 'EXPIRED';
+        } else {
+            $status = 'EXISTING';
+        }
+
+        if ($chainsaw->remarks !== $status) {
+            $chainsaw->remarks = $status;
+            $chainsaw->save();
+        }
+    }
+
+    $address = Address::where('type', 'chainsaw')->get();
+
+    return view('rps-database.forestry.permits.chainsaw.chainsaw', compact('address'));
 }
 
 
@@ -254,7 +277,7 @@ public function add_info(Request $request, $id){
     'sticker'=> 'nullable|string|max:255',
     'purpose'=> 'nullable|string|max:255',
     'remarks'=> 'nullable|string|max:255',
-    'document' => 'nullable|file|mimes:pdf,doc,docx,png,jpeg,jpg',
+    'document' => 'nullable|file|mimes:pdf',
 
     ]);
 

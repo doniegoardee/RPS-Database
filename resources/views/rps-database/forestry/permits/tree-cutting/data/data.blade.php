@@ -60,7 +60,7 @@
                 <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
             </a>
 
-            <a href="{{ route('client-report.lands',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+            <a href="{{ route('data-report.tree-cutting',['id' => $client->id,'add' => $client->address ]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
             </a>
 
@@ -164,7 +164,7 @@
                                             $expirationDate = $item->expiration_date ? \Carbon\Carbon::parse($item->expiration_date)->format('Y-m-d') : '';
                                         @endphp
 
-                                        <form action="{{ route('update.tree-cutting', $item->id) }}" method="POST" enctype="multipart/form-data">
+                                        <form action="{{ route('update.tree-cutting', $item->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             @method('PUT')
 
@@ -223,7 +223,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Information</button>
+                                                <button type="submit" id="Sbtn" class="btn btn-primary">Save Information</button>
                                             </div>
                                         </form>
                                     </div>
@@ -255,7 +255,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('add.tree-cutting',$client->id) }}" method="POST">
+            <form action="{{ route('add.tree-cutting',$client->id) }}" id="Client" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -298,12 +298,28 @@
                         <input type="text" class="form-control" id="" name="seed_requirements" placeholder="Enter Seed requirements..">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Information</button>
+                        <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

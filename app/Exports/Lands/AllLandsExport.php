@@ -57,11 +57,10 @@ class SingleClientSheet implements FromCollection, WithHeadings, WithEvents, Wit
             ->where('lands_type', $this->lands_type)
             ->get([
                 'applicant',
+                'applicant_no',
                 'location',
-                'lands_type',
                 'lot_no',
                 'area',
-                'date_approved',
                 'dpli_mi_si',
             ]);
 
@@ -76,11 +75,10 @@ class SingleClientSheet implements FromCollection, WithHeadings, WithEvents, Wit
     {
         return [
             'Applicant',
+            'Applicant No.',
             'Location',
-            'Land Type',
             'Lot No.',
             'Area',
-            'Date Approved',
             'DPLI/MI/SI',
         ];
     }
@@ -90,7 +88,7 @@ class SingleClientSheet implements FromCollection, WithHeadings, WithEvents, Wit
         return [
             AfterSheet::class => function(AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                $sheet->setAutoFilter('A1:G1');
+                $sheet->setAutoFilter('A1:F1');
 
                 $sheet->getColumnDimension('A')->setWidth(25);
                 $sheet->getColumnDimension('B')->setWidth(25);
@@ -98,7 +96,6 @@ class SingleClientSheet implements FromCollection, WithHeadings, WithEvents, Wit
                 $sheet->getColumnDimension('D')->setWidth(15);
                 $sheet->getColumnDimension('E')->setWidth(15);
                 $sheet->getColumnDimension('F')->setWidth(20);
-                $sheet->getColumnDimension('G')->setWidth(20);
             },
         ];
     }

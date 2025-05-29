@@ -66,11 +66,7 @@
         @endif
 
         <!-- Search Bar -->
-        <div class="input-group mb-4">
-            <input type="search" id="searchInput" class="form-control" placeholder="Search clients...">
-            <button class="btn btn-primary" id="searchBtn">Search</button>
-            <button class="btn btn-secondary ms-2" id="clearBtn">Clear</button>
-        </div>
+
         <a href="{{ route('pdf.status.expired',['add' => $add->address , 'type' => $title ]) }}" class="btn btn-sm btn-danger shadow-sm ms-auto" target="_blank">
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
         </a>
@@ -82,20 +78,70 @@
 <hr>
 
 
-        <!-- Client List -->
-        <div class="container-fluid px-0" id="clientList">
-            @foreach ($client as $item)
-                <a href="{{ route('ti.expired', ['title' => $title, $item->id]) }}"
-                   class="d-flex align-items-center gap-3 py-3 px-4 mb-2 bg-light rounded shadow-sm text-decoration-none address-container hover-shadow">
-                    <i class="fa-regular fa-circle-user fa-lg text-primary"></i>
-                    <span class="fw-medium text-dark">{{ $item->name }}</span>
-                </a>
-            @endforeach
-        </div>
+         <!-- Search Input -->
+<div style="margin-bottom: 1rem;">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search clients..."
+        style="
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        "
+    >
+</div>
 
-        <p id="noClientMessage" class="no-client-message" style="display: {{ $client->isEmpty() ? 'block' : 'none' }};">
-            No client found.
-        </p>
+<!-- Client List -->
+<div id="clientList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+    @foreach ($client as $item)
+    <a
+        href="{{ route('ti.expired', ['title' => $title, $item->id]) }}"
+        class="client-item"
+        style="
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #222;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='#f0f0f0';"
+        onmouseout="this.style.backgroundColor='';"
+    >
+        <i class="fa-regular fa-circle-user" style="font-size: 1.2rem; color: #0d6efd;"></i>
+        <span>{{ $item->name }}</span>
+    </a>
+    @endforeach
+</div>
+
+<p id="noClientMessage" style="margin-top: 1rem; color: #888; display: {{ $client->isEmpty() ? 'block' : 'none' }};">
+    No client found.
+</p>
+
+<!-- Search Filter Script -->
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const clients = document.querySelectorAll('#clientList .client-item');
+        let visibleCount = 0;
+
+        clients.forEach(function (client) {
+            const name = client.textContent.toLowerCase();
+            const match = name.includes(query);
+            client.style.display = match ? 'flex' : 'none';
+            if (match) visibleCount++;
+        });
+
+        document.getElementById('noClientMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+</script>
+
 
     </div>
 
@@ -103,54 +149,3 @@
 
 @include('rps-database.contents.footer')
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
-        const searchBtn = document.getElementById("searchBtn");
-        const clearBtn = document.getElementById("clearBtn");
-        const clientList = document.getElementById("clientList");
-        const noClientMessage = document.getElementById("noClientMessage");
-        const title = "{{ $title }}";
-        const address = "{{ $add->address }}";
-
-        function searchClients(query) {
-            fetch(`/clients/search?title=${title}&address=${address}&query=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    clientList.innerHTML = "";
-                    if (data.length > 0) {
-                        data.forEach(client => {
-                            const clientItem = `
-                                <a href="/clients/${client.id}" class="d-flex align-items-center gap-3 py-3 px-4 mb-2 bg-light rounded shadow-sm text-decoration-none address-container hover-shadow">
-                                    <i class="fa-regular fa-circle-user fa-lg text-primary"></i>
-                                    <span class="fw-medium text-dark">${client.name}</span>
-                                </a>
-                            `;
-                            clientList.insertAdjacentHTML("beforeend", clientItem);
-                        });
-                        noClientMessage.style.display = "none";
-                    } else {
-                        noClientMessage.style.display = "block";
-                    }
-                })
-                .catch(error => console.error("Error fetching clients:", error));
-        }
-
-        searchBtn.addEventListener("click", () => {
-            const query = searchInput.value.trim();
-            searchClients(query);
-        });
-
-        clearBtn.addEventListener("click", () => {
-            searchInput.value = "";
-            searchClients("");
-        });
-
-        searchInput.addEventListener("keyup", (event) => {
-            if (event.key === "Enter") {
-                const query = searchInput.value.trim();
-                searchClients(query);
-            }
-        });
-    });
-</script>

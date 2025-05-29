@@ -5,18 +5,38 @@
     <!-- Back Button Positioned Properly -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div class="d-flex align-items-center">
-            <a href="{{ route('tenurial.expired',['title'=> $title, 'add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-2">
+            <a href="{{ route('tenurial.existing',['title'=> $title, 'add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-2">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
             <h1 class="h3 mb-0 text-gray-800">{{ $client->name }} Information</h1>
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('danger'))
+        <div class="alert alert-danger">
+            {{ session('danger') }}
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        @if(session('primary'))
+        <div class="alert alert-primary">
+            {{ session('primary') }}
+        </div>
+        @endif
+
+
 
     <div class="input-group mb-4">
         <input type="search" id="searchInput" class="form-control" placeholder="Search...">
@@ -31,7 +51,7 @@
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Document
         </a>
 
-         <a href="{{ route('report.ld.new',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
+         <a href="  " class="btn btn-success btn-sm shadow-sm" target="_blank">
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
             </a>
 
@@ -144,7 +164,7 @@
                                         $expiredDate = $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('Y-m-d') : '';
                                        @endphp
 
-                                        <form action="{{ route('tenurial.update', $item->id)}}" method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('tenurial.update', $item->id)}}" id="Client" method="post" enctype="multipart/form-data">
                                             @method('PUT')
                                             @csrf
 
@@ -213,7 +233,7 @@
 
                                         <div class="modal-footer">
 
-                                            <button type="submit" class="btn btn-primary" value="">Edit Information</button>
+                                            <button type="submit" class="btn btn-primary" id="Sbtn" value="">Edit Information</button>
                                             <button class="btn btn-danger" type="button" data-bs-dismiss="modal" >close</button>
 
                                         </div>
@@ -251,7 +271,7 @@
                 <h5 class="modal-title" id="AddDataClient">Add New Data</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="close"></button>
             </div>
-            <form action="{{ route('add.client.data',$client->id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('add.client.data',$client->id) }}" id="Client" method="post" enctype="multipart/form-data">
                 @csrf
             <div class="modal-body">
 
@@ -298,9 +318,15 @@
                     <input class="form-control" name="remarks" type="text" placeholder="Enter Remarks">
                    </div>
 
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
+                    </div>
+
                    <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Information</button>
+                    <button type="submit" id="Sbtn" class="btn btn-primary">Add Information</button>
                    </div>
 
                 </div>
@@ -310,3 +336,11 @@
     </div>
 </div>
 
+<script>
+  const form = document.getElementById('Client');
+  const btn = document.getElementById('Sbtn');
+
+  form.addEventListener('submit', function() {
+    btn.disabled = true;
+  });
+</script>

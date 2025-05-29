@@ -18,10 +18,13 @@ return new class extends Migration
             $table->string('place_of_loading')->nullable();
             $table->string('destination')->nullable();
             $table->string('species')->nullable();
+            $table->string('permit_no')->nullable();
             $table->string('volume_to_transport')->nullable();
             $table->string('no_finish_product')->nullable();
             $table->string('no_finish_lumber')->nullable();
             $table->string('date_transport')->nullable();
+            $table->string('cert_and_oath')->nullable();
+            $table->string('inspection')->nullable();
             $table->string('remarks')->nullable();
             $table->string('client_address')->nullable();
             $table->string('permit_type')->nullable();

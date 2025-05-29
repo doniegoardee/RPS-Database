@@ -34,6 +34,12 @@
             </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+
         @if(session('danger'))
         <div class="alert alert-danger">
             {{ session('danger') }}
@@ -297,7 +303,7 @@
                 <h5 class="modal-title" id="addFolderModalLabel">Add New Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addTable" action="{{ route('client.info',$client->id) }}" method="POST">
+            <form id="addTable" action="{{ route('client.info',$client->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -371,6 +377,12 @@
                         <option value="RENEWAL">Renewal</option>
                         <option value="EXPIRED">Expired</option>
                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label">Document</label>
+                        <input type="file" class="form-control" id="" name="document">
+                        <i style="color: red">Pdf Only</i>
                     </div>
 
                     <div class="modal-footer">

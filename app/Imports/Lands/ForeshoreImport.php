@@ -14,14 +14,23 @@ use Carbon\Carbon;
 class ForeshoreImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
+    protected $startTime;
 
-    public function __construct($address)
+    public function __construct($address,$startTime)
     {
         $this->requestAddress = $address;
+        $this->startTime = $startTime;
+
     }
 
     public function model(array $row)
     {
+
+         $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
         logger()->info('Importing row:', $row);
 
         $address = Address::firstOrCreate([
@@ -43,7 +52,7 @@ class ForeshoreImport implements ToModel, WithHeadingRow
             ['area', '=', $row['area']],
             ['remarks_status', '=', $row['remarks_status']],
             ['client_address', '=', $address->address],
-            ['permit_type', '=', 'Foreshore'],
+            ['lands_type', '=', 'Foreshore'],
         ])->first();
 
         if ($foreshore) {
@@ -58,7 +67,7 @@ class ForeshoreImport implements ToModel, WithHeadingRow
             'area'      => $row['area'] ?? null,
             'remarks_status'             => $row['remarks_status'] ?? null,
             'client_address'     => $address->address,
-            'permit_type'        => 'Foreshore',
+            'lands_type'        => 'Foreshore',
             'user_id'            => Auth::id(),
             'client_id'   => $parent->id,
         ]);

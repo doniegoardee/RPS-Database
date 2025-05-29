@@ -14,14 +14,21 @@ use Carbon\Carbon;
 class ChainsawImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
+    protected $startTime;
 
-    public function __construct($address)
-    {
-        $this->requestAddress = $address;
-    }
-
+public function __construct($address, $startTime)
+{
+    $this->requestAddress = $address;
+    $this->startTime = $startTime;
+}
     public function model(array $row)
     {
+
+         $elapsed = microtime(true) - $this->startTime;
+        if ($elapsed >= 55) {
+            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
         logger()->info('Importing row:', $row);
 
         $address = Address::firstOrCreate([

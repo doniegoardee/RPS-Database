@@ -53,14 +53,28 @@ aria-hidden="true">
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
 
-<!-- Page level plugins -->
+{{-- <!-- Page level plugins -->
 <script src="{{ asset('template/vendor/chart.js/Chart.min.js') }}"></script>
 
 <!-- Page level custom scripts -->
 <script src="{{ asset('template/js/demo/chart-area-demo.js') }}"></script>
-<script src="{{ asset('template/js/demo/chart-pie-demo.js') }}"></script>
+<script src="{{ asset('template/js/demo/chart-pie-demo.js') }}"></script> --}}
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- Search Filter Script -->
+{{-- <script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const clients = document.querySelectorAll('#clientList .client-item');
+
+        clients.forEach(function (client) {
+            const name = client.textContent.toLowerCase();
+            client.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+</script> --}}
 
 </body>
 
