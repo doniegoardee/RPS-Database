@@ -8,6 +8,11 @@ use App\Models\Lands\LandsParents;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Validators\ValidationException;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
 
@@ -17,21 +22,47 @@ class LandsImportData implements ToModel, WithHeadingRow
     protected $lands_type;
     protected $startTime;
 
-public function __construct($address, $lands_type,$startTime)
-{
-    $this->requestAddress = $address;
-    $this->lands_type = $lands_type;
-    $this->startTime = $startTime;
+    protected $expectedHeaders = [
+        'applicant', 'applicant_no', 'lot_no', 'area', 'location', 'dpli_mi_si'
+    ];
 
-}
+    public function __construct($address, $lands_type, $startTime)
+    {
+        $this->requestAddress = $address;
+        $this->lands_type = $lands_type;
+        $this->startTime = $startTime;
+    }
 
+    public function headingRow(): int
+    {
+        return 1;
+    }
+
+    public function prepareForValidation($data, $index)
+    {
+        return $data;
+    }
 
     public function model(array $row)
     {
+        if ($this->headersMismatch($row)) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template.');
+        }
 
-         $elapsed = microtime(true) - $this->startTime;
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+        }
+
+        $isEmptyRow = empty($row['applicant']) &&
+                      empty($row['applicant_no']) &&
+                      empty($row['lot_no']) &&
+                      empty($row['area']) &&
+                      empty($row['location']) &&
+                      empty($row['dpli_mi_si']);
+
+        if ($isEmptyRow) {
+            return null;
         }
 
         $address = Address::firstOrCreate([
@@ -44,7 +75,6 @@ public function __construct($address, $lands_type,$startTime)
             'address' => $address->address,
             'type'    => $this->lands_type,
         ]);
-
 
         $existingLands = Lands::where([
             ['applicant', '=', $row['applicant']],
@@ -62,17 +92,26 @@ public function __construct($address, $lands_type,$startTime)
         }
 
         return new Lands([
-            'applicant'               => $row['applicant'] ?? null,
-            'applicant_no'               => $row['applicant_no'] ?? null,
-            'lot_no'            => $row['lot_no'] ?? null,
-            'area'         => $row['area'] ?? null,
-            'location'            => $row['location'] ?? null,
-            'dpli_mi_si'            => $row['dpli_mi_si'] ?? null,
-            'client_address'     => $address->address,
-            'lands_type'        => $this->lands_type,
-            'user_id'            => Auth::id(),
-            'client_id'          => $parent->id,
+            'applicant'      => $row['applicant'] ?? null,
+            'applicant_no'   => $row['applicant_no'] ?? null,
+            'lot_no'         => $row['lot_no'] ?? null,
+            'area'           => $row['area'] ?? null,
+            'location'       => $row['location'] ?? null,
+            'dpli_mi_si'     => $row['dpli_mi_si'] ?? null,
+            'client_address' => $address->address,
+            'lands_type'     => $this->lands_type,
+            'user_id'        => Auth::id(),
+            'client_id'      => $parent->id,
         ]);
+    }
+
+    protected function headersMismatch(array $row): bool
+    {
+        $rowKeys = array_map('strtolower', array_keys($row));
+        sort($rowKeys);
+        $expected = $this->expectedHeaders;
+        sort($expected);
+        return $rowKeys !== $expected;
     }
 
     protected function parseDate($value)

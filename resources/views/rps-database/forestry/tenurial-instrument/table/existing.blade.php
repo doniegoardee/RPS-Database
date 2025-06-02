@@ -51,9 +51,9 @@
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Document
         </a>
 
-         <a href="  " class="btn btn-success btn-sm shadow-sm" target="_blank">
-                    <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
-            </a>
+        <a href="{{ route('ti.existing.report', ['id'=>$client->id]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+            <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
+        </a>
 
         <a href="{{ route('excel-data.tenurial', ['id' => $client->id, 'status' => 'existing']) }}" class="btn btn-success btn-sm shadow-sm">
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Excel Report
@@ -278,7 +278,7 @@
 
                    <div class="mb-3">
                     <label for="">Name Lessee</label>
-                    <input class="form-control" name="name_lessee" type="text" placeholder="Enter Name Lessee">
+                    <input class="form-control" name="name_lessee" type="text" value="{{ old('name',$client->name) }}" placeholder="Enter Name Lessee">
                    </div>
 
                    <div class="mb-3">

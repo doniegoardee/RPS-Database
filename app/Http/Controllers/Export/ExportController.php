@@ -34,6 +34,9 @@ use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\Forestry\Tenurial\ExportData;
 use App\Exports\Lands\AllLandsExport;
+use App\Exports\Lands\Foreshore\ForeshoreAddress;
+use App\Exports\Lands\Foreshore\ForeshoreAll;
+use App\Exports\Lands\Foreshore\ForeshoreData;
 use App\Exports\Lands\Foreshore\ForeshoreTemplate;
 use App\Exports\Lands\LandData;
 use App\Exports\Lands\LandsTemplate;
@@ -44,6 +47,7 @@ use App\Models\Forestry\Permits\TreeCutting;
 use App\Models\Forestry\Permits\WildLife;
 use App\Models\Forestry\Tenurial\TenurialInstrument;
 use App\Models\Forestry\Tenurial\TIParent;
+use App\Models\Lands\Foreshore;
 use App\Models\Lands\Lands;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -128,6 +132,50 @@ class ExportController extends Controller
         return Excel::download(new ClientData($id, $add), 'client_report.xlsx');
     }
 
+//Foreshore
+
+public function exportForeshoreExcel()
+{
+    $hasData = Foreshore::exists();
+
+    if (!$hasData) {
+        return redirect()->back()->with('error', 'No Foreshore data found to export.');
+    }
+
+    $allForeshores = Foreshore::all();
+
+    return Excel::download(new ForeshoreAll($allForeshores), 'Foreshore_Report.xlsx');
+}
+
+
+    public function foreshore_export($address)
+    {
+        $exists = Foreshore::where('client_address', $address)
+                       ->exists();
+
+        if (!$exists) {
+            return redirect()->back()->with('error', 'No data found for the selected client address and foreshore.');
+        }
+
+        return Excel::download(new ForeshoreAddress($address), "Foreshore-{$address}.xlsx");
+    }
+
+
+     public function foreshore_data($id, $add)
+    {
+        $exists = Foreshore::where('client_address', $add)
+                       ->where('client_id', $id)
+                       ->exists();
+
+        if (!$exists) {
+            return redirect()->back()->with('error', 'No client data found for the selected parameters.');
+        }
+
+        return Excel::download(new ForeshoreData($id, $add), 'client_report.xlsx');
+    }
+
+
+
 
 //Chainsaw
 
@@ -168,7 +216,7 @@ class ExportController extends Controller
 
     public function exportStatusExcel($address, $status, $type)
     {
-        $exists = \App\Models\Forestry\Tenurial\TenurialInstrument::where('address', $address)
+        $exists = \App\Models\Forestry\Tenurial\TenurialInstrument::where('client_address', $address)
                                                                    ->where('status', $status)
                                                                    ->where('tenur_type', $type)
                                                                    ->exists();
@@ -402,7 +450,7 @@ public function exportTreeCuttingExcel()
 
     public function exportTenurialNewExcel($id, $status)
     {
-        $exists = \App\Models\Forestry\Tenurial\TenurialInstrument::where('id', $id)
+        $exists = \App\Models\Forestry\Tenurial\TenurialInstrument::where('client_id', $id)
                                                                    ->where('status', $status)
                                                                    ->exists();
 
@@ -412,6 +460,8 @@ public function exportTreeCuttingExcel()
 
         return Excel::download(new ExportClientData($id, $status), "Tenurial_{$status}_Export.xlsx");
     }
+
+
 
     public function exportPerType($tenur_type)
     {

@@ -86,31 +86,35 @@
 <hr style="font-weight: 900; color:red; height:5px; background:red;">
 
 @forelse ($grouped as $type => $items)
-    @foreach ($items as $index => $item)
-        <div>
-            <h3><strong>Name:</strong> {{ $item->applicant }}</h3>
-            <h3><strong>Location:</strong> {{ $item->location }}</h3>
-            <br>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>FLA No.</th>
-                        <th>Area</th>
-                        <th>Remarks/Status</th>
-                    </tr>
-                </thead>
-                <tbody>
+    @php
+        $firstItem = $items->first();
+    @endphp
+
+    <div>
+        <h3><strong>Name:</strong> {{ $firstItem->applicant }}</h3>
+        <h3><strong>Location:</strong> {{ $firstItem->location }}</h3>
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>FLA No.</th>
+                    <th>Area</th>
+                    <th>Remarks/Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($items as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->fla_no }}</td>
                         <td>{{ $item->area }}</td>
                         <td>{{ $item->remarks_status }}</td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-    @endforeach
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @empty
     <div class="no-details">
         <i class="bi bi-exclamation-triangle-fill"></i> No Foreshore details found.

@@ -5,7 +5,7 @@
     <!-- Back Button Positioned Properly -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div class="d-flex align-items-center">
-            <a href="{{ route('tenurial.expired',['title'=> $title, 'add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-2">
+            <a href="{{ route('tenurial.cancelled',['title'=> $title, 'add' => $client->address]) }}" class="btn btn-sm btn-primary shadow-sm me-2">
                 <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
             <h1 class="h3 mb-0 text-gray-800">{{ $client->name }} Information</h1>
@@ -49,7 +49,7 @@
             <i class="fas fa-file-circle-plus fa-sm text-white-50"></i> Add Document
         </a>
 
-        <a href="{{ route('ti.expired.report', ['id'=>$client->id]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
+        <a href="{{ route('ti.cancelled.report', ['id'=>$client->id]) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
             <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
         </a>
 

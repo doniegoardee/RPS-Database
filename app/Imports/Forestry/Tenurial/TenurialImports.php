@@ -17,20 +17,43 @@ class TenurialImports implements ToModel, WithHeadingRow
     protected $address;
     protected $title;
     protected $startTime;
+    protected $hasValidatedHeaders = false;
 
-    public function __construct($address, $title,$startTime)
+    protected $expectedHeaders = [
+        'name_lessee',
+        'issue_date',
+        'expired_date',
+        'tenur_no',
+        'total_area',
+        'status',
+        'remarks',
+        'address'
+    ];
+
+    public function __construct($address, $title, $startTime)
     {
         $this->address = $address;
         $this->title = $title;
         $this->startTime = $startTime;
     }
 
+    public function headingRow(): int
+    {
+        return 1;
+    }
+
     public function model(array $row)
     {
+        if (!$this->hasValidatedHeaders) {
+            if (!$this->validateHeaders($row)) {
+                throw new Exception('Import cancelled: Excel file headers do not match the expected template.');
+            }
+            $this->hasValidatedHeaders = true;
+        }
 
-    $elapsed = microtime(true) - $this->startTime;
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
-            throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
+            throw new Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
 
         $isEmptyRow = empty($row['name_lessee']) &&
@@ -61,7 +84,7 @@ class TenurialImports implements ToModel, WithHeadingRow
         $expiredDate = $this->parseDate($row['expired_date'] ?? null);
 
         $status = strtolower(trim($row['status'] ?? ''));
-        $validStatuses = ['new','existing', 'renewal', 'expired','cancelled'];
+        $validStatuses = ['new', 'existing', 'renewal', 'expired', 'cancelled'];
         if (!in_array($status, $validStatuses)) {
             $status = 'NEW';
         } else {
@@ -78,11 +101,20 @@ class TenurialImports implements ToModel, WithHeadingRow
             'tenur_type'    => $this->title,
             'tenur_type_id' => $tenurType->id,
             'client_id'     => $tiParent->id,
-            'client_address'  => $this->address,
+            'client_address'=> $this->address,
             'status'        => $status,
             'remarks'       => $row['remarks'] ?? 'No Remarks',
             'user_id'       => Auth::id(),
         ]);
+    }
+
+    protected function validateHeaders(array $row): bool
+    {
+        $rowKeys = array_map('strtolower', array_keys($row));
+        $expected = array_map('strtolower', $this->expectedHeaders);
+        sort($rowKeys);
+        sort($expected);
+        return $rowKeys === $expected;
     }
 
     protected function parseDate($value)

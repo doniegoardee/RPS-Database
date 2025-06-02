@@ -1,9 +1,7 @@
 <style>
-
-*{
-
-    font-family: sans-serif;
-}
+    * {
+        font-family: sans-serif;
+    }
 
     .header-container {
         display: flex;
@@ -17,7 +15,7 @@
         height: 80px;
     }
 
-     .header-container .image2 {
+    .header-container .image2 {
         margin-right: 20px;
         width: 110px;
         height: 80px;
@@ -29,7 +27,7 @@
     .header-container h2 {
         margin: 0;
         line-height: 1.2;
-        text-align:center;
+        text-align: center;
         bottom: 80px;
         position: relative;
     }
@@ -73,7 +71,7 @@
 
 <div class="header-container">
     <img src="images/penro_cag.png" alt="PENRO Logo" class="image1">
-    <img src="images/bagong_pilipinas.png" alt="PENRO Logo" class="image2">
+    <img src="images/bagong_pilipinas.png" alt="Bagong Pilipinas Logo" class="image2">
     <div>
         <h1>Department of Environment and Natural Resources</h1>
         <h2>Provincial Environment and Natural Resources Office</h2>
@@ -81,20 +79,21 @@
     </div>
 </div>
 
-
-
 <hr style="font-weight: 900; color:red; height:5px; background:red;">
 
+@if ($tenurial->isNotEmpty())
+    {{-- Display Name and Address from the first record --}}
     <div>
-        <h3><strong>Name:</strong> {{ $item->name_lessee }}</h3>
-        <h3><strong>Location:</strong> {{ $item->address }}</h3>
+        <h3><strong>Name:</strong> {{ $tenurial[0]->name_lessee }}</h3>
+        <h3><strong>Location:</strong> {{ $tenurial[0]->address }}</h3>
         <br>
-@forelse ($tenurial as $index => $item)
+    </div>
 
+    @foreach ($tenurial as $index => $item)
         <table>
             <thead>
                 <tr>
-                    <th></th>
+                    <th>#</th>
                     <th>Tenur Type</th>
                     <th>{{ $item->tenur_type }} Number</th>
                     <th>Issue Date</th>
@@ -105,7 +104,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $item->tenur_type }}</td>
@@ -113,16 +111,14 @@
                     <td>{{ $item->issue_date ? \Carbon\Carbon::parse($item->issue_date)->format('m/d/Y') : 'N/A' }}</td>
                     <td>{{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('m/d/Y') : 'N/A' }}</td>
                     <td>{{ $item->total_area ?? 'N/A' }}</td>
-                    <td>
-                            {{ $item->status }}
-                    </td>
+                    <td>{{ $item->status }}</td>
                     <td>{{ $item->remarks ?? 'No Remarks' }}</td>
                 </tr>
             </tbody>
         </table>
-    </div>
-@empty
+    @endforeach
+@else
     <div class="no-details">
         <i class="bi bi-exclamation-triangle-fill"></i> No Tenurial Instrument details found.
     </div>
-@endforelse
+@endif

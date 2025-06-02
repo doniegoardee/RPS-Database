@@ -30,7 +30,7 @@ public function index()
         } elseif ($now->gt($expiry)) {
             $status = 'EXPIRED';
         } else {
-            $status = 'EXISTING';
+            $status = 'RENEWAL';
         }
 
         if ($chainsaw->remarks !== $status) {

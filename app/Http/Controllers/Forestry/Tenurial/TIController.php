@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Forestry\Tenurial;
 
-use \Log;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Forestry\Tenurial\TenurialInstrument;
@@ -26,24 +25,30 @@ class TIController extends Controller
 public function ti_folder($title)
 {
     $type = TypeTI::where('title', $title)->first();
-
     $address = Address::where('type', $type->title)->get();
 
     $now = \Carbon\Carbon::now()->startOfDay();
+    $currentYear = $now->year;
 
     foreach ($address as $addr) {
-        $tenurials = TenurialInstrument::where('client_address', $addr->address)->get();
+        $tenurials = TenurialInstrument::where('client_address', $addr->address)
+            ->where('status', '!=', 'cancelled')
+            ->get();
 
         foreach ($tenurials as $tenurial) {
             $issueDate = \Carbon\Carbon::parse($tenurial->issue_date)->startOfDay();
             $expiryDate = \Carbon\Carbon::parse($tenurial->expired_date)->startOfDay();
 
-            if ($now->eq($issueDate)) {
-                $status = 'NEW';
-            } elseif ($now->gt($expiryDate)) {
+            $status = 'EXISTING';
+
+            if ($now->gt($expiryDate)) {
                 $status = 'EXPIRED';
-            } else {
-                $status = 'EXISTING';
+            } elseif (
+                $now->eq($issueDate) &&
+                strtolower($tenurial->status) !== 'renewal' &&
+                $issueDate->year !== $currentYear
+            ) {
+                $status = 'NEW';
             }
 
             if ($tenurial->status !== $status) {
@@ -55,11 +60,6 @@ public function ti_folder($title)
 
     return view('rps-database.forestry.tenurial-instrument.index', compact('address', 'type'));
 }
-
-
-
-
-
 
 
 

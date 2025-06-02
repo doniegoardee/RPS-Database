@@ -86,23 +86,28 @@
 <hr style="font-weight: 900; color:red; height:5px; background:red;">
 
 @forelse ($grouped as $type => $items)
-    @foreach ($items as $index => $item)
-        <div>
-            <h3><strong>Name:</strong> {{ $item->name }}</h3>
-            <h3><strong>Location:</strong> {{ $item->location }}</h3>
-            <br>
-            <table>
-                <thead>
-                    <tr>
+    @php
+        $firstItem = $items->first();
+    @endphp
+
+    <div>
+        <h3><strong>Name:</strong> {{ $firstItem->name }}</h3>
+        <h3><strong>Location:</strong> {{ $firstItem->location }}</h3>
+        <br>
+
+        <table>
+            <thead>
+                <tr>
                     <th style="width: 3%;">NO.</th>
                     <th style="width: 15%;">Business Name</th>
-                    <th style="width: 8%;">supplier Name</th>
+                    <th style="width: 8%;">Supplier Name</th>
                     <th style="width: 10%;">Volume</th>
                     <th style="width: 10%;">Date Issuance</th>
                     <th style="width: 10%;">Date Expiration</th>
-                    </tr>
-                </thead>
-                <tbody>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($items as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->business_name }}</td>
@@ -112,21 +117,24 @@
                             @if ($item->date_issuance)
                                 {{ \Carbon\Carbon::parse($item->date_issuance)->format('F j, Y') }}
                             @else
+                                N/A
                             @endif
                         </td>
                         <td>
                             @if ($item->date_expiration)
                                 {{ \Carbon\Carbon::parse($item->date_expiration)->format('F j, Y') }}
                             @else
+                                N/A
                             @endif
                         </td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-    @endforeach
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @empty
     <div class="no-details">
         <i class="bi bi-exclamation-triangle-fill"></i> No Lumber Dealer details found.
     </div>
 @endforelse
+

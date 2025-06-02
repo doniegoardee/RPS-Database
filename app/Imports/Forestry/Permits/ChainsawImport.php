@@ -15,21 +15,29 @@ class ChainsawImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
     protected $startTime;
+    protected $headerValidated = false;
 
-public function __construct($address, $startTime)
-{
-    $this->requestAddress = $address;
-    $this->startTime = $startTime;
-}
+    public function __construct($address, $startTime)
+    {
+        $this->requestAddress = $address;
+        $this->startTime = $startTime;
+    }
+
     public function model(array $row)
     {
+        if (!$this->headerValidated) {
+            $this->validateHeader(array_keys($row));
+            $this->headerValidated = true;
+        }
 
-         $elapsed = microtime(true) - $this->startTime;
+        if (empty(trim($row['name'] ?? '')) || empty(trim($row['address'] ?? ''))) {
+            return null;
+        }
+
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
-
-        logger()->info('Importing row:', $row);
 
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -65,7 +73,6 @@ public function __construct($address, $startTime)
         ])->first();
 
         if ($existingChainsaw) {
-            logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
@@ -88,6 +95,29 @@ public function __construct($address, $startTime)
             'user_id'            => Auth::id(),
             'chainsaw_parent_id' => $parent->id,
         ]);
+    }
+
+    protected function validateHeader(array $headerKeys)
+    {
+        $expected = [
+            'name',
+            'address',
+            'brand',
+            'serial_number',
+            'date_registered_or_renewal',
+            'date_expiry',
+            'control_no',
+            'date_acquired',
+            'horse_power',
+            'length_guidebar',
+            'denr_sticker_no',
+            'purpose',
+            'remarks',
+        ];
+
+        if ($headerKeys !== $expected) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+        }
     }
 
     protected function parseDate($value)
@@ -136,7 +166,6 @@ public function __construct($address, $startTime)
         try {
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
-            logger()->warning('Failed to parse date: ' . $value);
             return null;
         }
     }

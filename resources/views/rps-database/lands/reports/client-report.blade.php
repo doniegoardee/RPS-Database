@@ -90,7 +90,6 @@
     <div>
         <h3><strong>Applicant:</strong> {{ $first->applicant }}</h3>
         <h3><strong>Location:</strong> {{ $first->location }}</h3>
-        <h3><strong>Land Type:</strong> {{ $lands_type }}</h3>
         <br>
         <table>
             <thead>
@@ -109,7 +108,6 @@
                         <td>{{ $item->applicant_no ?? 'N/A' }}</td>
                         <td>{{ $item->lot_no ?? 'N/A' }}</td>
                         <td>{{ $item->area ?? 'N/A' }}</td>
-                        <td>{{ $item->date_approved ? \Carbon\Carbon::parse($item->date_approved)->format('m/d/Y') : 'N/A' }}</td>
                         <td>{{ $item->dpli_mi_si }}</td>
                     </tr>
                 @endforeach

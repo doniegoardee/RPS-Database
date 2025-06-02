@@ -17,12 +17,12 @@ class LumberDealerImport implements ToModel, WithHeadingRow
     protected $address;
     protected $parentCache = [];
     protected $startTime;
+    protected $headerValidated = false;
 
-    public function __construct($address,$startTime)
+    public function __construct($address, $startTime)
     {
         $this->requestAddress = $address;
         $this->startTime = $startTime;
-
 
         $this->address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -32,15 +32,20 @@ class LumberDealerImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
+        if (!$this->headerValidated) {
+            $this->validateHeader(array_keys($row));
+            $this->headerValidated = true;
+        }
 
-         $elapsed = microtime(true) - $this->startTime;
+        if (empty(trim($row['name'] ?? '')) || empty(trim($row['business_name'] ?? ''))) {
+            return null;
+        }
+
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
 
-        logger()->info('Importing row:', $row);
-
-        // Cache parent by name
         $parentKey = strtolower(trim($row['name'] ?? ''));
         if (!isset($this->parentCache[$parentKey])) {
             $this->parentCache[$parentKey] = LumDealerParent::firstOrCreate([
@@ -55,7 +60,6 @@ class LumberDealerImport implements ToModel, WithHeadingRow
         $dateIssuance = $this->parseDate($row['date_issuance']);
         $expirationDate = $this->parseDate($row['date_expiration']);
 
-        // Use hash check or reduced WHERE conditions if many fields are optional
         $dealerExists = LumDealer::where([
             ['name', '=', $row['name']],
             ['business_name', '=', $row['business_name']],
@@ -69,7 +73,6 @@ class LumberDealerImport implements ToModel, WithHeadingRow
         ])->exists();
 
         if ($dealerExists) {
-            logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
@@ -86,6 +89,23 @@ class LumberDealerImport implements ToModel, WithHeadingRow
             'user_id'            => Auth::id(),
             'dealer_parent_id'   => $parent->id,
         ]);
+    }
+
+    protected function validateHeader(array $headerKeys)
+    {
+        $expected = [
+            'name',
+            'business_name',
+            'location',
+            'supplier_name',
+            'volume',
+            'date_issuance',
+            'date_expiration',
+        ];
+
+        if ($headerKeys !== $expected) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+        }
     }
 
     protected function parseDate($value)

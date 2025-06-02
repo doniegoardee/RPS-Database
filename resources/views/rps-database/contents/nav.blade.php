@@ -49,7 +49,7 @@
                 <i class="fa-solid fa-mountain-sun"></i>
                 <span>Lands</span>
             </a>
-            <div id="collapseLands" class="collapse {{ request()->routeIs('FPA', 'RFPA','SP','Foreshore','fpa.client','fpa.client-data','rfpa.client',
+            <div id="collapseLands" class="collapse {{ request()->routeIs('lands','FPA', 'RFPA','SP','Foreshore','fpa.client','fpa.client-data','rfpa.client',
             'rfpa.client-data','sp.client','sp.client-data','foreshore.client','foreshore.client-data') ? 'show' : '' }}"
                 aria-labelledby="headingLands" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
@@ -69,7 +69,7 @@
                 <i class="fa-solid fa-tree"></i>
                 <span>Forestry</span>
             </a>
-            <div id="collapseForestry" class="collapse {{ request()->routeIs('tenur.doc', 'permit.doc','ti.folder','tenur.client','tenurial.new','tenurial.existing'
+            <div id="collapseForestry" class="collapse {{ request()->routeIs('forestry','tenur.doc', 'permit.doc','ti.folder','tenur.client','tenurial.new','tenurial.existing'
             ,'tenurial.renewal','tenurial.expired','tenurial.cancelled','ti.new','ti.existing','ti.renewal','ti.expired','ti.cancelled','chainsaw','folder',
             'table.chainsaw','table.new','table.renewal','table.expired','chainsaw.remark','chainsaw.new','chainsaw.renewal','chainsaw.expired','tree.cutting',
             'tree-cutting.client','tree-cutting.client-data','lumber.dealer','lumber-dealer.client','lumber-dealer.client-data','lumber.supplier',

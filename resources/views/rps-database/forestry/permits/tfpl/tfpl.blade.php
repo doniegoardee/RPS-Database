@@ -45,6 +45,13 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+
 
 
         {{-- <a href="#" class="btn btn-sm btn-primary shadow-sm ms-auto" data-bs-toggle="modal" data-bs-target="#addFolderModal">
@@ -54,7 +61,7 @@
 
         <div class="d-flex gap-2 mb-3">
 
-            <a href="" class="btn btn-sm btn-success shadow-sm">
+            <a href="{{ route('all-data.tfpl') }}" class="btn btn-sm btn-success shadow-sm">
                 <i class="fas fa-file-arrow-down fa-sm text-white-50"></i> Generate Excel Report
             </a>
         </div>

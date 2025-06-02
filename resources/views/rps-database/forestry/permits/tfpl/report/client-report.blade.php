@@ -88,30 +88,34 @@
 @forelse ($grouped as $type => $items)
     <h3>{{ strtoupper($type) }}</h3>
 
-    @foreach ($items as $index => $item)
-        <div>
-            <table>
-                <thead>
+    <div>
+        <table>
+            <thead>
                     <tr>
-                    <th style="width: 3%;">NO.</th>
+                        <th style="width: 3%;">NO.</th>
                         <th style="width: 10%;">Name Permitee</th>
                         <th style="width: 10%;">Place of Loading</th>
                         <th style="width: 15%;">Destination</th>
                         <th style="width: 8%;">Species</th>
+                        <th style="width: 8%;">Permit No.</th>
                         <th style="width: 10%;">Volume to be Transport</th>
                         <th style="width: 15%;">No of Finish Product</th>
                         <th style="width: 15%;">No of Finish Lumber/Timber</th>
                         <th style="width: 10%;">Date Transport</th>
+                        <th style="width: 10%;">Cert and Oath</th>
+                        <th style="width: 10%;">Inspection</th>
                         <th style="width: 10%;">Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($items as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $item->name_permitee }}</td>
                         <td>{{ $item->place_of_loading }}</td>
                         <td>{{ $item->destination }}</td>
                         <td>{{ $item->species }}</td>
+                        <td>{{ $item->permit_no }}</td>
                         <td>{{ $item->volume_to_transport }}</td>
                         <td>{{ $item->no_finish_product }}</td>
                         <td>{{ $item->no_finish_lumber }}</td>
@@ -121,12 +125,14 @@
                             @else
                             @endif
                         </td>
+                        <td>{{ $item->cert_and_oath }}</td>
+                        <td>{{ $item->inspection }}</td>
                         <td>{{ $item->remarks }}</td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
-    @endforeach
 @empty
     <div class="no-details">
         <i class="bi bi-exclamation-triangle-fill"></i> No Lumber Supplier details found.

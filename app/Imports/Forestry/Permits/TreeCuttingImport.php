@@ -17,22 +17,35 @@ class TreeCuttingImport implements ToCollection, WithHeadingRow
     protected $requestAddress;
     protected $startTime;
 
-    public function __construct($address,$startTime)
+    protected $requiredHeaders = [
+        'name_permitee',
+        'location',
+        'no_trees',
+        'species',
+        'approved_volume',
+        'date_issuance',
+        'expiration_date',
+        'seed_requirements',
+    ];
+
+    public function __construct($address, $startTime)
     {
         $this->requestAddress = $address;
         $this->startTime = $startTime;
-
-
     }
 
     public function collection(Collection $rows)
     {
-
-                 $elapsed = microtime(true) - $this->startTime;
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
 
+        $headers = array_keys($rows->first()->toArray());
+        $missingHeaders = array_diff($this->requiredHeaders, $headers);
+        if (!empty($missingHeaders)) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+        }
 
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -43,7 +56,6 @@ class TreeCuttingImport implements ToCollection, WithHeadingRow
         $existing = TreeCutting::whereIn('name_permitee', $rows->pluck('name_permitee')->toArray())->get();
 
         foreach ($rows as $row) {
-            // Skip if row is empty
             if (collect($row)->filter()->isEmpty()) continue;
 
             $dateIssuance = $this->parseDate($row['date_issuance'] ?? null);

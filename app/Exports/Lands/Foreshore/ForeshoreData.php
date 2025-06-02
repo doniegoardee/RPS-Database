@@ -26,7 +26,7 @@ class ForeshoreData implements FromCollection, WithHeadings, WithEvents, WithCol
         return Foreshore::where('client_id', $this->client_id)
                     ->where('client_address', $this->client_address)
                     ->get([
-                        'name',
+                        'applicant',
                         'location',
                         'fla_no',
                         'area',
@@ -37,7 +37,7 @@ class ForeshoreData implements FromCollection, WithHeadings, WithEvents, WithCol
     public function headings(): array
     {
         return [
-            'Name',
+            'Applicant',
             'Location',
             'FLA No.',
             'Area',

@@ -211,7 +211,7 @@ Route::prefix('PENRO')->middleware(['auth', 'role:admin'])->group(function () {
 
         Route::get('/',[LumberDealerCTRL::class, 'index'])->name('lumber.dealer');
 
-        Route::get('/status/{add}',[LumberDealerCTRL::class, 'client'])->name('lumber-dealer.client');
+        Route::get('/status/{add}/dealer',[LumberDealerCTRL::class, 'client'])->name('lumber-dealer.client');
         Route::post('/add-client/{address}', [LumberDealerCTRL::class, 'add_client'])->name('add-client.lumber-dealer');
 
         Route::get('/client/{id}', [LumberDealerCTRL::class, 'client_data'])->name('lumber-dealer.client-data');

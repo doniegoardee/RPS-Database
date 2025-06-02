@@ -222,10 +222,10 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success">
-            <i class="fas fa-upload"></i> Import
+          <button type="submit" class="btn btn-primary">
+    Import
           </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </form>

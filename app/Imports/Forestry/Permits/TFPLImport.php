@@ -8,13 +8,32 @@ use App\Models\Forestry\Permits\TFPLParent;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
 
 class TFPLImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
     protected $startTime;
+    protected $expectedHeaders = [
+        'name_permitee',
+        'place_of_loading',
+        'destination',
+        'species',
+        'permit_no',
+        'volume_to_transport',
+        'no_finish_product',
+        'no_finish_lumber',
+        'date_transport',
+        'cert_and_oath',
+        'inspection',
+        'remarks',
+    ];
+    protected $headerValidated = false;
 
     public function __construct($address, $startTime)
     {
@@ -24,12 +43,23 @@ class TFPLImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
+        if (!$this->headerValidated) {
+            $actualHeaders = array_keys($row);
+            $missingHeaders = array_diff($this->expectedHeaders, $actualHeaders);
+            if (count($missingHeaders)) {
+                throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+            }
+            $this->headerValidated = true;
+        }
+
+        if ($this->isRowEmpty($row)) {
+            return null;
+        }
+
         $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
-
-        logger()->info('Importing row:', $row);
 
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -62,7 +92,6 @@ class TFPLImport implements ToModel, WithHeadingRow
         ])->first();
 
         if ($tfpl) {
-            logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
@@ -86,6 +115,16 @@ class TFPLImport implements ToModel, WithHeadingRow
         ]);
     }
 
+    protected function isRowEmpty(array $row): bool
+    {
+        foreach ($row as $value) {
+            if (!is_null($value) && trim($value) !== '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected function parseDate($value)
     {
         if (is_numeric($value)) {
@@ -93,32 +132,11 @@ class TFPLImport implements ToModel, WithHeadingRow
         }
 
         $formats = [
-            'Y-m-d',
-            'Y/m/d',
-            'm-d-Y',
-            'm/d/Y',
-            'd-m-Y',
-            'd/m/Y',
-            'Ymd',
-            'dmY',
-            'mdY',
-            'M d, Y',
-            'd M Y',
-            'Y M d',
-            'F d, Y',
-            'd F Y',
-            'F j, Y',
-            'j F Y',
-            'd-M-Y',
-            'd-M-y',
-            'Y-M-d',
-            'Y-M-d H:i:s',
-            'Y-m-d H:i:s',
-            'd/m/y',
-            'm/d/y',
-            'd-m-y',
-            'Y.m.d',
-            'YmdHis'
+            'Y-m-d', 'Y/m/d', 'm-d-Y', 'm/d/Y', 'd-m-Y', 'd/m/Y',
+            'Ymd', 'dmY', 'mdY', 'M d, Y', 'd M Y', 'Y M d',
+            'F d, Y', 'd F Y', 'F j, Y', 'j F Y', 'd-M-Y', 'd-M-y',
+            'Y-M-d', 'Y-M-d H:i:s', 'Y-m-d H:i:s', 'd/m/y', 'm/d/y',
+            'd-m-y', 'Y.m.d', 'YmdHis'
         ];
 
         foreach ($formats as $format) {
@@ -132,7 +150,6 @@ class TFPLImport implements ToModel, WithHeadingRow
         try {
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Exception $e) {
-            logger()->warning('Failed to parse date: ' . $value);
             return null;
         }
     }

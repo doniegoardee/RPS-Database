@@ -4,6 +4,7 @@
 namespace App\Exports\Lands\Foreshore;
 
 use App\Models\Forestry\Permits\TFPL;
+use App\Models\Lands\Foreshore;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -21,9 +22,10 @@ class ForeshoreAddress implements FromCollection, WithHeadings, WithEvents, With
 
     public function collection()
     {
-        return TFPL::where('client_address', $this->address)
+        return Foreshore::where('client_address', $this->address)
+
                     ->get([
-                        'name',
+                        'applicant',
                         'location',
                         'fla_no',
                         'area',
@@ -34,7 +36,7 @@ class ForeshoreAddress implements FromCollection, WithHeadings, WithEvents, With
     public function headings(): array
     {
         return [
-            'Name',
+            'Applicant',
             'Location',
             'FLA No.',
             'Area',

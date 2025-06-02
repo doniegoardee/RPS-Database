@@ -56,7 +56,7 @@
             <i class="fas fa-user-plus fa-sm text-white-50"></i> Add New Document
         </a>
 
-        <a href="{{ route('report.chainsaw.expired',$client->id) }}" class="btn btn-success btn-sm shadow-sm" target="_blank">
+        <a href="{{ route('report.chainsaw.expired',$client->id) }}" class="btn btn-danger btn-sm shadow-sm" target="_blank">
                     <i class="fa-solid fa-chart-simple me-1"></i> Generate Pdf Report
         </a>
 

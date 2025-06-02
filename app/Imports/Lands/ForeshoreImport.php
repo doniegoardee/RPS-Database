@@ -10,28 +10,54 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\Importable;
 
 class ForeshoreImport implements ToModel, WithHeadingRow
 {
+    use Importable;
+
     protected $requestAddress;
     protected $startTime;
 
-    public function __construct($address,$startTime)
+    protected $expectedHeaders = [
+        'applicant',
+        'location',
+        'fla_no',
+        'area',
+        'remarks_status',
+    ];
+
+    public function __construct($address, $startTime)
     {
         $this->requestAddress = $address;
         $this->startTime = $startTime;
+    }
 
+    public function headingRow(): int
+    {
+        return 1;
     }
 
     public function model(array $row)
     {
+        if (!$this->validateHeaders($row)) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template.');
+        }
 
-         $elapsed = microtime(true) - $this->startTime;
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
 
-        logger()->info('Importing row:', $row);
+        $isEmptyRow = empty($row['applicant']) &&
+                      empty($row['location']) &&
+                      empty($row['fla_no']) &&
+                      empty($row['area']) &&
+                      empty($row['remarks_status']);
+
+        if ($isEmptyRow) {
+            return null;
+        }
 
         $address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -44,7 +70,6 @@ class ForeshoreImport implements ToModel, WithHeadingRow
             'type'    => 'Foreshore',
         ]);
 
-
         $foreshore = Foreshore::where([
             ['applicant', '=', $row['applicant']],
             ['location', '=', $row['location']],
@@ -56,21 +81,29 @@ class ForeshoreImport implements ToModel, WithHeadingRow
         ])->first();
 
         if ($foreshore) {
-            logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
         return new Foreshore([
-            'applicant'               => $row['applicant'] ?? null,
-            'location'      => $row['location'] ?? null,
-            'fla_no'           => $row['fla_no'] ?? null,
-            'area'      => $row['area'] ?? null,
-            'remarks_status'             => $row['remarks_status'] ?? null,
-            'client_address'     => $address->address,
-            'lands_type'        => 'Foreshore',
-            'user_id'            => Auth::id(),
-            'client_id'   => $parent->id,
+            'applicant'       => $row['applicant'] ?? null,
+            'location'        => $row['location'] ?? null,
+            'fla_no'          => $row['fla_no'] ?? null,
+            'area'            => $row['area'] ?? null,
+            'remarks_status'  => $row['remarks_status'] ?? null,
+            'client_address'  => $address->address,
+            'lands_type'      => 'Foreshore',
+            'user_id'         => Auth::id(),
+            'client_id'       => $parent->id,
         ]);
+    }
+
+    protected function validateHeaders(array $row): bool
+    {
+        $rowKeys = array_map('strtolower', array_keys($row));
+        $expected = array_map('strtolower', $this->expectedHeaders);
+        sort($rowKeys);
+        sort($expected);
+        return $rowKeys === $expected;
     }
 
     protected function parseDate($value)

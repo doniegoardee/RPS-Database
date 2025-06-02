@@ -16,8 +16,23 @@ class WildlifeImport implements ToCollection, WithHeadingRow
 {
     protected $requestAddress;
     protected $startTime;
+    protected $requiredHeaders = [
+        'name',
+        'address',
+        'species_name',
+        'quantity',
+        'unit_measure',
+        'fee',
+        'origin',
+        'description',
+        'purpose',
+        'destination',
+        'permit_no',
+        'date_issuance',
+        'date_expiry',
+    ];
 
-    public function __construct($address,$startTime)
+    public function __construct($address, $startTime)
     {
         $this->requestAddress = $address;
         $this->startTime = $startTime;
@@ -25,6 +40,16 @@ class WildlifeImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $rows)
     {
+        if ($rows->isEmpty()) {
+            throw new \Exception('No data found in the file.');
+        }
+
+        $headers = array_keys($rows->first()->toArray());
+
+        $missingHeaders = array_diff($this->requiredHeaders, $headers);
+        if (!empty($missingHeaders)) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+        }
 
         $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {

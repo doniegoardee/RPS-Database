@@ -4,6 +4,7 @@ namespace App\Imports\Forestry\Permits;
 
 use App\Models\Address;
 use App\Models\Forestry\Permits\LumDealer;
+use App\Models\Forestry\Permits\LumDealerParent;
 use App\Models\Forestry\Permits\Supplier;
 use App\Models\Forestry\Permits\SupplierParent;
 use Illuminate\Support\Facades\Auth;
@@ -16,14 +17,14 @@ class LumberSupplierImport implements ToModel, WithHeadingRow
 {
     protected $requestAddress;
     protected $address;
-    protected $startTime;
     protected $parentCache = [];
+    protected $startTime;
+    protected $headerValidated = false;
 
-    public function __construct($address,$startTime)
+    public function __construct($address, $startTime)
     {
         $this->requestAddress = $address;
         $this->startTime = $startTime;
-
 
         $this->address = Address::firstOrCreate([
             'address' => $this->requestAddress,
@@ -33,13 +34,19 @@ class LumberSupplierImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
+        if (!$this->headerValidated) {
+            $this->validateHeader(array_keys($row));
+            $this->headerValidated = true;
+        }
 
-           $elapsed = microtime(true) - $this->startTime;
+        if (empty(trim($row['name'] ?? '')) || empty(trim($row['business_name'] ?? ''))) {
+            return null;
+        }
+
+        $elapsed = microtime(true) - $this->startTime;
         if ($elapsed >= 55) {
             throw new \Exception('Import cancelled: exceeded time limit. Please reduce the number of rows.');
         }
-
-        logger()->info('Importing row:', $row);
 
         $parentKey = strtolower(trim($row['name'] ?? ''));
         if (!isset($this->parentCache[$parentKey])) {
@@ -63,11 +70,10 @@ class LumberSupplierImport implements ToModel, WithHeadingRow
             ['date_issuance', '=', $dateIssuance],
             ['date_expiration', '=', $expirationDate],
             ['client_address', '=', $this->address->address],
-            ['permit_type', '=', 'Lumber Supplier'],
+            ['permit_type', '=', 'Lumber Dealer'],
         ])->exists();
 
         if ($dealerExists) {
-            logger()->info('Duplicate row found, skipping import:', $row);
             return null;
         }
 
@@ -83,6 +89,22 @@ class LumberSupplierImport implements ToModel, WithHeadingRow
             'user_id'            => Auth::id(),
             'supplier_parent_id'   => $parent->id,
         ]);
+    }
+
+    protected function validateHeader(array $headerKeys)
+    {
+        $expected = [
+            'name',
+            'business_name',
+            'location',
+            'volume',
+            'date_issuance',
+            'date_expiration',
+        ];
+
+        if ($headerKeys !== $expected) {
+            throw new \Exception('Import cancelled: Excel file headers do not match the expected template');
+        }
     }
 
     protected function parseDate($value)
